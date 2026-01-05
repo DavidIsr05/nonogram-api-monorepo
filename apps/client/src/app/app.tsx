@@ -1,11 +1,3 @@
-import NxWelcome from './nx-welcome';
-
-export function App() {
-  return (
-    <div>
-      <NxWelcome title="client" />
-    </div>
-  );
-}
-
-export default App;
+export const App = () => {
+  return <div>hello Nadav welcome to simul</div>;
+};
