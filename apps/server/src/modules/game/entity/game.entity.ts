@@ -7,6 +7,13 @@ import {
   Table,
 } from 'sequelize-typescript';
 
+export enum TileState {
+  EMPTY = 'EMPTY',
+  FILLED = 'FILLED',
+  HINT = 'HINT',
+  MISTAKE = 'MISTAKE',
+}
+
 @Table({ tableName: 'games' })
 export class Game extends Model<Partial<Game>> {
   @PrimaryKey
@@ -22,8 +29,8 @@ export class Game extends Model<Partial<Game>> {
   @Column({ type: DataType.STRING })
   nonogramId: string;
 
-  //@Column({ type: DataType.ENUM })
-  //uncompletedNonogram: TileState;
+  @Column({ type: DataType.ENUM(...Object.values(TileState)) })
+  uncompletedNonogram: TileState[][];
 
   @Column({ type: DataType.INTEGER })
   timer: number;

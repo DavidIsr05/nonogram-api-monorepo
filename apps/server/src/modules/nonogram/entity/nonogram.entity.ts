@@ -7,6 +7,12 @@ import {
   Table,
 } from 'sequelize-typescript';
 
+export enum Difficulty {
+  EASY = 'EASY',
+  MEDIUM = 'MEDIUM',
+  HARD = 'HARD',
+}
+
 @Table({ tableName: 'nonograms' })
 export class Nonogram extends Model<Partial<Nonogram>> {
   @PrimaryKey
@@ -31,6 +37,6 @@ export class Nonogram extends Model<Partial<Nonogram>> {
   })
   isPrivate: boolean;
 
-  //@Column({ type: DataType.ENUM })
-  //difficulty: Difficulty;
+  @Column({ type: DataType.ENUM(...Object.values(Difficulty)) })
+  difficulty: Difficulty;
 }
