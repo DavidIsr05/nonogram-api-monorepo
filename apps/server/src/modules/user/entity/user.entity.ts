@@ -14,27 +14,23 @@ export class User extends Model<Partial<User>> {
   @Column(DataType.UUID)
   id: string;
 
-  @Column({
-    type: DataType.STRING,
-  })
+  @Column(DataType.STRING)
   username: string;
 
-  @Column({ type: DataType.STRING })
+  @Column(DataType.STRING)
   password: string;
 
-  @Column({ type: DataType.STRING })
+  @Column(DataType.STRING)
   firstName: string;
 
-  @Column({ type: DataType.STRING })
+  @Column(DataType.STRING)
   lastName: string;
 
   @Default(false)
-  @Column({
-    type: DataType.BOOLEAN,
-  })
+  @Column(DataType.BOOLEAN)
   isAdmin: boolean;
 
   @Default(0)
-  @Column({ type: DataType.INTEGER })
+  @Column(DataType.INTEGER)
   globalScore: number;
 }

@@ -7,38 +7,34 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-export enum TileState {
-  EMPTY = 'EMPTY',
-  FILLED = 'FILLED',
-  HINT = 'HINT',
-  MISTAKE = 'MISTAKE',
-}
+import {
+  TileStatesEnumType,
+  TileStatesEnumValues,
+} from '@nonogram-api-monorepo/types';
 
-@Table({ tableName: 'games' })
+@Table
 export class Game extends Model<Partial<Game>> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
   @Column(DataType.UUID)
   id: string;
 
-  @Column({
-    type: DataType.STRING,
-  })
+  @Column(DataType.STRING)
   userId: string;
 
-  @Column({ type: DataType.STRING })
+  @Column(DataType.STRING)
   nonogramId: string;
 
-  @Column({ type: DataType.ENUM(...Object.values(TileState)) })
-  uncompletedNonogram: TileState[][];
+  @Column(DataType.ENUM(...Object.values(TileStatesEnumValues)))
+  uncompletedNonogram: TileStatesEnumType[][];
 
-  @Column({ type: DataType.INTEGER })
+  @Column(DataType.INTEGER)
   timer: number;
 
   @Default(false)
-  @Column({ type: DataType.BOOLEAN })
+  @Column(DataType.BOOLEAN)
   isFinished: boolean;
 
-  @Column({ type: DataType.INTEGER })
+  @Column(DataType.INTEGER)
   rating: number | null;
 }

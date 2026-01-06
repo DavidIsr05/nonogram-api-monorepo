@@ -7,11 +7,10 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-export enum Difficulty {
-  EASY = 'EASY',
-  MEDIUM = 'MEDIUM',
-  HARD = 'HARD',
-}
+import {
+  NonogramDifficultiesEnumType,
+  NonogramDifficultiesEnumValues,
+} from '@nonogram-api-monorepo/types';
 
 @Table({ tableName: 'nonograms' })
 export class Nonogram extends Model<Partial<Nonogram>> {
@@ -20,23 +19,19 @@ export class Nonogram extends Model<Partial<Nonogram>> {
   @Column(DataType.UUID)
   id: string;
 
-  @Column({
-    type: DataType.JSON,
-  })
+  @Column(DataType.JSON)
   matrix: boolean[][];
 
-  @Column({ type: DataType.STRING })
+  @Column(DataType.STRING)
   imageBase64: string;
 
-  @Column({ type: DataType.STRING })
+  @Column(DataType.STRING)
   creatorId: string;
 
   @Default(true)
-  @Column({
-    type: DataType.BOOLEAN,
-  })
+  @Column(DataType.BOOLEAN)
   isPrivate: boolean;
 
-  @Column({ type: DataType.ENUM(...Object.values(Difficulty)) })
-  difficulty: Difficulty;
+  @Column(DataType.ENUM(...Object.values(NonogramDifficultiesEnumValues)))
+  difficulty: NonogramDifficultiesEnumType;
 }
