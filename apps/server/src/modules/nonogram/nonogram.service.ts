@@ -6,6 +6,6 @@ import { InjectModel } from '@nestjs/sequelize';
 @Injectable()
 export class NonogramService {
   constructor(
-    @InjectModel(Nonogram) private readonly nonogram: typeof Nonogram
+    @InjectModel(Nonogram) private readonly nonogramModel: typeof Nonogram
   ) {}
 }

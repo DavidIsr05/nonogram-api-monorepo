@@ -34,4 +34,4 @@ import { GameService } from '../modules/game/game.service';
   controllers: [NonogramController, UserController, GameController],
   providers: [NonogramService, UserService, GameService],
 })
-export class AppModule {}
+export class AppModule {} //TODO fix last problem from cr which is changing some names in service files for each entity/component

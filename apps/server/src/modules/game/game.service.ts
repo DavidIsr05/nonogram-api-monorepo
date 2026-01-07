@@ -4,5 +4,5 @@ import { Game } from './entity/game.entity';
 
 @Injectable()
 export class GameService {
-  constructor(@InjectModel(Game) private readonly game: typeof Game) {}
+  constructor(@InjectModel(Game) private readonly gameModel: typeof Game) {}
 }
