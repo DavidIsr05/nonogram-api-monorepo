@@ -7,7 +7,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-@Table({ tableName: 'users' })
+@Table
 export class User extends Model<Partial<User>> {
   @PrimaryKey
   @Default(DataType.UUIDV4)
@@ -20,11 +20,8 @@ export class User extends Model<Partial<User>> {
   @Column(DataType.STRING)
   password: string;
 
-  @Column(DataType.STRING)
-  firstName: string;
-
-  @Column(DataType.STRING)
-  lastName: string;
+  @Column(DataType.INTEGER)
+  PersonalNumber: number;
 
   @Default(false)
   @Column(DataType.BOOLEAN)
@@ -33,4 +30,8 @@ export class User extends Model<Partial<User>> {
   @Default(0)
   @Column(DataType.INTEGER)
   globalScore: number;
+
+  @Default(0)
+  @Column(DataType.NUMBER)
+  totalPlayTime: number;
 }

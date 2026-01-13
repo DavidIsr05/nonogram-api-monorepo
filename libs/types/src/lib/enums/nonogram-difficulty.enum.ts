@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-enum NonogramDifficulties {
+export enum NonogramDifficulties {
   EASY = 'EASY',
   MEDIUM = 'MEDIUM',
   HARD = 'HARD',
@@ -8,6 +8,7 @@ enum NonogramDifficulties {
 
 export const NonogramDifficultiesEnumValues =
   z.nativeEnum(NonogramDifficulties);
+
 export type NonogramDifficultiesEnumType = z.infer<
   typeof NonogramDifficultiesEnumValues
 >;
