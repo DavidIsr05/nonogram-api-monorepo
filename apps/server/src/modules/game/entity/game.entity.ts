@@ -1,4 +1,5 @@
 import {
+  AllowNull,
   Column,
   DataType,
   Default,
@@ -20,26 +21,26 @@ export class Game extends Model<Partial<Game>> {
   id: string;
 
   @HasOne(() => User)
-  @Column(DataType.UUIDV4)
+  @Column({ type: DataType.UUIDV4, allowNull: false })
   userId: string;
 
   @HasOne(() => Nonogram)
-  @Column(DataType.STRING)
+  @Column({ type: DataType.STRING, allowNull: false })
   nonogramId: string;
 
   @Column(DataType.ENUM(...Object.values(TileStates)))
   uncompletedNonogram: TileStatesEnumType[][] | null;
 
   @Default(0)
-  @Column(DataType.INTEGER)
+  @Column({ type: DataType.INTEGER, allowNull: false })
   timer: number;
 
   @Default(3)
-  @Column(DataType.INTEGER)
+  @Column({ type: DataType.INTEGER, allowNull: false })
   hints: number;
 
   @Default(false)
-  @Column(DataType.BOOLEAN)
+  @Column({ type: DataType.BOOLEAN, allowNull: false })
   isFinished: boolean;
 
   @Default(null)

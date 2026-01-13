@@ -8,4 +8,8 @@ export class NonogramService {
   constructor(
     @InjectModel(Nonogram) private readonly nonogramModel: typeof Nonogram
   ) {}
+
+  createNonogram(createNonogramDto) {
+    return this.nonogramModel.create(createNonogramDto);
+  }
 }

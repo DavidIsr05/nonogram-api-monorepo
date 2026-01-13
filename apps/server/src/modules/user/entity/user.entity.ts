@@ -14,24 +14,24 @@ export class User extends Model<Partial<User>> {
   @Column(DataType.UUID)
   id: string;
 
-  @Column(DataType.STRING)
+  @Column({ type: DataType.STRING, allowNull: false })
   username: string;
 
-  @Column(DataType.STRING)
+  @Column({ type: DataType.STRING, allowNull: false })
   password: string;
 
-  @Column(DataType.INTEGER)
+  @Column({ type: DataType.INTEGER, allowNull: false })
   PersonalNumber: number;
 
   @Default(false)
-  @Column(DataType.BOOLEAN)
+  @Column({ type: DataType.BOOLEAN, allowNull: false })
   isAdmin: boolean;
 
   @Default(0)
-  @Column(DataType.INTEGER)
+  @Column({ type: DataType.INTEGER, allowNull: false })
   globalScore: number;
 
   @Default(0)
-  @Column(DataType.NUMBER)
+  @Column({ type: DataType.NUMBER, allowNull: false })
   totalPlayTime: number;
 }
