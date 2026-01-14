@@ -20,9 +20,6 @@ import { GameModule } from '../modules/game/game.module';
       models: [User, Nonogram, Game],
       autoLoadModels: true,
       synchronize: true,
-      sync: {
-        force: true,
-      },
     }),
     UserModule,
     NonogramModule,

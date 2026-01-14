@@ -1,7 +1,10 @@
 import {
+  BelongsTo,
   Column,
   DataType,
   Default,
+  ForeignKey,
+  HasMany,
   HasOne,
   Model,
   PrimaryKey,
@@ -13,6 +16,7 @@ import {
   NonogramDifficultiesEnumType,
 } from '@nonogram-api-monorepo/types';
 import { User } from '../../user/entity/user.entity';
+import { Game } from '../../game/entity/game.entity';
 
 @Table
 export class Nonogram extends Model<Partial<Nonogram>> {
@@ -21,23 +25,20 @@ export class Nonogram extends Model<Partial<Nonogram>> {
   @Column(DataType.UUID)
   id: string;
 
-  @Column({ type: DataType.JSON, allowNull: false })
-  nonogram: boolean[][];
+  @Column({ type: DataType.JSONB, allowNull: false })
+  nonogram: { nonogram: boolean[][] };
 
-  @Column({ type: DataType.STRING, allowNull: false })
-  imageBase64: string;
+  @Column({ type: DataType.TEXT, allowNull: false })
+  previewImageBase64: Text;
 
-  @Column({ type: DataType.STRING, allowNull: false })
-  previewImageBase64: string;
-
-  @Column({ type: DataType.STRING, allowNull: false })
-  completeNonogramImageBase64: string;
+  @Column({ type: DataType.TEXT, allowNull: false })
+  completeNonogramImageBase64: Text;
 
   @Column({ type: DataType.DOUBLE, allowNull: false })
   pixelHighlightValue: number;
 
-  @HasOne(() => User)
-  @Column({ type: DataType.STRING, allowNull: false })
+  @ForeignKey(() => User)
+  @Column({ type: DataType.UUID, allowNull: false })
   creatorId: string;
 
   @Default(true)
@@ -49,4 +50,10 @@ export class Nonogram extends Model<Partial<Nonogram>> {
     allowNull: false,
   })
   difficulty: NonogramDifficultiesEnumType;
+
+  @BelongsTo(() => User)
+  user: User;
+
+  @HasMany(() => Game)
+  games: Game[];
 }

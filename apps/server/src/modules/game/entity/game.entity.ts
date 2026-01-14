@@ -1,8 +1,10 @@
 import {
   AllowNull,
+  BelongsTo,
   Column,
   DataType,
   Default,
+  ForeignKey,
   HasOne,
   Model,
   PrimaryKey,
@@ -20,12 +22,12 @@ export class Game extends Model<Partial<Game>> {
   @Column(DataType.UUID)
   id: string;
 
-  @HasOne(() => User)
-  @Column({ type: DataType.UUIDV4, allowNull: false })
+  @ForeignKey(() => User)
+  @Column({ type: DataType.UUID, allowNull: false })
   userId: string;
 
-  @HasOne(() => Nonogram)
-  @Column({ type: DataType.STRING, allowNull: false })
+  @ForeignKey(() => Nonogram)
+  @Column({ type: DataType.UUID, allowNull: false })
   nonogramId: string;
 
   @Column(DataType.ENUM(...Object.values(TileStates)))
@@ -43,7 +45,12 @@ export class Game extends Model<Partial<Game>> {
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   isFinished: boolean;
 
-  @Default(null)
   @Column(DataType.INTEGER)
   rating: number | null;
+
+  @BelongsTo(() => User)
+  user: User;
+
+  @BelongsTo(() => Nonogram)
+  nonogram: Nonogram;
 }

@@ -9,15 +9,13 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async signIn(username: string, pass: string): Promise<any> {
-    const user = await this.userService.findOne(username);
-    if (user?.password !== pass) {
+  async signIn(personalNumber, password): Promise<any> {
+    const user = await this.userService.findOne(personalNumber);
+    if (user?.password !== password) {
       throw new UnauthorizedException();
     }
-    const payload = { sub: user.userId, username: user.username };
+    const payload = { sub: user.id, personalNumber: user.personalNumber };
     return {
-      // 💡 Here the JWT secret key that's used for signing the payload
-      // is the key that was passsed in the JwtModule
       access_token: await this.jwtService.signAsync(payload),
     };
   }
