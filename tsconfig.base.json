@@ -12,8 +12,9 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
+    "baseUrl": ".",
     "paths": {
-      "@nonogram-api-monorepo/types": ["./libs/types/src/index.ts"]
+      "@nonogram-api-monorepo/types": ["libs/types/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

@@ -1,16 +1,19 @@
 import {
+  AllowNull,
+  BelongsTo,
   Column,
   DataType,
   Default,
+  ForeignKey,
+  HasOne,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
 
-import {
-  TileStatesEnumType,
-  TileStatesEnumValues,
-} from '@nonogram-api-monorepo/types';
+import { TileStates, TileStatesEnumType } from '@nonogram-api-monorepo/types';
+import { User } from '../../user/entity/user.entity';
+import { Nonogram } from '../../nonogram/entity/nonogram.entity';
 
 @Table
 export class Game extends Model<Partial<Game>> {
@@ -19,22 +22,35 @@ export class Game extends Model<Partial<Game>> {
   @Column(DataType.UUID)
   id: string;
 
-  @Column(DataType.STRING)
+  @ForeignKey(() => User)
+  @Column({ type: DataType.UUID, allowNull: false })
   userId: string;
 
-  @Column(DataType.STRING)
+  @ForeignKey(() => Nonogram)
+  @Column({ type: DataType.UUID, allowNull: false })
   nonogramId: string;
 
-  @Column(DataType.ENUM(...Object.values(TileStatesEnumValues)))
-  uncompletedNonogram: TileStatesEnumType[][];
+  @Column(DataType.ENUM(...Object.values(TileStates)))
+  uncompletedNonogram: TileStatesEnumType[][] | null;
 
-  @Column(DataType.INTEGER)
+  @Default(0)
+  @Column({ type: DataType.INTEGER, allowNull: false })
   timer: number;
 
+  @Default(3)
+  @Column({ type: DataType.INTEGER, allowNull: false })
+  hints: number;
+
   @Default(false)
-  @Column(DataType.BOOLEAN)
+  @Column({ type: DataType.BOOLEAN, allowNull: false })
   isFinished: boolean;
 
   @Column(DataType.INTEGER)
   rating: number | null;
+
+  @BelongsTo(() => User)
+  user: User;
+
+  @BelongsTo(() => Nonogram)
+  nonogram: Nonogram;
 }
