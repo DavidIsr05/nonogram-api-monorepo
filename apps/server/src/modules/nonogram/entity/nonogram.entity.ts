@@ -5,7 +5,6 @@ import {
   Default,
   ForeignKey,
   HasMany,
-  HasOne,
   Model,
   PrimaryKey,
   Table,
@@ -35,7 +34,13 @@ export class Nonogram extends Model<Partial<Nonogram>> {
   completeNonogramImageBase64: Text;
 
   @Column({ type: DataType.DOUBLE, allowNull: false })
-  pixelHighlightValue: number;
+  mainObjectDimFactor: number;
+
+  @Column({
+    type: DataType.ENUM(...Object.values(NonogramDifficulties)),
+    allowNull: false,
+  })
+  difficulty: NonogramDifficultiesEnumType;
 
   @ForeignKey(() => User)
   @Column({ type: DataType.UUID, allowNull: false })
@@ -44,12 +49,6 @@ export class Nonogram extends Model<Partial<Nonogram>> {
   @Default(true)
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   isPrivate: boolean;
-
-  @Column({
-    type: DataType.ENUM(...Object.values(NonogramDifficulties)),
-    allowNull: false,
-  })
-  difficulty: NonogramDifficultiesEnumType;
 
   @BelongsTo(() => User)
   user: User;

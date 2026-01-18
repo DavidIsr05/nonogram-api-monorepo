@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createZodDto } from 'nestjs-zod';
-import { NonogramDifficulties, NonogramDifficultiesEnumValues } from '../enums';
+import { NonogramDifficultiesEnumValues } from '../enums';
 
 export const NonogramSchema = z
   .object({
@@ -8,10 +8,10 @@ export const NonogramSchema = z
     nonogram: z.array(z.array(z.boolean())),
     previewImageBase64: z.string(),
     completeNonogramImageBase64: z.string(),
-    pixelHighlightValue: z.number(),
-    creatorId: z.string().uuid(),
-    isPrivate: z.boolean(),
+    mainObjectDimFactor: z.number(),
     difficulty: NonogramDifficultiesEnumValues,
+    creatorId: z.string().uuid(),
+    isPrivate: z.boolean().default(true),
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime(),
     deletedAt: z.string().datetime().nullable(),

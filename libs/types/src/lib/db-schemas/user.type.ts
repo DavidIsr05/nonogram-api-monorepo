@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import { createZodDto } from 'nestjs-zod';
-import { uuid, uuid4 } from 'zod/v4/core/regexes.cjs';
 
 export const UserSchema = z
   .object({
