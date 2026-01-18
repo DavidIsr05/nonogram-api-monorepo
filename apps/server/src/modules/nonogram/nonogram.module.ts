@@ -3,10 +3,11 @@ import { NonogramService } from './nonogram.service';
 import { NonogramController } from './nonogram.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { Nonogram } from './entity/nonogram.entity';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   providers: [NonogramService],
   controllers: [NonogramController],
-  imports: [SequelizeModule.forFeature([Nonogram])],
+  imports: [SequelizeModule.forFeature([Nonogram]), HttpModule],
 })
 export class NonogramModule {}

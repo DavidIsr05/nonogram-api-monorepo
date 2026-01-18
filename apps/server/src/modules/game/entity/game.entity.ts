@@ -1,11 +1,9 @@
 import {
-  AllowNull,
   BelongsTo,
   Column,
   DataType,
   Default,
   ForeignKey,
-  HasOne,
   Model,
   PrimaryKey,
   Table,
