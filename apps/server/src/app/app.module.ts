@@ -7,6 +7,7 @@ import { Game } from '../modules/game/entity/game.entity';
 import { UserModule } from '../modules/user/user.module';
 import { NonogramModule } from '../modules/nonogram/nonogram.module';
 import { GameModule } from '../modules/game/game.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { GameModule } from '../modules/game/game.module';
     UserModule,
     NonogramModule,
     GameModule,
+    ConfigModule.forRoot(),
   ],
 })
 export class AppModule {}

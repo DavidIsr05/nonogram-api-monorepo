@@ -19,14 +19,14 @@ export class NonogramService {
 
   async generateNonogram(
     generateNonogramDto: generateNonogramDto
-  ): Promise<any> {
-    const url = 'http://localhost:8080/api/v1/generate-nonogram';
+  ): Promise<generateNonogramDto> {
+    const url = process.env.URL_TO_ALGORITHM;
 
-    const response$ = this.httpService
+    const response = this.httpService
       .post(url, generateNonogramDto)
       .pipe(map((response) => response.data));
 
-    const responseData = await firstValueFrom(response$);
+    const responseData = await firstValueFrom(response);
     return responseData;
   }
 }
