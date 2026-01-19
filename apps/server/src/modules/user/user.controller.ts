@@ -1,4 +1,12 @@
-import { Body, Controller, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  Post,
+  Request,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '@nonogram-api-monorepo/types';
 import { Public } from '../auth/decorators/public.decorator';
@@ -16,6 +24,23 @@ export class UserController {
     );
   }
 
+  @Get()
+  getUser(@Request() req) {
+    return this.userService.findOne(req.user.id);
+  }
+
+  @Get('global-leaders')
+  getGlobalLeaders() {
+    return this.userService.getGlobalLeaders();
+  }
+
   @Patch('edit')
-  edituser(@Body() updateUserDto: UpdateUserDto) {}
+  edituser(@Body() updateUserDto: UpdateUserDto, @Request() req) {
+    return this.userService.updateUser(req.user.id, updateUserDto);
+  }
+
+  @Delete()
+  deleteUser(@Request() req) {
+    return this.userService.deleteUser(req.user.id);
+  }
 }

@@ -20,10 +20,39 @@ export class UserService {
     return this.userModel.create(createUserDto);
   }
 
-  async findOne(personalNumber: number): Promise<User | undefined> {
+  async findOne(id): Promise<User | undefined> {
     return this.userModel.findOne({
       where: {
-        personalNumber: personalNumber,
+        id: id,
+      },
+    });
+  }
+
+  async getGlobalLeaders() {
+    return await this.userModel.findAll({
+      limit: 10,
+      order: [['globalScore', 'DESC']],
+    });
+  }
+
+  async updateUser(id, userUpdateDto) {
+    const user = await this.userModel.findOne({
+      where: {
+        id: id,
+      },
+    });
+
+    user.set({
+      ...userUpdateDto,
+    });
+
+    return await user.save();
+  }
+
+  deleteUser(id) {
+    this.userModel.destroy({
+      where: {
+        id: id,
       },
     });
   }
