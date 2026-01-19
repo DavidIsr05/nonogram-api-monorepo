@@ -8,8 +8,6 @@ export const UserSchema = z
     password: z.string(), //TODO update the password field to be encripted
     personalNumber: z.number().refine((val) => `${val}`.length === 7),
     isAdmin: z.boolean().default(false),
-    globalScore: z.number().default(0),
-    totalPlayTime: z.number().default(0),
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime(),
     deletedAt: z.string().datetime().nullable(),
@@ -19,8 +17,6 @@ export const UserSchema = z
 export const CreateUserSchema = UserSchema.omit({
   id: true,
   isAdmin: true,
-  globalScore: true,
-  totalPlayTime: true,
   createdAt: true,
   updatedAt: true,
   deletedAt: true,

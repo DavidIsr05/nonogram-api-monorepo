@@ -26,13 +26,11 @@ export class UserController {
 
   @Get()
   getUser(@Request() req) {
-    return this.userService.findOne(req.user.id);
+    return this.userService.getUser(req.user.id);
   }
 
   @Get('global-leaders')
-  getGlobalLeaders() {
-    return this.userService.getGlobalLeaders();
-  }
+  getGlobalLeaders() {}
 
   @Patch('edit')
   edituser(@Body() updateUserDto: UpdateUserDto, @Request() req) {

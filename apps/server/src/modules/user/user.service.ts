@@ -20,7 +20,15 @@ export class UserService {
     return this.userModel.create(createUserDto);
   }
 
-  async findOne(id): Promise<User | undefined> {
+  async findOne(personalNumber): Promise<User | undefined> {
+    return this.userModel.findOne({
+      where: {
+        personalNumber: personalNumber,
+      },
+    });
+  }
+
+  async getUser(id) {
     return this.userModel.findOne({
       where: {
         id: id,
@@ -28,12 +36,7 @@ export class UserService {
     });
   }
 
-  async getGlobalLeaders() {
-    return await this.userModel.findAll({
-      limit: 10,
-      order: [['globalScore', 'DESC']],
-    });
-  }
+  async getGlobalLeaders() {}
 
   async updateUser(id, userUpdateDto) {
     const user = await this.userModel.findOne({

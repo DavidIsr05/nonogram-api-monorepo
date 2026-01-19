@@ -30,14 +30,6 @@ export class User extends Model<Partial<User>> {
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   isAdmin: boolean;
 
-  @Default(0)
-  @Column({ type: DataType.INTEGER, allowNull: false })
-  globalScore: number;
-
-  @Default(0)
-  @Column({ type: DataType.INTEGER, allowNull: false })
-  totalPlayTime: number;
-
   @HasMany(() => Game)
   games: Game[];
 
