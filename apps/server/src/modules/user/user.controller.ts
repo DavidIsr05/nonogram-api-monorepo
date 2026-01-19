@@ -1,13 +1,21 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Patch, Post } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from '@nonogram-api-monorepo/types';
+import { CreateUserDto, UpdateUserDto } from '@nonogram-api-monorepo/types';
+import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Post('create')
+  @Public()
+  @Post('signup')
   createUser(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(createUserDto);
+    return this.userService.createUser(
+      createUserDto.personalNumber,
+      createUserDto
+    );
   }
+
+  @Patch('edit')
+  edituser(@Body() updateUserDto: UpdateUserDto) {}
 }

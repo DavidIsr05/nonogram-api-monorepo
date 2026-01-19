@@ -8,6 +8,7 @@ import { UserModule } from '../modules/user/user.module';
 import { NonogramModule } from '../modules/nonogram/nonogram.module';
 import { GameModule } from '../modules/game/game.module';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from '../modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { ConfigModule } from '@nestjs/config';
     UserModule,
     NonogramModule,
     GameModule,
+    AuthModule,
     ConfigModule.forRoot(),
   ],
 })

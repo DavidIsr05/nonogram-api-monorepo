@@ -32,11 +32,4 @@ export class UserDto extends createZodDto(UserSchema) {}
 
 export class CreateUserDto extends createZodDto(CreateUserSchema) {}
 
-export class UpdateuserDto extends createZodDto(UpdateUserSchema) {}
-
-export class SignInDto extends createZodDto(
-  UserSchema.extend({
-    personalNumber: z.number(),
-    password: z.string(), //TODO update the password field to be encripted
-  })
-) {}
+export class UpdateUserDto extends createZodDto(UpdateUserSchema) {}
