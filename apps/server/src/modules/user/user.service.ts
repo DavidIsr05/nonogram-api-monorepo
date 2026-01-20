@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entity/user.entity';
-import { UserAlreadyExistsException } from './exceptions/user-already-exists.exception';
+import { UserAlreadyExistsException } from './exceptions';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
   constructor(@InjectModel(User) private readonly userModel: typeof User) {}
 
-  async createUser(personalNumber, createUserDto) {
+  async createUser(createUserDto) {
     const user = await this.userModel.findOne({
       where: {
-        personalNumber: personalNumber,
+        personalNumber: createUserDto.personalNumber,
       },
     });
 
     if (user) {
-      throw new UserAlreadyExistsException(personalNumber);
+      throw new UserAlreadyExistsException(createUserDto.personalNumber);
     }
 
     const saltRounds = parseInt(process.env.BCRYPT_SALT);
@@ -30,7 +30,7 @@ export class UserService {
     this.userModel.create(createUserDto);
   }
 
-  async findOne(personalNumber): Promise<User | undefined> {
+  async findOne(personalNumber): Promise<User | null> {
     return this.userModel.findOne({
       where: {
         personalNumber: personalNumber,
@@ -40,17 +40,13 @@ export class UserService {
 
   async getUser(id) {
     return this.userModel.findOne({
-      where: {
-        id: id,
-      },
+      where: { id },
     });
   }
 
   async updateUser(id, userUpdateDto) {
     const user = await this.userModel.findOne({
-      where: {
-        id: id,
-      },
+      where: { id },
     });
 
     user.set({
@@ -62,9 +58,7 @@ export class UserService {
 
   deleteUser(id) {
     this.userModel.destroy({
-      where: {
-        id: id,
-      },
+      where: { id },
     });
   }
 }

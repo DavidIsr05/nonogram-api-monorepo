@@ -14,10 +14,10 @@ export class NonogramService {
     private readonly httpService: HttpService
   ) {}
 
-  createNonogram(createNonogramDto, id) {
+  createNonogram(createNonogramDto, creatorId) {
     createNonogramDto = {
       ...createNonogramDto,
-      creatorId: id,
+      creatorId: creatorId,
     };
 
     return this.nonogramModel.create(createNonogramDto);
@@ -36,8 +36,6 @@ export class NonogramService {
     return responseData;
   }
 
-  async getGlobalLeaders() {}
-
   async getNonogramLeaders(id) {
     return await this.nonogramModel.findAll({
       include: [
@@ -49,9 +47,7 @@ export class NonogramService {
           attributes: ['userId', 'timer'],
         },
       ],
-      where: {
-        id: id,
-      },
+      where: { id },
       limit: 10,
       attributes: ['id'],
     });

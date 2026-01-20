@@ -7,7 +7,7 @@ export class GameController {
   constructor(private gameService: GameService) {}
 
   @Post('create')
-  createGame(@Body() createGameDto: CreateGameDto, @Request() req) {
-    return this.gameService.createGame(createGameDto, req.user.id);
+  createGame(@Body() createGameDto: CreateGameDto, @Request() request) {
+    return this.gameService.createGame(createGameDto, request.user.id);
   }
 }

@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '@nonogram-api-monorepo/types';
-import { Public } from '../auth/decorators/public.decorator';
+import { Public } from '../auth';
 
 @Controller('user')
 export class UserController {
@@ -18,24 +18,21 @@ export class UserController {
   @Public()
   @Post('signup')
   createUser(@Body() createUserDto: CreateUserDto) {
-    return this.userService.createUser(
-      createUserDto.personalNumber,
-      createUserDto
-    );
+    return this.userService.createUser(createUserDto);
   }
 
   @Get()
-  getUser(@Request() req) {
-    return this.userService.getUser(req.user.id);
+  getUser(@Request() request) {
+    return this.userService.getUser(request.user.id);
   }
 
   @Patch('edit')
-  edituser(@Body() updateUserDto: UpdateUserDto, @Request() req) {
-    return this.userService.updateUser(req.user.id, updateUserDto);
+  edituser(@Body() updateUserDto: UpdateUserDto, @Request() request) {
+    return this.userService.updateUser(request.user.id, updateUserDto);
   }
 
   @Delete()
-  deleteUser(@Request() req) {
-    return this.userService.deleteUser(req.user.id);
+  deleteUser(@Request() request) {
+    return this.userService.deleteUser(request.user.id);
   }
 }
