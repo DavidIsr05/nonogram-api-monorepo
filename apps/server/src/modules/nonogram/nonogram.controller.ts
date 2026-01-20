@@ -13,7 +13,7 @@ export class NonogramController {
   createNonogram(@Body() createNonogramDto: CreateNonogramDto, @Request() req) {
     return this.nonogramService.createNonogram(createNonogramDto, req.user.id);
   }
-
+  //TODO maybe make so generate route only returns preview image and create sends req to spring again and saves it then?
   @Post('generate')
   generateNonogram(@Body() generateNonogramDto: generateNonogramDto) {
     return this.nonogramService.generateNonogram(generateNonogramDto);

@@ -57,7 +57,7 @@ export class UserService {
       ...userUpdateDto,
     });
 
-    return await user.save();
+    await user.save();
   }
 
   deleteUser(id) {
