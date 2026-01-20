@@ -7,7 +7,7 @@ export const generateNonogramSchema = z
     imageBase64: z.string(),
     difficulty: NonogramDifficultiesEnumValues,
     mainObjectDimFactor: z.number(),
-    previewImageHighlightColorIntRGB: z.number(),
+    previewImageIntRGB: z.number(),
   })
   .strict();
 

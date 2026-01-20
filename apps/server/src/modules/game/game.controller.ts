@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Request } from '@nestjs/common';
 import { GameService } from './game.service';
 import { CreateGameDto } from '@nonogram-api-monorepo/types';
 
@@ -7,7 +7,7 @@ export class GameController {
   constructor(private gameService: GameService) {}
 
   @Post('create')
-  createGame(@Body() createGameDto: CreateGameDto) {
-    return this.gameService.createGame(createGameDto);
+  createGame(@Body() createGameDto: CreateGameDto, @Request() request) {
+    return this.gameService.createGame(createGameDto, request.user.id);
   }
 }

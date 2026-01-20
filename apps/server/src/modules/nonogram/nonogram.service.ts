@@ -5,6 +5,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, map } from 'rxjs';
 import { generateNonogramDto } from '@nonogram-api-monorepo/types';
+import { Game } from '../game/entity/game.entity';
 
 @Injectable()
 export class NonogramService {
@@ -13,7 +14,12 @@ export class NonogramService {
     private readonly httpService: HttpService
   ) {}
 
-  createNonogram(createNonogramDto) {
+  createNonogram(createNonogramDto, creatorId) {
+    createNonogramDto = {
+      ...createNonogramDto,
+      creatorId: creatorId,
+    };
+
     return this.nonogramModel.create(createNonogramDto);
   }
 
@@ -28,5 +34,22 @@ export class NonogramService {
 
     const responseData = await firstValueFrom(response);
     return responseData;
+  }
+
+  async getNonogramLeaders(id) {
+    return await this.nonogramModel.findAll({
+      include: [
+        {
+          model: Game,
+          where: {
+            isFinished: true,
+          },
+          attributes: ['userId', 'timer'],
+        },
+      ],
+      where: { id },
+      limit: 10,
+      attributes: ['id'],
+    });
   }
 }

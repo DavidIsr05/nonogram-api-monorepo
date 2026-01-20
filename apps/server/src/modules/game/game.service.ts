@@ -6,7 +6,12 @@ import { Game } from './entity/game.entity';
 export class GameService {
   constructor(@InjectModel(Game) private readonly gameModel: typeof Game) {}
 
-  createGame(createGameDto) {
+  createGame(createGameDto, userId) {
+    createGameDto = {
+      ...createGameDto,
+      userId: userId,
+    };
+
     return this.gameModel.create(createGameDto);
   }
 }
