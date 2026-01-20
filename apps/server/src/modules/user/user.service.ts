@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entity/user.entity';
 import { UserAlreadyExistsException } from './exceptions/user-already-exists.exception';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -17,7 +18,16 @@ export class UserService {
     if (user) {
       throw new UserAlreadyExistsException(personalNumber);
     }
-    return this.userModel.create(createUserDto);
+
+    const saltRounds = parseInt(process.env.BCRYPT_SALT);
+    const salt = await bcrypt.genSalt(saltRounds);
+
+    createUserDto = {
+      ...createUserDto,
+      password: await bcrypt.hash(createUserDto.password, salt),
+    };
+
+    this.userModel.create(createUserDto);
   }
 
   async findOne(personalNumber): Promise<User | undefined> {
