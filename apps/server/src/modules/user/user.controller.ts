@@ -29,9 +29,6 @@ export class UserController {
     return this.userService.getUser(req.user.id);
   }
 
-  @Get('global-leaders')
-  getGlobalLeaders() {}
-
   @Patch('edit')
   edituser(@Body() updateUserDto: UpdateUserDto, @Request() req) {
     return this.userService.updateUser(req.user.id, updateUserDto);

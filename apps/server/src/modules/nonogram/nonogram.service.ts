@@ -38,7 +38,7 @@ export class NonogramService {
 
   async getGlobalLeaders() {}
 
-  async getNonogramLeaders() {
+  async getNonogramLeaders(id) {
     return await this.nonogramModel.findAll({
       include: [
         {
@@ -46,10 +46,14 @@ export class NonogramService {
           where: {
             isFinished: true,
           },
+          attributes: ['userId', 'timer'],
         },
       ],
+      where: {
+        id: id,
+      },
       limit: 10,
-      order: [['timer', 'DESC']],
+      attributes: ['id'],
     });
   }
 }

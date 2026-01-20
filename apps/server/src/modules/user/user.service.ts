@@ -36,8 +36,6 @@ export class UserService {
     });
   }
 
-  async getGlobalLeaders() {}
-
   async updateUser(id, userUpdateDto) {
     const user = await this.userModel.findOne({
       where: {

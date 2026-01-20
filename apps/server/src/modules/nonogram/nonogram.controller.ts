@@ -19,8 +19,8 @@ export class NonogramController {
     return this.nonogramService.generateNonogram(generateNonogramDto);
   }
 
-  @Get('nonogram-leaders')
-  getNonogramLeaders() {
-    return this.nonogramService.getNonogramLeaders();
+  @Post('nonogram-leaders')
+  getNonogramLeaders(@Body() id) {
+    return this.nonogramService.getNonogramLeaders(id.id);
   }
 }
