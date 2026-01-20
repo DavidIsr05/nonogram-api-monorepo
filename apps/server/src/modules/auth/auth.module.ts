@@ -22,7 +22,9 @@ import { AuthGuard } from './auth.guard';
     JwtModule.register({
       global: true,
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '10d' },
+      signOptions: {
+        expiresIn: parseInt(process.env.JWT_EXPIRATION_TIME_IN_SECONDS),
+      },
     }),
   ],
   exports: [AuthService],
