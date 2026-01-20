@@ -5,7 +5,7 @@ export const UserSchema = z
   .object({
     id: z.string().uuid(),
     username: z.string().max(16),
-    password: z.string(), //TODO update the password field to be encripted
+    password: z.string(),
     personalNumber: z.number().refine((val) => `${val}`.length === 7),
     isAdmin: z.boolean().default(false),
     createdAt: z.string().datetime(),

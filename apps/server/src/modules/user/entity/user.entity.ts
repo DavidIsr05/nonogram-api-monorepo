@@ -21,7 +21,7 @@ export class User extends Model<Partial<User>> {
   username: string;
 
   @Column({ type: DataType.STRING, allowNull: false })
-  password: string; //TODO update the password field to be encripted
+  password: string;
 
   @Column({ type: DataType.INTEGER, allowNull: false, unique: true })
   personalNumber: number;
