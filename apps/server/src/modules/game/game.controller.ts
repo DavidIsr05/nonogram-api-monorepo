@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { GameService } from './game.service';
 import { CreateGameDto } from '@nonogram-api-monorepo/types';
 import { User } from '../../common/decorators';
