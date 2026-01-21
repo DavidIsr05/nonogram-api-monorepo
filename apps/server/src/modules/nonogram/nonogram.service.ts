@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
-
 import { Nonogram } from './entity/nonogram.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, map } from 'rxjs';
-import { generateNonogramDto } from '@nonogram-api-monorepo/types';
+import {
+  TileStatesEnumValues,
+  generateNonogramDto,
+} from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 
 @Injectable()
@@ -51,5 +53,21 @@ export class NonogramService {
       limit: 10,
       attributes: ['id'],
     });
+  }
+
+  async getNonogramSize(id): Promise<number | null> {
+    const nonogramDifficulty = await this.nonogramModel.findOne({
+      where: { id },
+      attributes: ['difficulty'],
+    });
+
+    const nonogramSize =
+      20 +
+      10 *
+        Object.keys(TileStatesEnumValues).indexOf(
+          nonogramDifficulty.difficulty
+        );
+
+    return nonogramSize;
   }
 }
