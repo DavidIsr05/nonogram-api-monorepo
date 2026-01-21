@@ -11,9 +11,10 @@ export class AuthService {
   ) {}
 
   async signIn(personalNumber: number, password: string) {
-    const user = await this.userService.findOne(personalNumber);
-
-    if (!bcrypt.compare(password, user.password)) {
+    const user = await this.userService.getUserByPersonalNumber(personalNumber);
+    console.log(password);
+    console.log(user.password);
+    if (!(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException();
     }
 

@@ -20,7 +20,6 @@ export const GameSchema = z
 
 export const CreateGameSchema = GameSchema.omit({
   id: true,
-  userId: true,
   uncompletedNonogram: true,
   timer: true,
   hints: true,

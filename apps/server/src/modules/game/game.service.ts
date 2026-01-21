@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Game } from './entity/game.entity';
 import { TileStates, TileStatesEnumType } from '@nonogram-api-monorepo/types';
@@ -12,8 +12,16 @@ export class GameService {
   ) {}
 
   async createGame(createGameDto, userId) {
-    const nonogramSize: number = await this.nonogramModel.getNonogramSize(
+    if (createGameDto.userId !== userId) {
+      throw new UnauthorizedException();
+    }
+
+    const currentNonogram = await this.nonogramModel.findOne(
       createGameDto.nonogramId
+    );
+
+    const nonogramSize: number = await this.nonogramModel.getNonogramSize(
+      currentNonogram
     );
 
     const blankUncompletedNonogram: TileStatesEnumType[][] = Array.from(
