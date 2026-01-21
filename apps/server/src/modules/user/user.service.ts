@@ -3,11 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entity/user.entity';
 import { UserAlreadyExistsException } from './exceptions';
 import * as bcrypt from 'bcrypt';
-import { plainToInstance } from 'class-transformer';
-import {
-  UserResponseDto,
-  UserResponseSchema,
-} from '@nonogram-api-monorepo/types';
+import { UserResponseSchema } from '@nonogram-api-monorepo/types';
 
 @Injectable()
 export class UserService {

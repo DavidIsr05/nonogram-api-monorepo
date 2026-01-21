@@ -38,8 +38,7 @@ export class NonogramService {
       .post(url, generateNonogramDto)
       .pipe(map((response) => response.data));
 
-    const responseData = await firstValueFrom(response);
-    return responseData;
+    return await firstValueFrom(response);
   }
 
   async getNonogramLeaders(id) {
@@ -70,7 +69,7 @@ export class NonogramService {
     return nonogramSize;
   }
 
-  async findOne(id): Promise<Nonogram | null> {
+  async getNonogramById(id): Promise<Nonogram | null> {
     return this.nonogramModel.findOne({
       where: { id },
     });
