@@ -16,7 +16,7 @@ export class GameService {
       throw new UnauthorizedException();
     }
 
-    const currentNonogram = await this.nonogramModel.findOne(
+    const currentNonogram = await this.nonogramModel.getNonogramById(
       createGameDto.nonogramId
     );
 
@@ -35,6 +35,8 @@ export class GameService {
       uncompletedNonogram: blankUncompletedNonogram,
     };
 
-    return this.gameModel.create(createGameDto);
+    try {
+      return this.gameModel.create(createGameDto);
+    } catch (error) {}
   }
 }

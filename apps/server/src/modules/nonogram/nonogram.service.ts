@@ -8,6 +8,7 @@ import {
   generateNonogramDto,
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
+import { NonogramNotFoundException } from '../../common';
 
 @Injectable()
 export class NonogramService {
@@ -26,7 +27,9 @@ export class NonogramService {
       creatorId: creatorId,
     };
 
-    return this.nonogramModel.create(createNonogramDto);
+    try {
+      return this.nonogramModel.create(createNonogramDto);
+    } catch (error) {}
   }
 
   async generateNonogram(
@@ -38,24 +41,28 @@ export class NonogramService {
       .post(url, generateNonogramDto)
       .pipe(map((response) => response.data));
 
-    return await firstValueFrom(response);
+    try {
+      return await firstValueFrom(response);
+    } catch (error) {}
   }
 
   async getNonogramLeaders(id) {
-    return await this.nonogramModel.findAll({
-      include: [
-        {
-          model: Game,
-          where: {
-            isFinished: true,
+    try {
+      return await this.nonogramModel.findAll({
+        include: [
+          {
+            model: Game,
+            where: {
+              isFinished: true,
+            },
+            attributes: ['userId', 'timer'],
           },
-          attributes: ['userId', 'timer'],
-        },
-      ],
-      where: { id },
-      limit: 10,
-      attributes: ['id'],
-    });
+        ],
+        where: { id },
+        limit: 10,
+        attributes: ['id'],
+      });
+    } catch (error) {}
   }
 
   async getNonogramSize(nonogram): Promise<number | null> {
@@ -70,8 +77,12 @@ export class NonogramService {
   }
 
   async getNonogramById(id): Promise<Nonogram | null> {
-    return this.nonogramModel.findOne({
-      where: { id },
-    });
+    try {
+      return this.nonogramModel.findOne({
+        where: { id },
+      });
+    } catch (error) {
+      throw new NonogramNotFoundException(id);
+    }
   }
 }

@@ -1,7 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entity/user.entity';
-import { UserAlreadyExistsException } from './exceptions';
+import {
+  UserAlreadyExistsException,
+  UserNotFoundException,
+} from '../../common';
 import * as bcrypt from 'bcrypt';
 import { UserResponseSchema } from '@nonogram-api-monorepo/types';
 
@@ -28,17 +31,23 @@ export class UserService {
       password: await bcrypt.hash(createUserDto.password, salt),
     };
 
-    return UserResponseSchema.parse(
-      (await this.userModel.create(createUserDto)).toJSON()
-    );
+    try {
+      return UserResponseSchema.parse(
+        (await this.userModel.create(createUserDto)).toJSON()
+      );
+    } catch (error) {}
   }
 
   async getUserByPersonalNumber(personalNumber): Promise<User | null> {
-    return await this.userModel.findOne({
-      where: {
-        personalNumber: personalNumber,
-      },
-    });
+    try {
+      return await this.userModel.findOne({
+        where: {
+          personalNumber: personalNumber,
+        },
+      });
+    } catch (error) {
+      throw new UserNotFoundException(personalNumber);
+    }
   }
 
   async getUserById(paramId, userId) {
@@ -46,13 +55,17 @@ export class UserService {
       throw new UnauthorizedException();
     }
 
-    return UserResponseSchema.parse(
-      (
-        await this.userModel.findOne({
-          where: { id: userId },
-        })
-      ).toJSON()
-    );
+    try {
+      return UserResponseSchema.parse(
+        (
+          await this.userModel.findOne({
+            where: { id: userId },
+          })
+        ).toJSON()
+      );
+    } catch (error) {
+      throw new UserNotFoundException(userId);
+    }
   }
 
   async updateUser(id, userUpdateDto) {
@@ -78,7 +91,9 @@ export class UserService {
       ...userUpdateDto,
     });
 
-    return UserResponseSchema.parse((await user.save()).toJSON());
+    try {
+      return UserResponseSchema.parse((await user.save()).toJSON());
+    } catch (error) {}
   }
 
   async deleteUser(id, userId) {
@@ -86,8 +101,10 @@ export class UserService {
       throw new UnauthorizedException();
     }
 
-    return await this.userModel.destroy({
-      where: { id },
-    });
+    try {
+      return await this.userModel.destroy({
+        where: { id },
+      });
+    } catch (error) {}
   }
 }
