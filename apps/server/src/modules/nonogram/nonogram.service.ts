@@ -1,10 +1,12 @@
-import { Injectable } from '@nestjs/common';
-
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { Nonogram } from './entity/nonogram.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, map } from 'rxjs';
-import { generateNonogramDto } from '@nonogram-api-monorepo/types';
+import {
+  TileStatesEnumValues,
+  generateNonogramDto,
+} from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 
 @Injectable()
@@ -15,6 +17,10 @@ export class NonogramService {
   ) {}
 
   createNonogram(createNonogramDto, creatorId) {
+    if (createNonogramDto.userId !== creatorId) {
+      throw new UnauthorizedException();
+    }
+
     createNonogramDto = {
       ...createNonogramDto,
       creatorId: creatorId,
@@ -32,8 +38,7 @@ export class NonogramService {
       .post(url, generateNonogramDto)
       .pipe(map((response) => response.data));
 
-    const responseData = await firstValueFrom(response);
-    return responseData;
+    return await firstValueFrom(response);
   }
 
   async getNonogramLeaders(id) {
@@ -50,6 +55,23 @@ export class NonogramService {
       where: { id },
       limit: 10,
       attributes: ['id'],
+    });
+  }
+
+  async getNonogramSize(nonogram): Promise<number | null> {
+    const defaultNonogramSize = 20;
+    const sizeFactorBasedOnDifficulty = Object.keys(
+      TileStatesEnumValues
+    ).indexOf(nonogram.difficulty);
+
+    const nonogramSize = defaultNonogramSize + 10 * sizeFactorBasedOnDifficulty;
+
+    return nonogramSize;
+  }
+
+  async getNonogramById(id): Promise<Nonogram | null> {
+    return this.nonogramModel.findOne({
+      where: { id },
     });
   }
 }

@@ -1,7 +1,7 @@
 import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserSignInDto } from '@nonogram-api-monorepo/types';
-import { Public } from './decorators';
+import { Public } from '../../common/decorators';
 
 @Controller('auth')
 export class AuthController {

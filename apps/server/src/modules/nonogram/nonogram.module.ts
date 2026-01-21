@@ -9,5 +9,6 @@ import { HttpModule } from '@nestjs/axios';
   providers: [NonogramService],
   controllers: [NonogramController],
   imports: [SequelizeModule.forFeature([Nonogram]), HttpModule],
+  exports: [NonogramService],
 })
 export class NonogramModule {}

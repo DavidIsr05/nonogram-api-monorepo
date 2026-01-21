@@ -1,10 +1,12 @@
-import { Body, Controller, Post, Request } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { NonogramService } from './nonogram.service';
 import {
   CreateNonogramDto,
   generateNonogramDto,
   nonogramLeadersRequestDto,
 } from '@nonogram-api-monorepo/types';
+import { User as UserEntity } from '../user/entity/user.entity';
+import { CurrentUser } from '../../common/decorators';
 
 @Controller('nonogram')
 export class NonogramController {
@@ -13,11 +15,11 @@ export class NonogramController {
   @Post('create')
   createNonogram(
     @Body() createNonogramDto: CreateNonogramDto,
-    @Request() request
+    @CurrentUser() CurrentUser: UserEntity
   ) {
     return this.nonogramService.createNonogram(
       createNonogramDto,
-      request.user.id
+      CurrentUser.id
     );
   }
   //TODO maybe make so generate route only returns preview image and create sends request to spring again and saves it then?

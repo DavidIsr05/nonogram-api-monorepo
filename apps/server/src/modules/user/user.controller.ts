@@ -3,17 +3,23 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
-  Request,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '@nonogram-api-monorepo/types';
-import { Public } from '../auth';
+import { Public, CurrentUser } from '../../common/decorators';
+import { User } from './entity/user.entity';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @Get(':id')
+  getUserById(@CurrentUser() currentUser: User, @Param() paramId: string) {
+    return this.userService.getUserById(paramId, currentUser.id);
+  }
 
   @Public()
   @Post('signup')
@@ -21,18 +27,16 @@ export class UserController {
     return this.userService.createUser(createUserDto);
   }
 
-  @Get()
-  getUser(@Request() request) {
-    return this.userService.getUser(request.user.id);
+  @Patch()
+  updateUser(
+    @Body() updateUserDto: UpdateUserDto,
+    @CurrentUser() currentUser: User
+  ) {
+    return this.userService.updateUser(currentUser.id, updateUserDto);
   }
 
-  @Patch('edit')
-  edituser(@Body() updateUserDto: UpdateUserDto, @Request() request) {
-    return this.userService.updateUser(request.user.id, updateUserDto);
-  }
-
-  @Delete()
-  deleteUser(@Request() request) {
-    return this.userService.deleteUser(request.user.id);
+  @Delete(':id')
+  deleteUser(@CurrentUser() currentUser: User, @Param() paramId: string) {
+    return this.userService.deleteUser(currentUser.id, paramId);
   }
 }

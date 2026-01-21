@@ -7,6 +7,6 @@ export enum TileStates {
   MISTAKE = 'MISTAKE',
 }
 
-const TileStatesEnumValues = z.nativeEnum(TileStates);
+export const TileStatesEnumValues = z.nativeEnum(TileStates);
 
 export type TileStatesEnumType = z.infer<typeof TileStatesEnumValues>;
