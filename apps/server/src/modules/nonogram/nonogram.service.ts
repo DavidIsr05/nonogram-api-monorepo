@@ -8,7 +8,6 @@ import {
   generateNonogramDto,
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
-import { NonogramNotFoundException } from '../../common';
 
 @Injectable()
 export class NonogramService {
@@ -78,11 +77,11 @@ export class NonogramService {
 
   async getNonogramById(id): Promise<Nonogram | null> {
     try {
-      return this.nonogramModel.findOne({
+      return await this.nonogramModel.findOne({
         where: { id },
       });
     } catch (error) {
-      throw new NonogramNotFoundException(id);
+      throw new error();
     }
   }
 }

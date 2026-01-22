@@ -1,4 +1,12 @@
-import { Body, Controller, Post, UsePipes } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Post,
+  UsePipes,
+} from '@nestjs/common';
 import { NonogramService } from './nonogram.service';
 import {
   CreateNonogramDto,
@@ -24,7 +32,7 @@ export class NonogramController {
       CurrentUser.id
     );
   }
-  //TODO maybe make so generate route only returns preview image and create sends request to spring again and saves it then?
+  //TODO when genearting return everything encrypted other then preview and then on create we get the object back from cleint decrypt everything and save it
   @Post('generate')
   @UsePipes(new ZodValidationPipe(generateNonogramDto))
   generateNonogram(@Body() generateNonogramDto: generateNonogramDto) {
@@ -34,5 +42,10 @@ export class NonogramController {
   @Post('nonogram-leaders')
   getNonogramLeaders(@Body() nonogramId: nonogramLeadersRequestDto) {
     return this.nonogramService.getNonogramLeaders(nonogramId);
+  }
+
+  @Get(':id')
+  getNonogram(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
+    return this.nonogramService.getNonogramById(id);
   }
 }

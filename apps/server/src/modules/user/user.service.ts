@@ -13,11 +13,9 @@ export class UserService {
   constructor(@InjectModel(User) private readonly userModel: typeof User) {}
 
   async createUser(createUserDto) {
-    const user = await this.userModel.findOne({
-      where: {
-        personalNumber: createUserDto.personalNumber,
-      },
-    });
+    const user = await this.getUserByPersonalNumber(
+      createUserDto.personalNumber
+    );
 
     if (user) {
       throw new UserAlreadyExistsException(createUserDto.personalNumber);
@@ -35,7 +33,9 @@ export class UserService {
       return UserResponseSchema.parse(
         (await this.userModel.create(createUserDto)).toJSON()
       );
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   async getUserByPersonalNumber(personalNumber): Promise<User | null> {
@@ -45,9 +45,7 @@ export class UserService {
           personalNumber: personalNumber,
         },
       });
-    } catch (error) {
-      throw new UserNotFoundException(personalNumber);
-    }
+    } catch (error) {}
   }
 
   async getUserById(paramId, userId) {
