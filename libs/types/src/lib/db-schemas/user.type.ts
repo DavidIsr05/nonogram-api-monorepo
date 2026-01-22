@@ -27,7 +27,9 @@ export const CreateUserSchema = UserSchema.omit({
   deletedAt: true,
 }).strict();
 
-export const UpdateUserSchema = UserSchema.partial().required({ id: true });
+export const UpdateUserSchema = UserSchema.partial()
+  .required({ id: true })
+  .strict();
 
 export class UserDto extends createZodDto(UserSchema) {}
 

@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -25,7 +26,7 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException('you shall not pass');
+      throw new UnauthorizedException('You must log in first');
     }
     try {
       const payload = await this.jwtService.verifyAsync(token, {
@@ -33,7 +34,9 @@ export class AuthGuard implements CanActivate {
       });
       request['user'] = payload;
     } catch {
-      throw new UnauthorizedException('you shall not pass');
+      throw new ForbiddenException(
+        'You are not allowed to perform this action'
+      );
     }
     return true;
   }

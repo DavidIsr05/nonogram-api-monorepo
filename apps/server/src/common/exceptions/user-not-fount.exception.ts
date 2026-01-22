@@ -1,11 +1,14 @@
 import { NotFoundException } from '@nestjs/common';
 
 export class UserNotFoundException extends NotFoundException {
-  constructor(personalNumber?: number, id?: string) {
+  constructor(error: any, personalNumber?: number, id?: string) {
     if (personalNumber) {
-      super(`Could not find a user with personal number: ${personalNumber}`);
+      super(
+        `Could not find a user with personal number: ${personalNumber}`,
+        error
+      );
     } else {
-      super(`Could not find a user with id: ${id}`);
+      super(`Could not find a user with id: ${id}`, error);
     }
   }
 }

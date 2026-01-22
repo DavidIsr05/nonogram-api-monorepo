@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Game } from './entity/game.entity';
 import { TileStates, TileStatesEnumType } from '@nonogram-api-monorepo/types';
@@ -13,8 +17,8 @@ export class GameService {
 
   async createGame(createGameDto, userId) {
     if (createGameDto.userId !== userId) {
-      throw new UnauthorizedException();
-    }
+      throw new ForbiddenException('You can not create games for other users');
+    } //TODO need to check with what nonogram user is trying to create game as well
 
     const currentNonogram = await this.nonogramModel.getNonogramById(
       createGameDto.nonogramId
@@ -37,6 +41,10 @@ export class GameService {
 
     try {
       return this.gameModel.create(createGameDto);
-    } catch (error) {}
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not create game for nonogram: ' + createGameDto.nonogramId
+      );
+    }
   }
 }

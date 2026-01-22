@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entity/user.entity';
 import {
@@ -34,27 +38,31 @@ export class UserService {
         (await this.userModel.create(createUserDto)).toJSON()
       );
     } catch (error) {
-      console.log(error);
+      throw new BadRequestException('Could not create user', error);
     }
   }
 
-  async getUserByPersonalNumber(personalNumber): Promise<User | null> {
+  async getUserByPersonalNumber(personalNumber) {
     try {
       return await this.userModel.findOne({
         where: {
           personalNumber: personalNumber,
         },
       });
-    } catch (error) {}
+    } catch (error) {
+      throw new UserNotFoundException(error, personalNumber);
+    }
   }
 
   async getUserById(paramId, userId) {
-    if (paramId.id !== userId) {
-      throw new UnauthorizedException();
+    if (paramId !== userId) {
+      throw new ForbiddenException(
+        'You are not allowed to access other users data'
+      );
     }
 
     try {
-      return UserResponseSchema.parse(
+      return await UserResponseSchema.parse(
         (
           await this.userModel.findOne({
             where: { id: userId },
@@ -62,18 +70,20 @@ export class UserService {
         ).toJSON()
       );
     } catch (error) {
-      throw new UserNotFoundException(userId);
+      throw new UserNotFoundException(error, userId);
     }
   }
 
-  async updateUser(id, userUpdateDto) {
-    if (id !== userUpdateDto.id) {
-      throw new UnauthorizedException();
+  async updateUser(currentUser, userUpdateDto) {
+    if (currentUser.id !== userUpdateDto.id) {
+      throw new ForbiddenException(
+        'You are not allowed to edit other users data'
+      );
+    } else if (userUpdateDto.isAdmin) {
+      throw new ForbiddenException('You can not edit this role');
     }
 
-    const user = await this.userModel.findOne({
-      where: { id },
-    });
+    const user = await this.getUserByPersonalNumber(currentUser.personalNumber);
 
     if (userUpdateDto.password) {
       const saltRounds = parseInt(process.env.BCRYPT_SALT);
@@ -91,18 +101,28 @@ export class UserService {
 
     try {
       return UserResponseSchema.parse((await user.save()).toJSON());
-    } catch (error) {}
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not update user with ID: ' + user.id,
+        error
+      );
+    }
   }
 
   async deleteUser(id, userId) {
     if (id !== userId) {
-      throw new UnauthorizedException();
+      throw new ForbiddenException('You can not delete other users');
     }
 
     try {
       return await this.userModel.destroy({
         where: { id },
       });
-    } catch (error) {}
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not delete user with ID: ' + id,
+        error
+      );
+    }
   }
 }

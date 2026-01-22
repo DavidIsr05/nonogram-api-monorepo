@@ -20,6 +20,7 @@ export const NonogramSchema = z
 
 export const CreateNonogramSchema = NonogramSchema.omit({
   id: true,
+  creatorId: true,
   createdAt: true,
   updatedAt: true,
   deletedAt: true,

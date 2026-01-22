@@ -35,12 +35,13 @@ export class UserController {
   }
 
   @Patch()
-  @UsePipes(new ZodValidationPipe(UpdateUserDto))
+  //@UsePipes(new ZodValidationPipe(UpdateUserDto)) //TODO fix the bug of unknows values when validator is on for this route
   updateUser(
     @Body() updateUserDto: UpdateUserDto,
     @CurrentUser() currentUser: User
   ) {
-    return this.userService.updateUser(currentUser.id, updateUserDto);
+    console.log('HELLO');
+    return this.userService.updateUser(currentUser, updateUserDto);
   }
 
   @Delete(':id')
