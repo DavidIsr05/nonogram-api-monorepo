@@ -7,7 +7,6 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
-  UsePipes,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto, UpdateUserDto } from '@nonogram-api-monorepo/types';
@@ -22,33 +21,32 @@ export class UserController {
   @Get(':id')
   getUserById(
     @CurrentUser() currentUser: User,
-    @Param('id', new ParseUUIDPipe({ version: '4' })) paramId: string
+    @Param('id', new ParseUUIDPipe({ version: '4' })) userId: string
   ) {
-    return this.userService.getUserById(paramId, currentUser.id);
+    return this.userService.getUserById(currentUser, userId);
   }
 
   @Public()
   @Post('signup')
-  @UsePipes(new ZodValidationPipe(CreateUserDto))
-  createUser(@Body() createUserDto: CreateUserDto) {
+  createUser(
+    @Body(new ZodValidationPipe(CreateUserDto)) createUserDto: CreateUserDto
+  ) {
     return this.userService.createUser(createUserDto);
   }
 
   @Patch()
-  //@UsePipes(new ZodValidationPipe(UpdateUserDto)) //TODO fix the bug of unknows values when validator is on for this route
   updateUser(
-    @Body() updateUserDto: UpdateUserDto,
+    @Body(new ZodValidationPipe(UpdateUserDto)) updateUserDto: UpdateUserDto,
     @CurrentUser() currentUser: User
   ) {
-    console.log('HELLO');
     return this.userService.updateUser(currentUser, updateUserDto);
   }
 
   @Delete(':id')
   deleteUser(
     @CurrentUser() currentUser: User,
-    @Param('id', new ParseUUIDPipe({ version: '4' })) paramId: string
+    @Param('id', new ParseUUIDPipe({ version: '4' })) userId: string
   ) {
-    return this.userService.deleteUser(currentUser.id, paramId);
+    return this.userService.deleteUser(currentUser, userId);
   }
 }

@@ -5,13 +5,12 @@ import {
   Param,
   ParseUUIDPipe,
   Post,
-  UsePipes,
 } from '@nestjs/common';
 import { NonogramService } from './nonogram.service';
 import {
   CreateNonogramDto,
   generateNonogramDto,
-  nonogramLeadersRequestDto,
+  NonogramLeadersRequestDto,
 } from '@nonogram-api-monorepo/types';
 import { User as UserEntity } from '../user/entity/user.entity';
 import { CurrentUser } from '../../common';
@@ -22,26 +21,29 @@ export class NonogramController {
   constructor(private nonogramService: NonogramService) {}
 
   @Post('create')
-  @UsePipes(new ZodValidationPipe(CreateNonogramDto))
   createNonogram(
-    @Body() createNonogramDto: CreateNonogramDto,
+    @Body(new ZodValidationPipe(CreateNonogramDto))
+    createNonogramDto: CreateNonogramDto,
     @CurrentUser() CurrentUser: UserEntity
   ) {
-    return this.nonogramService.createNonogram(
-      createNonogramDto,
-      CurrentUser.id
-    );
+    return this.nonogramService.createNonogram(CurrentUser, createNonogramDto);
   }
   //TODO when genearting return everything encrypted other then preview and then on create we get the object back from cleint decrypt everything and save it
   @Post('generate')
-  @UsePipes(new ZodValidationPipe(generateNonogramDto))
-  generateNonogram(@Body() generateNonogramDto: generateNonogramDto) {
+  generateNonogram(
+    @Body(new ZodValidationPipe(generateNonogramDto))
+    generateNonogramDto: generateNonogramDto
+  ) {
     return this.nonogramService.generateNonogram(generateNonogramDto);
   }
 
   @Post('nonogram-leaders')
-  getNonogramLeaders(@Body() nonogramId: nonogramLeadersRequestDto) {
-    return this.nonogramService.getNonogramLeaders(nonogramId);
+  getNonogramLeaders(
+    @Body(new ZodValidationPipe(NonogramLeadersRequestDto))
+    nonogramLeadersRequestDto: NonogramLeadersRequestDto
+  ) {
+    //maybe pass the id as Param instead o craeting a dto for it?
+    return this.nonogramService.getNonogramLeaders(nonogramLeadersRequestDto);
   }
 
   @Get(':id')

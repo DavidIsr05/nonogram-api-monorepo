@@ -29,6 +29,7 @@ export const CreateUserSchema = UserSchema.omit({
 
 export const UpdateUserSchema = UserSchema.partial()
   .required({ id: true })
+  .omit({ isAdmin: true })
   .strict();
 
 export class UserDto extends createZodDto(UserSchema) {}

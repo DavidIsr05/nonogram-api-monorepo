@@ -15,14 +15,19 @@ export class GameService {
     private nonogramModel: NonogramService
   ) {}
 
-  async createGame(createGameDto, userId) {
-    if (createGameDto.userId !== userId) {
-      throw new ForbiddenException('You can not create games for other users');
-    } //TODO need to check with what nonogram user is trying to create game as well
-
+  async createGame(currentUser, createGameDto) {
     const currentNonogram = await this.nonogramModel.getNonogramById(
       createGameDto.nonogramId
     );
+
+    if (
+      !currentNonogram.isPrivate ||
+      currentNonogram.creatorId !== currentUser.id
+    ) {
+      throw new ForbiddenException(
+        'You do not have permission to play this nonogram'
+      );
+    }
 
     const nonogramSize: number = await this.nonogramModel.getNonogramSize(
       currentNonogram
@@ -35,7 +40,7 @@ export class GameService {
 
     createGameDto = {
       ...createGameDto,
-      userId: userId,
+      userId: currentUser.id,
       uncompletedNonogram: blankUncompletedNonogram,
     };
 

@@ -17,7 +17,7 @@ export class AuthService {
       throw new UserNotFoundException(personalNumber);
     }
     if (!(await bcrypt.compare(password, user.password))) {
-      throw new UnauthorizedException('Wrong password');
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const payload = { id: user.id, personalNumber: user.personalNumber };

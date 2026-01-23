@@ -18,6 +18,7 @@ export class UserService {
 
   async createUser(createUserDto) {
     const user = await this.getUserByPersonalNumber(
+      //TODO CR comment: "make it unit" was not clear
       createUserDto.personalNumber
     );
 
@@ -34,8 +35,8 @@ export class UserService {
     };
 
     try {
-      return UserResponseSchema.parse(
-        (await this.userModel.create(createUserDto)).toJSON()
+      return this.parseObjectForReturn(
+        await this.userModel.create(createUserDto)
       );
     } catch (error) {
       throw new BadRequestException('Could not create user', error);
@@ -54,20 +55,18 @@ export class UserService {
     }
   }
 
-  async getUserById(paramId, userId) {
-    if (paramId !== userId) {
+  async getUserById(currentUser, userId) {
+    if (currentUser.id !== userId) {
       throw new ForbiddenException(
         'You are not allowed to access other users data'
       );
     }
 
     try {
-      return await UserResponseSchema.parse(
-        (
-          await this.userModel.findOne({
-            where: { id: userId },
-          })
-        ).toJSON()
+      return this.parseObjectForReturn(
+        await this.userModel.findOne({
+          where: { id: userId },
+        })
       );
     } catch (error) {
       throw new UserNotFoundException(error, userId);
@@ -79,8 +78,6 @@ export class UserService {
       throw new ForbiddenException(
         'You are not allowed to edit other users data'
       );
-    } else if (userUpdateDto.isAdmin) {
-      throw new ForbiddenException('You can not edit this role');
     }
 
     const user = await this.getUserByPersonalNumber(currentUser.personalNumber);
@@ -100,7 +97,7 @@ export class UserService {
     });
 
     try {
-      return UserResponseSchema.parse((await user.save()).toJSON());
+      return this.parseObjectForReturn(await user.save());
     } catch (error) {
       throw new BadRequestException(
         'Could not update user with ID: ' + user.id,
@@ -109,20 +106,24 @@ export class UserService {
     }
   }
 
-  async deleteUser(id, userId) {
-    if (id !== userId) {
+  async deleteUser(currentUser, userId) {
+    if (currentUser.id !== userId) {
       throw new ForbiddenException('You can not delete other users');
     }
 
     try {
       return await this.userModel.destroy({
-        where: { id },
+        where: { id: userId },
       });
     } catch (error) {
       throw new BadRequestException(
-        'Could not delete user with ID: ' + id,
+        'Could not delete user with ID: ' + userId,
         error
       );
     }
+  }
+
+  parseObjectForReturn(object) {
+    return UserResponseSchema.parse(object.toJSON());
   }
 }
