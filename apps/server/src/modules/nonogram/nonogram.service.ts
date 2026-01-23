@@ -9,7 +9,6 @@ import { InjectModel } from '@nestjs/sequelize';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, map } from 'rxjs';
 import {
-  NonogramResponseDto,
   NonogramResponseSchema,
   TileStatesEnumValues,
   generateNonogramDto,
@@ -24,7 +23,7 @@ export class NonogramService {
     private readonly httpService: HttpService
   ) {}
 
-  createNonogram(currentUser, createNonogramDto) {
+  async createNonogram(currentUser, createNonogramDto) {
     if (!createNonogramDto.isPrivate && !currentUser.isAdmin) {
       throw new ForbiddenException('You can not create public nonograms');
     } else if (currentUser.id !== createNonogramDto.creatorId) {
@@ -37,9 +36,7 @@ export class NonogramService {
     };
 
     try {
-      return this.parseObjectForReturn(
-        this.nonogramModel.create(createNonogramDto)
-      );
+      return await this.nonogramModel.create(createNonogramDto);
     } catch (error) {
       throw new BadRequestException('Could not create your nonogram', error);
     }
@@ -49,7 +46,7 @@ export class NonogramService {
     const response = await this.generateNonogramResponse(generateNonogramDto);
 
     try {
-      return this.parseObjectForReturn(firstValueFrom(response));
+      return firstValueFrom(response);
     } catch (error) {
       throw new BadRequestException('Could not generate nonogram', error);
     }
@@ -106,13 +103,11 @@ export class NonogramService {
     return DEFAULT_NONOGRAM_SIZE + 10 * sizeFactorBasedOnDifficulty;
   }
 
-  async getNonogramById(id): Promise<NonogramResponseDto | null> {
+  async getNonogramById(id): Promise<Nonogram | null> {
     try {
-      return this.parseObjectForReturn(
-        await this.nonogramModel.findOne({
-          where: { id },
-        })
-      );
+      return await this.nonogramModel.findOne({
+        where: { id },
+      });
     } catch (error) {
       throw new BadRequestException(
         'Could not find nonogram by ID: ' + id,
