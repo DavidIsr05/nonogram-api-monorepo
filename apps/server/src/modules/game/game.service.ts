@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Game } from './entity/game.entity';
 import { TileStates, TileStatesEnumType } from '@nonogram-api-monorepo/types';
@@ -11,14 +15,19 @@ export class GameService {
     private nonogramModel: NonogramService
   ) {}
 
-  async createGame(createGameDto, userId) {
-    if (createGameDto.userId !== userId) {
-      throw new UnauthorizedException();
-    }
-
-    const currentNonogram = await this.nonogramModel.findOne(
+  async createGame(currentUser, createGameDto) {
+    const currentNonogram = await this.nonogramModel.getNonogramById(
       createGameDto.nonogramId
     );
+
+    if (
+      !currentNonogram.isPrivate ||
+      currentNonogram.creatorId !== currentUser.id
+    ) {
+      throw new ForbiddenException(
+        'You do not have permission to play this nonogram'
+      );
+    }
 
     const nonogramSize: number = await this.nonogramModel.getNonogramSize(
       currentNonogram
@@ -31,10 +40,16 @@ export class GameService {
 
     createGameDto = {
       ...createGameDto,
-      userId: userId,
+      userId: currentUser.id,
       uncompletedNonogram: blankUncompletedNonogram,
     };
 
-    return this.gameModel.create(createGameDto);
+    try {
+      return this.gameModel.create(createGameDto);
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not create game for nonogram: ' + createGameDto.nonogramId
+      );
+    }
   }
 }

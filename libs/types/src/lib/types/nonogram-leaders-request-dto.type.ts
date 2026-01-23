@@ -1,12 +1,12 @@
 import { createZodDto } from 'nestjs-zod';
 import z from 'zod';
 
-export const nonogramLeadersRequestSchema = z
+export const NonogramLeadersRequestSchema = z
   .object({
     id: z.string().uuid(),
   })
   .strict();
 
-export class nonogramLeadersRequestDto extends createZodDto(
-  nonogramLeadersRequestSchema
+export class NonogramLeadersRequestDto extends createZodDto(
+  NonogramLeadersRequestSchema
 ) {}

@@ -1,8 +1,9 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { GameService } from './game.service';
 import { CreateGameDto } from '@nonogram-api-monorepo/types';
-import { CurrentUser } from '../../common/decorators';
-import { User as UserEntity } from '../user/entity/user.entity';
+import { CurrentUser } from '../../common';
+import { User } from '../user/entity/user.entity';
+import { ZodValidationPipe } from 'nestjs-zod';
 
 @Controller('game')
 export class GameController {
@@ -10,9 +11,9 @@ export class GameController {
 
   @Post()
   createGame(
-    @Body() createGameDto: CreateGameDto,
-    @CurrentUser() CurrentUser: UserEntity
+    @Body(new ZodValidationPipe(CreateGameDto)) createGameDto: CreateGameDto,
+    @CurrentUser() CurrentUser: User
   ) {
-    return this.gameService.createGame(createGameDto, CurrentUser.id);
+    return this.gameService.createGame(CurrentUser, createGameDto);
   }
 }

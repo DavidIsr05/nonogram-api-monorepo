@@ -1,7 +1,8 @@
 import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserSignInDto } from '@nonogram-api-monorepo/types';
-import { Public } from '../../common/decorators';
+import { Public } from '../../common';
+import { ZodValidationPipe } from 'nestjs-zod';
 
 @Controller('auth')
 export class AuthController {
@@ -10,7 +11,7 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: UserSignInDto) {
+  signIn(@Body(new ZodValidationPipe(UserSignInDto)) signInDto: UserSignInDto) {
     return this.authService.signIn(
       signInDto.personalNumber,
       signInDto.password

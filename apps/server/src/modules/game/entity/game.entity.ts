@@ -28,7 +28,7 @@ export class Game extends Model<Partial<Game>> {
   @Column({ type: DataType.UUID, allowNull: false })
   nonogramId: string;
 
-  @Column(DataType.ENUM(...Object.values(TileStates)))
+  @Column(DataType.JSONB)
   uncompletedNonogram: TileStatesEnumType[][] | null;
 
   @Default(0)

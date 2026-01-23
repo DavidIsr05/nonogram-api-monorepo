@@ -4,9 +4,14 @@ import { createZodDto } from 'nestjs-zod';
 export const UserSchema = z
   .object({
     id: z.string().uuid(),
-    username: z.string().max(16),
+    username: z.string().max(16, 'Maximum 16 characters in username'),
     password: z.string(),
-    personalNumber: z.number().refine((val) => `${val}`.length === 7),
+    personalNumber: z
+      .number()
+      .refine(
+        (val) => `${val}`.length === 7,
+        'Personal number must be 7 characters long'
+      ),
     isAdmin: z.boolean().default(false),
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime(),
@@ -22,7 +27,10 @@ export const CreateUserSchema = UserSchema.omit({
   deletedAt: true,
 }).strict();
 
-export const UpdateUserSchema = UserSchema.partial().required({ id: true });
+export const UpdateUserSchema = UserSchema.partial()
+  .required({ id: true })
+  .omit({ isAdmin: true })
+  .strict();
 
 export class UserDto extends createZodDto(UserSchema) {}
 
