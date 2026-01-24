@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Game } from './entity/game.entity';
@@ -15,6 +16,8 @@ export class GameService {
     private nonogramModel: NonogramService
   ) {}
 
+  private readonly logger = new Logger(GameService.name);
+
   async createGame(currentUser, createGameDto) {
     const currentNonogram = await this.nonogramModel.getNonogramById(
       createGameDto.nonogramId
@@ -24,6 +27,7 @@ export class GameService {
       !currentNonogram.isPrivate ||
       currentNonogram.creatorId !== currentUser.id
     ) {
+      this.logger.log('User tried playing forbidden nonogram');
       throw new ForbiddenException(
         'You do not have permission to play this nonogram'
       );
@@ -45,10 +49,15 @@ export class GameService {
     };
 
     try {
+      this.logger.log('Creating new game', { createGameDto });
       return this.gameModel.create(createGameDto);
     } catch (error) {
+      this.logger.error('Could not create new game', error.stack, {
+        createGameDto,
+      });
       throw new BadRequestException(
-        'Could not create game for nonogram: ' + createGameDto.nonogramId
+        'Could not create game for nonogram: ' + createGameDto.nonogramId,
+        error
       );
     }
   }
