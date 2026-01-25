@@ -17,6 +17,7 @@ import {
 import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
 import { Op } from 'sequelize';
+import { ForbiddenNonogramException } from '../../common';
 
 @Injectable()
 export class NonogramService {
@@ -29,9 +30,9 @@ export class NonogramService {
 
   async createNonogram(currentUser, createNonogramDto) {
     if (!createNonogramDto.isPrivate && !currentUser.isAdmin) {
-      throw new ForbiddenException('You can not create public nonograms');
+      throw new ForbiddenNonogramException();
     } else if (currentUser.id !== createNonogramDto.creatorId) {
-      throw new ForbiddenException('Can not create nonograms or other users');
+      throw new ForbiddenNonogramException();
     }
 
     createNonogramDto = {
@@ -119,22 +120,22 @@ export class NonogramService {
     return DEFAULT_NONOGRAM_SIZE + 10 * sizeFactorBasedOnDifficulty;
   }
 
-  async getNonogramById(currentUser, nonogramId): Promise<Nonogram | null> {
+  async getNonogramById(currentUser, id): Promise<Nonogram | null> {
     try {
-      this.logger.log('Getting nonogram by ID', { nonogramId });
+      this.logger.log('Getting nonogram by ID', { id });
       const foundNonogram = await this.nonogramModel.findOne({
-        where: { id: nonogramId },
+        where: { id },
       });
 
       if (foundNonogram.creatorId !== currentUser.id) {
-        throw new ForbiddenException('Can not access other users nonograms');
+        throw new ForbiddenNonogramException();
       }
 
       return foundNonogram;
     } catch (error) {
       if (!(error instanceof ForbiddenException)) {
         throw new BadRequestException(
-          'Could not find nonogram by ID: ' + nonogramId,
+          'Could not find nonogram by ID: ' + id,
           error.stack
         );
       }
@@ -148,7 +149,7 @@ export class NonogramService {
 
   async getAllAvaliableNonograms(currentUser, userId) {
     if (userId !== currentUser.id) {
-      throw new ForbiddenException('Can not access other users nonograms');
+      throw new ForbiddenNonogramException();
     }
     try {
       this.logger.log('Getting all avaliable nonograms for current user');
@@ -165,16 +166,14 @@ export class NonogramService {
     }
   }
 
-  async getNonogramsCreatedByUser(currentUser, userId) {
-    if (userId !== currentUser.id) {
-      throw new ForbiddenException('Can not access other users nonograms');
+  async getNonogramsCreatedByUser(currentUser, creatorId) {
+    if (creatorId !== currentUser.id) {
+      throw new ForbiddenNonogramException();
     }
     try {
       this.logger.log('Getting nonograms created by user');
       return await this.nonogramModel.findAll({
-        where: {
-          creatorId: userId,
-        },
+        where: { creatorId },
       });
     } catch (error) {
       throw new BadRequestException(
@@ -186,7 +185,7 @@ export class NonogramService {
 
   async getUnplayedNonograms(currentUser, userId) {
     if (userId !== currentUser.id) {
-      throw new ForbiddenException('Can not access other users nonograms');
+      throw new ForbiddenNonogramException();
     }
     try {
       this.logger.log('Getting unplayed nonograms');
@@ -197,7 +196,6 @@ export class NonogramService {
           required: true,
           where: { userId },
         },
-        raw: true,
       });
 
       const playedNonogramIds = playedNonograms.map((nonogram) => nonogram.id);
@@ -215,7 +213,7 @@ export class NonogramService {
 
   async getPlayedNonograms(currentUser, userId) {
     if (userId !== currentUser.id) {
-      throw new ForbiddenException('Can not access other users nonograms');
+      throw new ForbiddenNonogramException();
     }
     try {
       this.logger.log('Getting played nonograms');

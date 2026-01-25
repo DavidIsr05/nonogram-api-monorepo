@@ -7,6 +7,7 @@ import {
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entity/user.entity';
 import {
+  ForbiddenUserException,
   UserAlreadyExistsException,
   UserNotFoundException,
 } from '../../common';
@@ -82,9 +83,7 @@ export class UserService {
 
   async updateUser(currentUser, userUpdateDto) {
     if (currentUser.id !== userUpdateDto.id) {
-      throw new ForbiddenException(
-        'You are not allowed to edit other users data'
-      );
+      throw new ForbiddenUserException();
     }
 
     const user = await this.getUserByPersonalNumber(currentUser.personalNumber);
@@ -117,7 +116,7 @@ export class UserService {
 
   async deleteUser(currentUser, userId) {
     if (currentUser.id !== userId) {
-      throw new ForbiddenException('You can not delete other users');
+      throw new ForbiddenUserException();
     }
 
     try {

@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Game } from './entity/game.entity';
 import { TileStates, TileStatesEnumType } from '@nonogram-api-monorepo/types';
 import { NonogramService } from '../nonogram';
+import { ForbiddenGameException } from '../../common';
 
 @Injectable()
 export class GameService {
@@ -28,9 +29,7 @@ export class GameService {
       !currentNonogram.isPrivate ||
       currentNonogram.creatorId !== currentUser.id
     ) {
-      throw new ForbiddenException(
-        'You do not have permission to play this nonogram'
-      );
+      throw new ForbiddenGameException();
     }
 
     const nonogramSize: number = await this.nonogramModel.getNonogramSize(
@@ -61,7 +60,7 @@ export class GameService {
 
   async getAllUsersGames(currentUser, userId) {
     if (userId !== currentUser.id) {
-      throw new ForbiddenException('Can not access other users games');
+      throw new ForbiddenGameException();
     }
     try {
       this.logger.log('Getting all of the users games');
@@ -75,7 +74,7 @@ export class GameService {
 
   async getInProgresGames(currentUser, userId) {
     if (userId !== currentUser.id) {
-      throw new ForbiddenException('Can not access other users games');
+      throw new ForbiddenGameException();
     }
     try {
       this.logger.log('Getting users in progress games');
@@ -89,7 +88,7 @@ export class GameService {
 
   async getFinishedGames(currentUser, userId) {
     if (userId !== currentUser.id) {
-      throw new ForbiddenException('Can not access other users games');
+      throw new ForbiddenGameException();
     }
     try {
       this.logger.log('Getting users finished games');
@@ -109,7 +108,7 @@ export class GameService {
       });
 
       if (foundGame.userId !== currentUser.id) {
-        throw new ForbiddenException('Can not access other users games');
+        throw new ForbiddenGameException();
       }
     } catch (error) {
       if (!(error instanceof ForbiddenException)) {
