@@ -16,6 +16,7 @@ import {
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
+import { Op } from 'sequelize';
 
 @Injectable()
 export class NonogramService {
@@ -135,5 +136,93 @@ export class NonogramService {
   parseObjectForReturn(object) {
     this.logger.log('Parsing nonogram object for return');
     return NonogramResponseSchema.parse(object.toJSON());
+  }
+
+  async getAllAvaliableNonograms(currentUser, userId) {
+    if (userId !== currentUser.id) {
+      throw new ForbiddenException('Can not access other users nonograms');
+    }
+    try {
+      this.logger.log('Getting all avaliable nonograms for current user');
+      return await this.nonogramModel.findAll({
+        where: {
+          [Op.or]: [{ isPrivate: false }, { creatorId: userId }],
+        },
+      });
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not find avaliable nonograms',
+        error.stack
+      );
+    }
+  }
+
+  async getNonogramsCreatedByUser(currentUser, userId) {
+    if (userId !== currentUser.id) {
+      throw new ForbiddenException('Can not access other users nonograms');
+    }
+    try {
+      this.logger.log('Getting nonograms created by user');
+      return await this.nonogramModel.findAll({
+        where: {
+          creatorId: userId,
+        },
+      });
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not get nonograms created by you',
+        error.stack
+      );
+    }
+  }
+
+  async getUnplayedNonograms(currentUser, userId) {
+    if (userId !== currentUser.id) {
+      throw new ForbiddenException('Can not access other users nonograms');
+    }
+    try {
+      this.logger.log('Getting unplayed nonograms');
+      const playedNonograms = await this.nonogramModel.findAll({
+        attributes: ['id'],
+        include: {
+          model: Game,
+          required: true,
+          where: { userId },
+        },
+        raw: true,
+      });
+
+      const playedNonogramIds = playedNonograms.map((nonogram) => nonogram.id);
+
+      return await this.nonogramModel.findAll({
+        where: {
+          [Op.or]: [{ isPrivate: false }, { creatorId: userId }],
+          id: { [Op.notIn]: playedNonogramIds },
+        },
+      });
+    } catch (error) {
+      throw new BadRequestException('Could not get unplayed nonograms');
+    }
+  }
+
+  async getPlayedNonograms(currentUser, userId) {
+    if (userId !== currentUser.id) {
+      throw new ForbiddenException('Can not access other users nonograms');
+    }
+    try {
+      this.logger.log('Getting played nonograms');
+      return await this.nonogramModel.findAll({
+        where: {
+          [Op.or]: [{ isPrivate: false }, { creatorId: userId }],
+        },
+        include: {
+          model: Game,
+          required: true,
+          where: { userId },
+        },
+      });
+    } catch (error) {
+      throw new BadRequestException('Could not get played nonograms');
+    }
   }
 }

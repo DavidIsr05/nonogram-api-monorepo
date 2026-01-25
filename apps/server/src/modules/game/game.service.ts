@@ -57,4 +57,57 @@ export class GameService {
       );
     }
   }
+
+  async getAllUsersGames(currentUser, userId) {
+    if (userId !== currentUser.id) {
+      throw new ForbiddenException('Can not access other users games');
+    }
+    try {
+      this.logger.log('Getting all of the users games');
+      return await this.gameModel.findAll({
+        where: { userId },
+      });
+    } catch (error) {
+      throw new BadRequestException('Could not get all users games');
+    }
+  }
+
+  async getInProgresGames(currentUser, userId) {
+    if (userId !== currentUser.id) {
+      throw new ForbiddenException('Can not access other users games');
+    }
+    try {
+      this.logger.log('Getting users in progress games');
+      return await this.gameModel.findAll({
+        where: { isFinished: false },
+      });
+    } catch (error) {
+      throw new BadRequestException('Could not get in progress games');
+    }
+  }
+
+  async getFinishedGames(currentUser, userId) {
+    if (userId !== currentUser.id) {
+      throw new ForbiddenException('Can not access other users games');
+    }
+    try {
+      this.logger.log('Getting users finished games');
+      return await this.gameModel.findAll({
+        where: { isFinished: true },
+      });
+    } catch (error) {
+      throw new BadRequestException('Could not get finished games');
+    }
+  }
+
+  async getGameById(id) {
+    try {
+      this.logger.log('Getting game by id');
+      return await this.gameModel.findOne({
+        where: { id },
+      });
+    } catch (error) {
+      throw new BadRequestException('Could not get game by ID: ' + id);
+    }
+  }
 }
