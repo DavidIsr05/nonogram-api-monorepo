@@ -119,17 +119,25 @@ export class NonogramService {
     return DEFAULT_NONOGRAM_SIZE + 10 * sizeFactorBasedOnDifficulty;
   }
 
-  async getNonogramById(id): Promise<Nonogram | null> {
+  async getNonogramById(currentUser, nonogramId): Promise<Nonogram | null> {
     try {
-      this.logger.log('Getting nonogram by ID', { id });
-      return await this.nonogramModel.findOne({
-        where: { id },
+      this.logger.log('Getting nonogram by ID', { nonogramId });
+      const foundNonogram = await this.nonogramModel.findOne({
+        where: { id: nonogramId },
       });
+
+      if (foundNonogram.creatorId !== currentUser.id) {
+        throw new ForbiddenException('Can not access other users nonograms');
+      }
+
+      return foundNonogram;
     } catch (error) {
-      throw new BadRequestException(
-        'Could not find nonogram by ID: ' + id,
-        error.stack
-      );
+      if (!(error instanceof ForbiddenException)) {
+        throw new BadRequestException(
+          'Could not find nonogram by ID: ' + nonogramId,
+          error.stack
+        );
+      }
     }
   }
 

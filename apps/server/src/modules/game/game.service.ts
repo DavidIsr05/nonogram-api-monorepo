@@ -20,6 +20,7 @@ export class GameService {
 
   async createGame(currentUser, createGameDto) {
     const currentNonogram = await this.nonogramModel.getNonogramById(
+      currentUser,
       createGameDto.nonogramId
     );
 
@@ -100,14 +101,20 @@ export class GameService {
     }
   }
 
-  async getGameById(id) {
+  async getGameById(currentUser, gameId) {
     try {
       this.logger.log('Getting game by id');
-      return await this.gameModel.findOne({
-        where: { id },
+      const foundGame = await this.gameModel.findOne({
+        where: { id: gameId },
       });
+
+      if (foundGame.userId !== currentUser.id) {
+        throw new ForbiddenException('Can not access other users games');
+      }
     } catch (error) {
-      throw new BadRequestException('Could not get game by ID: ' + id);
+      if (!(error instanceof ForbiddenException)) {
+        throw new BadRequestException('Could not get game by ID: ' + gameId);
+      }
     }
   }
 }

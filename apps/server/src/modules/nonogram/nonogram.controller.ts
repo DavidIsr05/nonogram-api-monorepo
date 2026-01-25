@@ -79,7 +79,10 @@ export class NonogramController {
   }
 
   @Get(':id')
-  getNonogram(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.nonogramService.getNonogramById(id);
+  getNonogram(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) nonogramId: string,
+    @CurrentUser() currentUser: User
+  ) {
+    return this.nonogramService.getNonogramById(currentUser, nonogramId);
   }
 }

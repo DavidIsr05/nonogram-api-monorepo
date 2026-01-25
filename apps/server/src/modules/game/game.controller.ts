@@ -49,7 +49,10 @@ export class GameController {
   }
 
   @Get(':id')
-  getGameById(@Param('id', new ParseUUIDPipe({ version: '4' })) id: string) {
-    return this.gameService.getGameById(id);
+  getGameById(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) gameId: string,
+    @CurrentUser() currentUser: User
+  ) {
+    return this.gameService.getGameById(currentUser, gameId);
   }
 }
