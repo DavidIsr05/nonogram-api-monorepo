@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Game } from './entity/game.entity';
 import { TileStates, TileStatesEnumType } from '@nonogram-api-monorepo/types';
 import { NonogramService } from '../nonogram';
+import { ForbiddenGameException } from '../../common';
 
 @Injectable()
 export class GameService {
@@ -20,6 +21,7 @@ export class GameService {
 
   async createGame(currentUser, createGameDto) {
     const currentNonogram = await this.nonogramModel.getNonogramById(
+      currentUser,
       createGameDto.nonogramId
     );
 
@@ -27,9 +29,7 @@ export class GameService {
       !currentNonogram.isPrivate ||
       currentNonogram.creatorId !== currentUser.id
     ) {
-      throw new ForbiddenException(
-        'You do not have permission to play this nonogram'
-      );
+      throw new ForbiddenGameException();
     }
 
     const nonogramSize: number = await this.nonogramModel.getNonogramSize(
@@ -55,6 +55,65 @@ export class GameService {
         'Could not create game for nonogram: ' + createGameDto.nonogramId,
         error.stack
       );
+    }
+  }
+
+  async getAllUsersGames(currentUser, userId) {
+    if (userId !== currentUser.id) {
+      throw new ForbiddenGameException();
+    }
+    try {
+      this.logger.log('Getting all of the users games');
+      return await this.gameModel.findAll({
+        where: { userId },
+      });
+    } catch (error) {
+      throw new BadRequestException('Could not get all users games');
+    }
+  }
+
+  async getInProgresGames(currentUser, userId) {
+    if (userId !== currentUser.id) {
+      throw new ForbiddenGameException();
+    }
+    try {
+      this.logger.log('Getting users in progress games');
+      return await this.gameModel.findAll({
+        where: { isFinished: false },
+      });
+    } catch (error) {
+      throw new BadRequestException('Could not get in progress games');
+    }
+  }
+
+  async getFinishedGames(currentUser, userId) {
+    if (userId !== currentUser.id) {
+      throw new ForbiddenGameException();
+    }
+    try {
+      this.logger.log('Getting users finished games');
+      return await this.gameModel.findAll({
+        where: { isFinished: true },
+      });
+    } catch (error) {
+      throw new BadRequestException('Could not get finished games');
+    }
+  }
+
+  async getGameById(currentUser, gameId) {
+    try {
+      this.logger.log('Getting game by id');
+      const foundGame = await this.gameModel.findOne({
+        where: { id: gameId },
+      });
+
+      if (foundGame.userId !== currentUser.id) {
+        throw new ForbiddenGameException();
+      }
+    } catch (error) {
+      if (!(error instanceof ForbiddenException)) {
+        throw new BadRequestException('Could not get game by ID: ' + gameId);
+      }
     }
   }
 }

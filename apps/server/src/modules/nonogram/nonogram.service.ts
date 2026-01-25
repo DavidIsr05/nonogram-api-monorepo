@@ -16,6 +16,8 @@ import {
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
+import { Op } from 'sequelize';
+import { ForbiddenNonogramException } from '../../common';
 
 @Injectable()
 export class NonogramService {
@@ -28,9 +30,9 @@ export class NonogramService {
 
   async createNonogram(currentUser, createNonogramDto) {
     if (!createNonogramDto.isPrivate && !currentUser.isAdmin) {
-      throw new ForbiddenException('You can not create public nonograms');
+      throw new ForbiddenNonogramException();
     } else if (currentUser.id !== createNonogramDto.creatorId) {
-      throw new ForbiddenException('Can not create nonograms or other users');
+      throw new ForbiddenNonogramException();
     }
 
     createNonogramDto = {
@@ -118,22 +120,115 @@ export class NonogramService {
     return DEFAULT_NONOGRAM_SIZE + 10 * sizeFactorBasedOnDifficulty;
   }
 
-  async getNonogramById(id): Promise<Nonogram | null> {
+  async getNonogramById(currentUser, id): Promise<Nonogram | null> {
     try {
       this.logger.log('Getting nonogram by ID', { id });
-      return await this.nonogramModel.findOne({
+      const foundNonogram = await this.nonogramModel.findOne({
         where: { id },
       });
+
+      if (foundNonogram.creatorId !== currentUser.id) {
+        throw new ForbiddenNonogramException();
+      }
+
+      return foundNonogram;
     } catch (error) {
-      throw new BadRequestException(
-        'Could not find nonogram by ID: ' + id,
-        error.stack
-      );
+      if (!(error instanceof ForbiddenException)) {
+        throw new BadRequestException(
+          'Could not find nonogram by ID: ' + id,
+          error.stack
+        );
+      }
     }
   }
 
   parseObjectForReturn(object) {
     this.logger.log('Parsing nonogram object for return');
     return NonogramResponseSchema.parse(object.toJSON());
+  }
+
+  async getAllAvaliableNonograms(currentUser, userId) {
+    if (userId !== currentUser.id) {
+      throw new ForbiddenNonogramException();
+    }
+    try {
+      this.logger.log('Getting all avaliable nonograms for current user');
+      return await this.nonogramModel.findAll({
+        where: {
+          [Op.or]: [{ isPrivate: false }, { creatorId: userId }],
+        },
+      });
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not find avaliable nonograms',
+        error.stack
+      );
+    }
+  }
+
+  async getNonogramsCreatedByUser(currentUser, creatorId) {
+    if (creatorId !== currentUser.id) {
+      throw new ForbiddenNonogramException();
+    }
+    try {
+      this.logger.log('Getting nonograms created by user');
+      return await this.nonogramModel.findAll({
+        where: { creatorId },
+      });
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not get nonograms created by you',
+        error.stack
+      );
+    }
+  }
+
+  async getUnplayedNonograms(currentUser, userId) {
+    if (userId !== currentUser.id) {
+      throw new ForbiddenNonogramException();
+    }
+    try {
+      this.logger.log('Getting unplayed nonograms');
+      const playedNonograms = await this.nonogramModel.findAll({
+        attributes: ['id'],
+        include: {
+          model: Game,
+          required: true,
+          where: { userId },
+        },
+      });
+
+      const playedNonogramIds = playedNonograms.map((nonogram) => nonogram.id);
+
+      return await this.nonogramModel.findAll({
+        where: {
+          [Op.or]: [{ isPrivate: false }, { creatorId: userId }],
+          id: { [Op.notIn]: playedNonogramIds },
+        },
+      });
+    } catch (error) {
+      throw new BadRequestException('Could not get unplayed nonograms');
+    }
+  }
+
+  async getPlayedNonograms(currentUser, userId) {
+    if (userId !== currentUser.id) {
+      throw new ForbiddenNonogramException();
+    }
+    try {
+      this.logger.log('Getting played nonograms');
+      return await this.nonogramModel.findAll({
+        where: {
+          [Op.or]: [{ isPrivate: false }, { creatorId: userId }],
+        },
+        include: {
+          model: Game,
+          required: true,
+          where: { userId },
+        },
+      });
+    } catch (error) {
+      throw new BadRequestException('Could not get played nonograms');
+    }
   }
 }
