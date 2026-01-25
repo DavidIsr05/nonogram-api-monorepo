@@ -27,7 +27,6 @@ export class GameService {
       !currentNonogram.isPrivate ||
       currentNonogram.creatorId !== currentUser.id
     ) {
-      this.logger.log('User tried playing forbidden nonogram');
       throw new ForbiddenException(
         'You do not have permission to play this nonogram'
       );
@@ -52,12 +51,9 @@ export class GameService {
       this.logger.log('Creating new game', { createGameDto });
       return this.gameModel.create(createGameDto);
     } catch (error) {
-      this.logger.error('Could not create new game', error.stack, {
-        createGameDto,
-      });
       throw new BadRequestException(
         'Could not create game for nonogram: ' + createGameDto.nonogramId,
-        error
+        error.stack
       );
     }
   }

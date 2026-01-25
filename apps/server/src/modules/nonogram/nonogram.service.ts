@@ -28,10 +28,8 @@ export class NonogramService {
 
   async createNonogram(currentUser, createNonogramDto) {
     if (!createNonogramDto.isPrivate && !currentUser.isAdmin) {
-      this.logger.log('Non admin user tried craeting public game');
       throw new ForbiddenException('You can not create public nonograms');
     } else if (currentUser.id !== createNonogramDto.creatorId) {
-      this.logger.log('User tried creating a nonogram for other user');
       throw new ForbiddenException('Can not create nonograms or other users');
     }
 
@@ -44,10 +42,10 @@ export class NonogramService {
       this.logger.log('Creating new nonogram', { createNonogramDto });
       return await this.nonogramModel.create(createNonogramDto);
     } catch (error) {
-      this.logger.error('Could not create new nonogram', error.stack, {
-        createNonogramDto,
-      });
-      throw new BadRequestException('Could not create your nonogram', error);
+      throw new BadRequestException(
+        'Could not create your nonogram',
+        error.stack
+      );
     }
   }
 
@@ -58,10 +56,7 @@ export class NonogramService {
       this.logger.log('Generating nonogram', { generateNonogramDto });
       return firstValueFrom(response);
     } catch (error) {
-      this.logger.error('Could not generate nonogram', error.stack, {
-        generateNonogramDto,
-      });
-      throw new BadRequestException('Could not generate nonogram', error);
+      throw new BadRequestException('Could not generate nonogram', error.stack);
     }
   }
 
@@ -73,10 +68,9 @@ export class NonogramService {
         .post(url, generateNonogramDto)
         .pipe(map((response) => response.data));
     } catch (error) {
-      this.logger.error('Could not access external API', error.stack);
       throw new ServiceUnavailableException(
         'Could not access nonogram generator API',
-        error
+        error.stack
       );
     }
   }
@@ -108,10 +102,10 @@ export class NonogramService {
         attributes: ['id'],
       });
     } catch (error) {
-      this.logger.error('Could not get nonogram leaders', error.stack, {
-        nonogramLeadersRequestDto,
-      });
-      throw new BadRequestException('Could not get nonogram leaders', error);
+      throw new BadRequestException(
+        'Could not get nonogram leaders',
+        error.stack
+      );
     }
   }
 
@@ -131,10 +125,9 @@ export class NonogramService {
         where: { id },
       });
     } catch (error) {
-      this.logger.error('Could not find nonogram by ID', error.stack, { id });
       throw new BadRequestException(
         'Could not find nonogram by ID: ' + id,
-        error
+        error.stack
       );
     }
   }

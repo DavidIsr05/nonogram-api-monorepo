@@ -27,9 +27,6 @@ export class UserService {
     );
 
     if (user) {
-      this.logger.log(
-        'User tried to create an account with used personal number'
-      );
       throw new UserAlreadyExistsException(createUserDto.personalNumber);
     }
 
@@ -42,15 +39,12 @@ export class UserService {
     };
 
     try {
-      this.logger.log('Creating new user', { createUserDto }); //loged craete user dto *with password*
+      this.logger.log('Creating new user', { createUserDto });
       return this.parseObjectForReturn(
         await this.userModel.create(createUserDto)
       );
     } catch (error) {
-      this.logger.error('Could not create user', error.stack, {
-        createUserDto,
-      });
-      throw new BadRequestException('Could not create user', error);
+      throw new BadRequestException('Could not create user', error.stack);
     }
   }
 
@@ -63,18 +57,12 @@ export class UserService {
         },
       });
     } catch (error) {
-      this.logger.error(
-        'Could not get a user with personla number',
-        error.stack,
-        { personalNumber }
-      );
-      throw new UserNotFoundException(error, personalNumber);
+      throw new UserNotFoundException(error.stack, personalNumber);
     }
   }
 
   async getUserById(currentUser, userId) {
     if (currentUser.id !== userId) {
-      this.logger.log('User tried accesing other users data');
       throw new ForbiddenException(
         'You are not allowed to access other users data'
       );
@@ -88,14 +76,12 @@ export class UserService {
         })
       );
     } catch (error) {
-      this.logger.error('Could not get user by ID', error.stack, { userId });
-      throw new UserNotFoundException(error, userId);
+      throw new UserNotFoundException(error.stack, userId);
     }
   }
 
   async updateUser(currentUser, userUpdateDto) {
     if (currentUser.id !== userUpdateDto.id) {
-      this.logger.log('User tried updating other users data');
       throw new ForbiddenException(
         'You are not allowed to edit other users data'
       );
@@ -122,17 +108,15 @@ export class UserService {
       this.logger.log('Updated user', { user });
       return this.parseObjectForReturn(await user.save());
     } catch (error) {
-      this.logger.error('Could not update user', error.stack, { user });
       throw new BadRequestException(
         'Could not update user with ID: ' + user.id,
-        error
+        error.stack
       );
     }
   }
 
   async deleteUser(currentUser, userId) {
     if (currentUser.id !== userId) {
-      this.logger.log('User tried deleting other users account');
       throw new ForbiddenException('You can not delete other users');
     }
 
@@ -142,12 +126,9 @@ export class UserService {
         where: { id: userId },
       });
     } catch (error) {
-      this.logger.error('Could not delete user with ID', error.stack, {
-        userId,
-      });
       throw new BadRequestException(
         'Could not delete user with ID: ' + userId,
-        error
+        error.stack
       );
     }
   }
