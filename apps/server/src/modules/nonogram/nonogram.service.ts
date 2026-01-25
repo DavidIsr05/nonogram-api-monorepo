@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { Nonogram } from './entity/nonogram.entity';
@@ -23,6 +24,8 @@ export class NonogramService {
     private readonly httpService: HttpService
   ) {}
 
+  private readonly logger = new Logger(NonogramService.name);
+
   async createNonogram(currentUser, createNonogramDto) {
     if (!createNonogramDto.isPrivate && !currentUser.isAdmin) {
       throw new ForbiddenException('You can not create public nonograms');
@@ -36,9 +39,13 @@ export class NonogramService {
     };
 
     try {
+      this.logger.log('Creating new nonogram', { createNonogramDto });
       return await this.nonogramModel.create(createNonogramDto);
     } catch (error) {
-      throw new BadRequestException('Could not create your nonogram', error);
+      throw new BadRequestException(
+        'Could not create your nonogram',
+        error.stack
+      );
     }
   }
 
@@ -46,28 +53,33 @@ export class NonogramService {
     const response = await this.generateNonogramResponse(generateNonogramDto);
 
     try {
+      this.logger.log('Generating nonogram', { generateNonogramDto });
       return firstValueFrom(response);
     } catch (error) {
-      throw new BadRequestException('Could not generate nonogram', error);
+      throw new BadRequestException('Could not generate nonogram', error.stack);
     }
   }
 
   async generateNonogramResponse(generateNonogramDto) {
     const url = process.env.URL_TO_ALGORITHM;
     try {
+      this.logger.log('Sending nonogram generate request to external API');
       return await this.httpService
         .post(url, generateNonogramDto)
         .pipe(map((response) => response.data));
     } catch (error) {
       throw new ServiceUnavailableException(
         'Could not access nonogram generator API',
-        error
+        error.stack
       );
     }
   }
 
   async getNonogramLeaders(nonogramLeadersRequestDto) {
     try {
+      this.logger.log('Getting leaders for nonogram with ID', {
+        nonogramLeadersRequestDto,
+      });
       return await this.nonogramModel.findAll({
         include: [
           {
@@ -90,7 +102,10 @@ export class NonogramService {
         attributes: ['id'],
       });
     } catch (error) {
-      throw new BadRequestException('Could not get nonogram leaders', error);
+      throw new BadRequestException(
+        'Could not get nonogram leaders',
+        error.stack
+      );
     }
   }
 
@@ -105,18 +120,20 @@ export class NonogramService {
 
   async getNonogramById(id): Promise<Nonogram | null> {
     try {
+      this.logger.log('Getting nonogram by ID', { id });
       return await this.nonogramModel.findOne({
         where: { id },
       });
     } catch (error) {
       throw new BadRequestException(
         'Could not find nonogram by ID: ' + id,
-        error
+        error.stack
       );
     }
   }
 
   parseObjectForReturn(object) {
+    this.logger.log('Parsing nonogram object for return');
     return NonogramResponseSchema.parse(object.toJSON());
   }
 }

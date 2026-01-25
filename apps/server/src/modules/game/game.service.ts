@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Game } from './entity/game.entity';
@@ -14,6 +15,8 @@ export class GameService {
     @InjectModel(Game) private readonly gameModel: typeof Game,
     private nonogramModel: NonogramService
   ) {}
+
+  private readonly logger = new Logger(GameService.name);
 
   async createGame(currentUser, createGameDto) {
     const currentNonogram = await this.nonogramModel.getNonogramById(
@@ -45,10 +48,12 @@ export class GameService {
     };
 
     try {
+      this.logger.log('Creating new game', { createGameDto });
       return this.gameModel.create(createGameDto);
     } catch (error) {
       throw new BadRequestException(
-        'Could not create game for nonogram: ' + createGameDto.nonogramId
+        'Could not create game for nonogram: ' + createGameDto.nonogramId,
+        error.stack
       );
     }
   }
