@@ -18,7 +18,8 @@ export class UserService {
   async createUser(createUserDto) {
     const user = await this.getUserByPersonalNumber(
       //TODO CR comment: "make it unit" was not clear
-      //how will the nonogram tiles get checked in the middle of the game? each click call to api or we send the nonogram?
+      //how will the nonogram tiles get checked in the middle of the game? each
+      //click call to api or we send the nonogram?
       createUserDto.personalNumber
     );
 
@@ -128,5 +129,15 @@ export class UserService {
   parseObjectForReturn(object) {
     this.logger.log('Parsing user object for return');
     return UserResponseSchema.parse(object.toJSON());
+  }
+
+  async getGlobalLeaders() {
+    try {
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not get global leaders',
+        error.stack
+      );
+    }
   }
 }

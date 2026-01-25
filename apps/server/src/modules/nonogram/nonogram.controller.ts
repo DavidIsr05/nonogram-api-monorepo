@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
@@ -84,5 +85,13 @@ export class NonogramController {
     @CurrentUser() currentUser: User
   ) {
     return this.nonogramService.getNonogramById(currentUser, nonogramId);
+  }
+
+  @Delete(':id')
+  deleteUser(
+    @CurrentUser() currentUser: User,
+    @Param('id', new ParseUUIDPipe({ version: '4' })) nonogramId: string
+  ) {
+    return this.nonogramService.deleteNonogram(currentUser, nonogramId);
   }
 }

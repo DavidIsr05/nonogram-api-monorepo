@@ -68,7 +68,10 @@ export class GameService {
         where: { userId },
       });
     } catch (error) {
-      throw new BadRequestException('Could not get all users games');
+      throw new BadRequestException(
+        'Could not get all users games',
+        error.stack
+      );
     }
   }
 
@@ -82,7 +85,10 @@ export class GameService {
         where: { isFinished: false },
       });
     } catch (error) {
-      throw new BadRequestException('Could not get in progress games');
+      throw new BadRequestException(
+        'Could not get in progress games',
+        error.stack
+      );
     }
   }
 
@@ -96,7 +102,10 @@ export class GameService {
         where: { isFinished: true },
       });
     } catch (error) {
-      throw new BadRequestException('Could not get finished games');
+      throw new BadRequestException(
+        'Could not get finished games',
+        error.stack
+      );
     }
   }
 
@@ -113,7 +122,10 @@ export class GameService {
       return foundGame;
     } catch (error) {
       if (!(error instanceof ForbiddenException)) {
-        throw new BadRequestException('Could not get game by ID: ' + gameId);
+        throw new BadRequestException(
+          'Could not get game by ID: ' + gameId,
+          error.stack
+        );
       }
     }
   }
