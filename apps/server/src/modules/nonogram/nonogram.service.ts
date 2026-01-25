@@ -207,7 +207,10 @@ export class NonogramService {
         },
       });
     } catch (error) {
-      throw new BadRequestException('Could not get unplayed nonograms');
+      throw new BadRequestException(
+        'Could not get unplayed nonograms',
+        error.stack
+      );
     }
   }
 
@@ -228,7 +231,26 @@ export class NonogramService {
         },
       });
     } catch (error) {
-      throw new BadRequestException('Could not get played nonograms');
+      throw new BadRequestException(
+        'Could not get played nonograms',
+        error.stack
+      );
+    }
+  }
+
+  async deleteNonogram(currentUser, nonogramId) {
+    await this.getNonogramById(currentUser, nonogramId);
+
+    try {
+      this.logger.log('Deleting nonogram with ID', { nonogramId });
+      return await this.nonogramModel.destroy({
+        where: { id: nonogramId },
+      });
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not delete user with ID: ' + nonogramId,
+        error.stack
+      );
     }
   }
 }

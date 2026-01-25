@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-  Logger,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entity/user.entity';
 import {
@@ -64,9 +59,7 @@ export class UserService {
 
   async getUserById(currentUser, userId) {
     if (currentUser.id !== userId) {
-      throw new ForbiddenException(
-        'You are not allowed to access other users data'
-      );
+      throw new ForbiddenUserException();
     }
 
     try {

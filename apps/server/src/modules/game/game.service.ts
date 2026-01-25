@@ -110,10 +110,45 @@ export class GameService {
       if (foundGame.userId !== currentUser.id) {
         throw new ForbiddenGameException();
       }
+      return foundGame;
     } catch (error) {
       if (!(error instanceof ForbiddenException)) {
         throw new BadRequestException('Could not get game by ID: ' + gameId);
       }
+    }
+  }
+
+  async deleteGame(currentUser, gameId) {
+    await this.getGameById(currentUser, gameId);
+
+    try {
+      this.logger.log('Deleting nonogram with ID', { gameId });
+      return await this.gameModel.destroy({
+        where: { id: gameId },
+      });
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not delete user with ID: ' + gameId,
+        error.stack
+      );
+    }
+  }
+
+  async updateGame(currentUser, updateGameDto) {
+    const game = await this.getGameById(currentUser, updateGameDto.id);
+
+    game.set({
+      ...updateGameDto,
+    });
+
+    try {
+      this.logger.log('Updated game', { game });
+      return await game.save();
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not update user with ID: ' + game.id,
+        error.stack
+      );
     }
   }
 }
