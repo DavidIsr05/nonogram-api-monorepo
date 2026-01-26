@@ -18,6 +18,11 @@ import { ZodValidationPipe } from 'nestjs-zod';
 export class UserController {
   constructor(private userService: UserService) {}
 
+  @Get('leaders')
+  getGlobalLeaders() {
+    return this.userService.getGlobalLeaders();
+  }
+
   @Get(':id')
   getUserById(
     @CurrentUser() currentUser: User,

@@ -38,13 +38,12 @@ export class NonogramController {
     return this.nonogramService.generateNonogram(generateNonogramDto);
   }
 
-  @Post('nonogram-leaders')
+  @Get('leaders/:id')
   getNonogramLeaders(
-    @Body(new ZodValidationPipe(NonogramLeadersRequestDto))
-    nonogramLeadersRequestDto: NonogramLeadersRequestDto
+    @Param('id', new ParseUUIDPipe({ version: '4' })) nonogramId: string
   ) {
     //maybe pass the id as Param instead o craeting a dto for it?
-    return this.nonogramService.getNonogramLeaders(nonogramLeadersRequestDto);
+    return this.nonogramService.getNonogramLeaders(nonogramId);
   }
 
   @Get('all/:id')

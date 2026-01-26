@@ -8,6 +8,8 @@ import {
 } from '../../common';
 import * as bcrypt from 'bcrypt';
 import { UserResponseSchema } from '@nonogram-api-monorepo/types';
+import { Game } from '../game/entity/game.entity';
+import { ValidationError } from 'sequelize';
 
 @Injectable()
 export class UserService {
@@ -16,17 +18,6 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
 
   async createUser(createUserDto) {
-    const user = await this.getUserByPersonalNumber(
-      //TODO CR comment: "make it unit" was not clear
-      //how will the nonogram tiles get checked in the middle of the game? each
-      //click call to api or we send the nonogram?
-      createUserDto.personalNumber
-    );
-
-    if (user) {
-      throw new UserAlreadyExistsException(createUserDto.personalNumber);
-    }
-
     const saltRounds = parseInt(process.env.BCRYPT_SALT);
     const salt = await bcrypt.genSalt(saltRounds);
 
@@ -41,6 +32,9 @@ export class UserService {
         await this.userModel.create(createUserDto)
       );
     } catch (error) {
+      if (error instanceof ValidationError) {
+        throw new UserAlreadyExistsException(createUserDto.personalNumber);
+      }
       throw new BadRequestException('Could not create user', error.stack);
     }
   }
@@ -65,11 +59,7 @@ export class UserService {
 
     try {
       this.logger.log('Getting user by ID', { userId });
-      return this.parseObjectForReturn(
-        await this.userModel.findOne({
-          where: { id: userId },
-        })
-      );
+      return this.parseObjectForReturn(await this.userModel.findByPk(userId));
     } catch (error) {
       throw new UserNotFoundException(error.stack, userId);
     }
@@ -133,6 +123,15 @@ export class UserService {
 
   async getGlobalLeaders() {
     try {
+      return await this.userModel.findAll({
+        attributes: ['username'],
+        include: {
+          model: Game,
+          attributes: ['timer'],
+          where: { isFinished: true },
+          order: ['timer', 'ASC'],
+        },
+      });
     } catch (error) {
       throw new BadRequestException(
         'Could not get global leaders',

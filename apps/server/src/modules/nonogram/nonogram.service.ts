@@ -18,6 +18,7 @@ import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
 import { Op } from 'sequelize';
 import { ForbiddenNonogramException } from '../../common';
+import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
 export class NonogramService {
@@ -77,10 +78,10 @@ export class NonogramService {
     }
   }
 
-  async getNonogramLeaders(nonogramLeadersRequestDto) {
+  async getNonogramLeaders(nonogramId) {
     try {
       this.logger.log('Getting leaders for nonogram with ID', {
-        nonogramLeadersRequestDto,
+        nonogramId,
       });
       return await this.nonogramModel.findAll({
         include: [
@@ -90,7 +91,7 @@ export class NonogramService {
               isFinished: true,
             },
             attributes: ['timer'],
-            order: ['timer', 'ASC'],
+            required: true,
             include: [
               {
                 model: User,
@@ -99,9 +100,11 @@ export class NonogramService {
             ],
           },
         ],
-        where: { id: nonogramLeadersRequestDto.nonogramId },
+        where: { id: nonogramId },
         limit: 10,
         attributes: ['id'],
+        order: [['games', 'timer', 'ASC']],
+        raw: true,
       });
     } catch (error) {
       throw new BadRequestException(
@@ -123,11 +126,12 @@ export class NonogramService {
   async getNonogramById(currentUser, id): Promise<Nonogram | null> {
     try {
       this.logger.log('Getting nonogram by ID', { id });
-      const foundNonogram = await this.nonogramModel.findOne({
-        where: { id },
-      });
+      const foundNonogram = await this.nonogramModel.findByPk(id);
 
-      if (foundNonogram.creatorId !== currentUser.id) {
+      if (
+        foundNonogram.isPrivate &&
+        foundNonogram.creatorId !== currentUser.id
+      ) {
         throw new ForbiddenNonogramException();
       }
 

@@ -18,7 +18,7 @@ import { AuthModule, GameModule, NonogramModule, UserModule } from '../modules';
       models: [User, Nonogram, Game],
       autoLoadModels: true,
       synchronize: true,
-      logging: false,
+      logging: true,
     }),
     UserModule,
     NonogramModule,

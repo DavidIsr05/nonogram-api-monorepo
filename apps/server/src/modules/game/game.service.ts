@@ -26,7 +26,7 @@ export class GameService {
     );
 
     if (
-      !currentNonogram.isPrivate ||
+      currentNonogram.isPrivate &&
       currentNonogram.creatorId !== currentUser.id
     ) {
       throw new ForbiddenGameException();
@@ -112,9 +112,7 @@ export class GameService {
   async getGameById(currentUser, gameId) {
     try {
       this.logger.log('Getting game by id');
-      const foundGame = await this.gameModel.findOne({
-        where: { id: gameId },
-      });
+      const foundGame = await this.gameModel.findByPk(gameId);
 
       if (foundGame.userId !== currentUser.id) {
         throw new ForbiddenGameException();
