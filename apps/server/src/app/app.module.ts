@@ -5,6 +5,7 @@ import { Nonogram } from '../modules/nonogram/entity/nonogram.entity';
 import { Game } from '../modules/game/entity/game.entity';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule, GameModule, NonogramModule, UserModule } from '../modules';
+import { Cipher, EncryptionModule } from '@hedger/nestjs-encryption';
 
 @Module({
   imports: [
@@ -19,6 +20,10 @@ import { AuthModule, GameModule, NonogramModule, UserModule } from '../modules';
       autoLoadModels: true,
       synchronize: true,
       logging: true,
+    }),
+    EncryptionModule.forRoot({
+      key: process.env.KEY,
+      cipher: Cipher.AES_256_CBC,
     }),
     UserModule,
     NonogramModule,

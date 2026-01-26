@@ -10,6 +10,9 @@ import { InjectModel } from '@nestjs/sequelize';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, map } from 'rxjs';
 import {
+  CreateNonogramDto,
+  CreateNonogramRequestDto,
+  GeneratedNonogramResponseDto,
   NonogramResponseSchema,
   TileStatesEnumValues,
   generateNonogramDto,
@@ -18,32 +21,40 @@ import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
 import { Op } from 'sequelize';
 import { ForbiddenNonogramException } from '../../common';
-import { Sequelize } from 'sequelize-typescript';
+import { EncryptionService } from '@hedger/nestjs-encryption';
 
 @Injectable()
 export class NonogramService {
   constructor(
     @InjectModel(Nonogram) private readonly nonogramModel: typeof Nonogram,
-    private readonly httpService: HttpService
+    private readonly httpService: HttpService,
+    private readonly crypto: EncryptionService
   ) {}
 
   private readonly logger = new Logger(NonogramService.name);
 
-  async createNonogram(currentUser, createNonogramDto) {
-    if (!createNonogramDto.isPrivate && !currentUser.isAdmin) {
-      throw new ForbiddenNonogramException();
-    } else if (currentUser.id !== createNonogramDto.creatorId) {
+  async createNonogram(
+    currentUser: User,
+    createNonogramRequestDto: CreateNonogramRequestDto
+  ) {
+    if (!createNonogramRequestDto.isPrivate && !currentUser.isAdmin) {
+      throw new ForbiddenException('Can not create public nonograms');
+    } else if (currentUser.id !== createNonogramRequestDto.creatorId) {
       throw new ForbiddenNonogramException();
     }
 
-    createNonogramDto = {
-      ...createNonogramDto,
-      creatorId: currentUser.id,
+    const decrypted = this.crypto.decrypt(createNonogramRequestDto.nonogram);
+
+    const nonogramMatrix: boolean[][] = JSON.parse(decrypted);
+
+    const createNonogramDto: CreateNonogramDto = {
+      ...createNonogramRequestDto,
+      nonogram: nonogramMatrix,
     };
 
     try {
-      this.logger.log('Creating new nonogram', { createNonogramDto });
-      return await this.nonogramModel.create(createNonogramDto);
+      this.logger.log('Creating new nonogram');
+      return await this.nonogramModel.create(createNonogramDto); //TODO need to parse this return statement to not inclide nonogram like in user
     } catch (error) {
       throw new BadRequestException(
         'Could not create your nonogram',
@@ -57,9 +68,24 @@ export class NonogramService {
 
     try {
       this.logger.log('Generating nonogram', { generateNonogramDto });
-      return firstValueFrom(response);
+      const generatedNonogram: GeneratedNonogramResponseDto =
+        await firstValueFrom(response);
+
+      const nonogramToEncrypt = JSON.stringify(generatedNonogram.nonogram);
+
+      const encrypted = this.crypto.encrypt(nonogramToEncrypt);
+
+      return {
+        ...generatedNonogram,
+        nonogram: encrypted,
+      };
     } catch (error) {
-      throw new BadRequestException('Could not generate nonogram', error.stack);
+      if (!(error instanceof ServiceUnavailableException)) {
+        throw new BadRequestException(
+          'Could not generate nonogram',
+          error.stack
+        );
+      }
     }
   }
 

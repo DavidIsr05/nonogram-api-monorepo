@@ -23,7 +23,9 @@ export const CreateNonogramSchema = NonogramSchema.omit({
   createdAt: true,
   updatedAt: true,
   deletedAt: true,
-}).strict();
+})
+  .required({ creatorId: true, nonogram: true })
+  .strict();
 
 export const UpdateNonogramSchema = NonogramSchema.partial();
 
