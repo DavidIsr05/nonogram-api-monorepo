@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
@@ -8,9 +9,8 @@ import {
 } from '@nestjs/common';
 import { NonogramService } from './nonogram.service';
 import {
-  CreateNonogramDto,
-  generateNonogramDto,
-  NonogramLeadersRequestDto,
+  CreateNonogramRequestDto,
+  GenerateNonogramDto,
 } from '@nonogram-api-monorepo/types';
 import { User } from '../user/entity/user.entity';
 import { CurrentUser } from '../../common';
@@ -22,28 +22,29 @@ export class NonogramController {
 
   @Post('create')
   createNonogram(
-    @Body(new ZodValidationPipe(CreateNonogramDto))
-    createNonogramDto: CreateNonogramDto,
+    @Body(new ZodValidationPipe(CreateNonogramRequestDto))
+    createNonogramRequestDto: CreateNonogramRequestDto,
     @CurrentUser() currentUser: User
   ) {
-    return this.nonogramService.createNonogram(currentUser, createNonogramDto);
+    return this.nonogramService.createNonogram(
+      currentUser,
+      createNonogramRequestDto
+    );
   }
-  //TODO when genearting return everything encrypted other then preview and then on create we get the object back from cleint decrypt everything and save it
+
   @Post('generate')
   generateNonogram(
-    @Body(new ZodValidationPipe(generateNonogramDto))
-    generateNonogramDto: generateNonogramDto
+    @Body(new ZodValidationPipe(GenerateNonogramDto))
+    generateNonogramDto: GenerateNonogramDto
   ) {
     return this.nonogramService.generateNonogram(generateNonogramDto);
   }
 
-  @Post('nonogram-leaders')
+  @Get('leaders/:nonogramId')
   getNonogramLeaders(
-    @Body(new ZodValidationPipe(NonogramLeadersRequestDto))
-    nonogramLeadersRequestDto: NonogramLeadersRequestDto
+    @Param('nonogramId', new ParseUUIDPipe({ version: '4' })) nonogramId: string
   ) {
-    //maybe pass the id as Param instead o craeting a dto for it?
-    return this.nonogramService.getNonogramLeaders(nonogramLeadersRequestDto);
+    return this.nonogramService.getNonogramLeaders(nonogramId);
   }
 
   @Get('all/:id')
@@ -84,5 +85,13 @@ export class NonogramController {
     @CurrentUser() currentUser: User
   ) {
     return this.nonogramService.getNonogramById(currentUser, nonogramId);
+  }
+
+  @Delete(':id')
+  deleteUser(
+    @CurrentUser() currentUser: User,
+    @Param('id', new ParseUUIDPipe({ version: '4' })) nonogramId: string
+  ) {
+    return this.nonogramService.deleteNonogram(currentUser, nonogramId);
   }
 }

@@ -28,15 +28,15 @@ export class Nonogram extends Model<Partial<Nonogram>> {
 
   @Exclude()
   @Column({ type: DataType.JSONB, allowNull: false })
-  nonogram: { nonogram: boolean[][] };
+  nonogram: boolean[][];
 
   @Expose()
   @Column({ type: DataType.TEXT, allowNull: false })
-  previewImageBase64: Text;
+  previewImageBase64: string;
 
   @Expose()
   @Column({ type: DataType.TEXT, allowNull: false })
-  completeNonogramImageBase64: Text;
+  completeNonogramImageBase64: string;
 
   @Expose()
   @Column({ type: DataType.DOUBLE, allowNull: false })

@@ -1,13 +1,15 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
 } from '@nestjs/common';
 import { GameService } from './game.service';
-import { CreateGameDto } from '@nonogram-api-monorepo/types';
+import { CreateGameDto, UpdateGameDto } from '@nonogram-api-monorepo/types';
 import { CurrentUser } from '../../common';
 import { User } from '../user/entity/user.entity';
 import { ZodValidationPipe } from 'nestjs-zod';
@@ -54,5 +56,21 @@ export class GameController {
     @CurrentUser() currentUser: User
   ) {
     return this.gameService.getGameById(currentUser, gameId);
+  }
+
+  @Patch()
+  updateUser(
+    @Body(new ZodValidationPipe(UpdateGameDto)) updateGameDto: UpdateGameDto,
+    @CurrentUser() currentUser: User
+  ) {
+    return this.gameService.updateGame(currentUser, updateGameDto);
+  }
+
+  @Delete(':id')
+  deleteUser(
+    @CurrentUser() currentUser: User,
+    @Param('id', new ParseUUIDPipe({ version: '4' })) gameId: string
+  ) {
+    return this.gameService.deleteGame(currentUser, gameId);
   }
 }

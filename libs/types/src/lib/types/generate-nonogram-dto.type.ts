@@ -2,7 +2,7 @@ import z from 'zod';
 import { NonogramDifficultiesEnumValues } from '../enums';
 import { createZodDto } from 'nestjs-zod';
 
-export const generateNonogramSchema = z
+export const GenerateNonogramSchema = z
   .object({
     imageBase64: z.string(),
     difficulty: NonogramDifficultiesEnumValues,
@@ -11,4 +11,4 @@ export const generateNonogramSchema = z
   })
   .strict();
 
-export class generateNonogramDto extends createZodDto(generateNonogramSchema) {}
+export class GenerateNonogramDto extends createZodDto(GenerateNonogramSchema) {}
