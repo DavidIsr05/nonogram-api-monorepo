@@ -9,9 +9,8 @@ import {
 } from '@nestjs/common';
 import { NonogramService } from './nonogram.service';
 import {
-  CreateNonogramDto,
   CreateNonogramRequestDto,
-  generateNonogramDto,
+  GenerateNonogramDto,
 } from '@nonogram-api-monorepo/types';
 import { User } from '../user/entity/user.entity';
 import { CurrentUser } from '../../common';
@@ -35,8 +34,8 @@ export class NonogramController {
 
   @Post('generate')
   generateNonogram(
-    @Body(new ZodValidationPipe(generateNonogramDto))
-    generateNonogramDto: generateNonogramDto
+    @Body(new ZodValidationPipe(GenerateNonogramDto))
+    generateNonogramDto: GenerateNonogramDto
   ) {
     return this.nonogramService.generateNonogram(generateNonogramDto);
   }

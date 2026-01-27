@@ -15,7 +15,7 @@ import {
   GeneratedNonogramResponseDto,
   NonogramResponseSchema,
   TileStatesEnumValues,
-  generateNonogramDto,
+  GenerateNonogramDto,
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
@@ -33,7 +33,7 @@ export class NonogramService {
 
   private readonly logger = new Logger(NonogramService.name);
 
-  async generateNonogram(generateNonogramDto: generateNonogramDto) {
+  async generateNonogram(generateNonogramDto: GenerateNonogramDto) {
     const response = await this.generateNonogramResponse(generateNonogramDto);
 
     try {
