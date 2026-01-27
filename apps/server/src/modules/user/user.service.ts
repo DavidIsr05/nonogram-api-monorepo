@@ -10,6 +10,7 @@ import * as bcrypt from 'bcrypt';
 import { UserResponseSchema } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 import { ValidationError } from 'sequelize';
+import { Nonogram } from '../nonogram/entity/nonogram.entity';
 
 @Injectable()
 export class UserService {
@@ -18,8 +19,7 @@ export class UserService {
   private readonly logger = new Logger(UserService.name);
 
   async createUser(createUserDto) {
-    const saltRounds = parseInt(process.env.BCRYPT_SALT);
-    const salt = await bcrypt.genSalt(saltRounds);
+    const salt = await bcrypt.genSalt(+process.env.BCRYPT_SALT);
 
     createUserDto = {
       ...createUserDto,
@@ -27,10 +27,11 @@ export class UserService {
     };
 
     try {
-      this.logger.log('Creating new user', { createUserDto });
-      return this.parseObjectForReturn(
+      const createdUser = this.parseObjectForReturn(
         await this.userModel.create(createUserDto)
       );
+      this.logger.log('Created new user successfully', { createdUser });
+      return createdUser;
     } catch (error) {
       if (error instanceof ValidationError) {
         throw new UserAlreadyExistsException(createUserDto.personalNumber);
@@ -41,12 +42,15 @@ export class UserService {
 
   async getUserByPersonalNumber(personalNumber) {
     try {
-      this.logger.log('Getting user by personal number', { personalNumber });
-      return await this.userModel.findOne({
+      const foundUserByPersonalNumber = await this.userModel.findOne({
         where: {
           personalNumber: personalNumber,
         },
       });
+      this.logger.log('Found user by personla number successfully', {
+        foundUserByPersonalNumber,
+      });
+      return foundUserByPersonalNumber;
     } catch (error) {
       throw new UserNotFoundException(error.stack, personalNumber);
     }
@@ -58,8 +62,11 @@ export class UserService {
     }
 
     try {
-      this.logger.log('Getting user by ID', { userId });
-      return this.parseObjectForReturn(await this.userModel.findByPk(userId));
+      const foundUserById = this.parseObjectForReturn(
+        await this.userModel.findByPk(userId)
+      );
+      this.logger.log('Found user by ID successfully', { foundUserById });
+      return foundUserById;
     } catch (error) {
       throw new UserNotFoundException(error.stack, userId);
     }
@@ -87,9 +94,9 @@ export class UserService {
     });
 
     try {
-      this.logger.log('Updating user', { currentUser });
-      this.logger.log('Updated user', { user });
-      return this.parseObjectForReturn(await user.save());
+      const updatedUser = this.parseObjectForReturn(await user.save());
+      this.logger.log('Updated user successfully', { updatedUser });
+      return updatedUser;
     } catch (error) {
       throw new BadRequestException(
         'Could not update user with ID: ' + user.id,
@@ -104,10 +111,11 @@ export class UserService {
     }
 
     try {
-      this.logger.log('Deleting user with ID', { userId });
-      return await this.userModel.destroy({
+      const deletedUser = await this.userModel.destroy({
         where: { id: userId },
       });
+      this.logger.log('Deleted user successfully', { deletedUser });
+      return deletedUser;
     } catch (error) {
       throw new BadRequestException(
         'Could not delete user with ID: ' + userId,
@@ -123,15 +131,25 @@ export class UserService {
 
   async getGlobalLeaders() {
     try {
-      return await this.userModel.findAll({
+      const globalLeaders = await this.userModel.findAll({
         attributes: ['username'],
-        include: {
-          model: Game,
-          attributes: ['timer'],
-          where: { isFinished: true },
-          order: ['timer', 'ASC'],
-        },
+        include: [
+          {
+            model: Game,
+            attributes: ['timer'],
+            where: { isFinished: true },
+            order: ['timer', 'ASC'],
+          },
+          {
+            model: Nonogram,
+            attributes: ['isPrivate'],
+            where: { isPrivate: false },
+          },
+        ],
+        raw: true,
       });
+      this.logger.log('Got global leaders successfully', { globalLeaders });
+      return globalLeaders;
     } catch (error) {
       throw new BadRequestException(
         'Could not get global leaders',

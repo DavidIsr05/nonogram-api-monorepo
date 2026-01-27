@@ -41,9 +41,9 @@ export class NonogramController {
     return this.nonogramService.generateNonogram(generateNonogramDto);
   }
 
-  @Get('leaders/:id')
+  @Get('leaders/:nonogramId')
   getNonogramLeaders(
-    @Param('id', new ParseUUIDPipe({ version: '4' })) nonogramId: string
+    @Param('nonogramId', new ParseUUIDPipe({ version: '4' })) nonogramId: string
   ) {
     return this.nonogramService.getNonogramLeaders(nonogramId);
   }

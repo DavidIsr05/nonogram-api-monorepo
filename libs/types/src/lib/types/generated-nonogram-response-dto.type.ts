@@ -4,7 +4,7 @@ import { createZodDto } from 'nestjs-zod';
 
 export const GeneratedNonogramResponseSchema = z
   .object({
-    nonogram: z.array(z.array(z.boolean())),
+    nonogram: z.boolean().array().array(),
     previewImageBase64: z.string(),
     completeNonogramImageBase64: z.string(),
     mainObjectDimFactor: z.number(),
