@@ -9,7 +9,11 @@ import {
   Post,
 } from '@nestjs/common';
 import { GameService } from './game.service';
-import { CreateGameDto, UpdateGameDto } from '@nonogram-api-monorepo/types';
+import {
+  CheckAndUpdateNonogramTileDto,
+  CreateGameDto,
+  UpdateGameDto,
+} from '@nonogram-api-monorepo/types';
 import { CurrentUser } from '../../common';
 import { User } from '../user/entity/user.entity';
 import { ZodValidationPipe } from 'nestjs-zod';
@@ -72,5 +76,17 @@ export class GameController {
     @Param('id', new ParseUUIDPipe({ version: '4' })) gameId: string
   ) {
     return this.gameService.deleteGame(currentUser, gameId);
+  }
+
+  @Post('check') //TODO
+  checkAndUpdateNonogramTile(
+    @Body(new ZodValidationPipe(CheckAndUpdateNonogramTileDto))
+    checkAndUpdateNonogramTileDto: CheckAndUpdateNonogramTileDto,
+    @CurrentUser() currentUser: User
+  ) {
+    return this.gameService.checkAndUpdateNonogramTile(
+      currentUser,
+      checkAndUpdateNonogramTileDto
+    );
   }
 }

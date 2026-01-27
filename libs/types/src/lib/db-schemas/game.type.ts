@@ -33,7 +33,7 @@ export const CreateGameSchema = GameSchema.omit({
 
 export const UpdateGameSchema = GameSchema.partial()
   .omit({ nonogramId: true })
-  .required({ userId: true })
+  .required({ id: true })
   .strict();
 
 export class GameDto extends createZodDto(GameSchema) {}
