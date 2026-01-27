@@ -78,7 +78,7 @@ export class GameController {
     return this.gameService.deleteGame(currentUser, gameId);
   }
 
-  @Post('check') //TODO
+  @Post('check-tile')
   checkAndUpdateNonogramTile(
     @Body(new ZodValidationPipe(CheckAndUpdateNonogramTileDto))
     checkAndUpdateNonogramTileDto: CheckAndUpdateNonogramTileDto,

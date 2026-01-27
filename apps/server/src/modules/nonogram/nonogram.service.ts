@@ -22,6 +22,7 @@ import { User } from '../user/entity/user.entity';
 import { Op } from 'sequelize';
 import { ForbiddenNonogramException } from '../../common';
 import { EncryptionService } from '@hedger/nestjs-encryption';
+import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
 export class NonogramService {
@@ -234,23 +235,21 @@ export class NonogramService {
       throw new ForbiddenNonogramException();
     }
     try {
-      const playedNonograms = await this.nonogramModel.findAll({
-        attributes: ['id'],
+      const unplayedNonograms = await this.nonogramModel.findAll({
         include: {
           model: Game,
-          required: true,
           where: { userId },
+          attributes: ['nonogramId'],
+          required: false,
         },
-      });
-
-      const playedNonogramIds = playedNonograms.map((nonogram) => nonogram.id); //TODO make this one "shlifa"
-
-      const unplayedNonograms = await this.nonogramModel.findAll({
+        attributes: ['id'],
+        raw: true,
         where: {
-          [Op.or]: [{ isPrivate: false }, { creatorId: userId }],
-          id: { [Op.notIn]: playedNonogramIds },
+          [Op.or]: { isPrivate: false, creatorId: userId },
+          '$games.nonogramId$': { [Op.is]: null },
         },
       });
+
       this.logger.log('Got unplayed nonograms successfully', {
         unplayedNonograms,
       });
