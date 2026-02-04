@@ -189,9 +189,16 @@ export class GameService {
     } else {
       updatedUncompletedNonogram[xIndex][yIndex] = TileStates.MISTAKE;
 
+      const updatedMistakesCount = foundGame.mistakes - 1;
+
+      if (!updatedMistakesCount) {
+        //TODO end game as failed because reached mistakes threshold
+      }
+
       this.updateGame(currentUser, {
         id: foundGame.id,
         uncompletedNonogram: updatedUncompletedNonogram,
+        mistakes: updatedMistakesCount,
       });
 
       return TileStates.MISTAKE;
