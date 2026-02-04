@@ -116,43 +116,6 @@ export class NonogramService {
     }
   }
 
-  async getNonogramLeaders(nonogramId) {
-    try {
-      const nonogramLeaders = await this.nonogramModel.findAll({
-        include: [
-          {
-            model: Game,
-            where: {
-              isFinished: true,
-            },
-            attributes: ['timer'],
-            required: true,
-            include: [
-              {
-                model: User,
-                attributes: ['username'],
-              },
-            ],
-          },
-        ],
-        where: { id: nonogramId },
-        limit: 10,
-        attributes: ['id'],
-        order: [['games', 'timer', 'ASC']],
-        raw: true,
-      });
-      this.logger.log('Got nonogram leaders successfully', {
-        nonogramLeaders,
-      });
-      return nonogramLeaders;
-    } catch (error) {
-      throw new BadRequestException(
-        'Could not get nonogram leaders',
-        error.stack
-      );
-    }
-  }
-
   getNonogramSize(nonogram) {
     const DEFAULT_NONOGRAM_SIZE = 20;
     const sizeFactorBasedOnDifficulty = Object.keys(
@@ -300,6 +263,72 @@ export class NonogramService {
     } catch (error) {
       throw new BadRequestException(
         'Could not delete user with ID: ' + nonogramId,
+        error.stack
+      );
+    }
+  }
+
+  async getNonogramLeaders(nonogramId) {
+    try {
+      const nonogramLeaders = await this.nonogramModel.findAll({
+        include: [
+          {
+            model: Game,
+            where: {
+              isFinished: true,
+            },
+            attributes: ['timer'],
+            required: true,
+            include: [
+              {
+                model: User,
+                attributes: ['username'],
+              },
+            ],
+          },
+        ],
+        where: { id: nonogramId },
+        limit: 10,
+        attributes: ['id'],
+        order: [['games', 'timer', 'ASC']],
+      });
+      this.logger.log('Got nonogram leaders successfully', {
+        nonogramLeaders,
+      });
+      return nonogramLeaders;
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not get nonogram leaders',
+        error.stack
+      );
+    }
+  }
+
+  async getGlobalLeaders() {
+    try {
+      const globalLeaders = await this.nonogramModel.findAll({
+        raw: true,
+        attributes: [],
+        where: { isPrivate: false },
+        group: ['Nonogram.id'],
+        include: [
+          {
+            model: Game,
+            as: 'games',
+            attributes: [
+              [Sequelize.fn('COUNT', Sequelize.col('Nonogram.id')), 'count'],
+            ],
+            where: { isFinished: true },
+            required: true,
+          },
+        ],
+        order: [['count', 'DESC']],
+      });
+      this.logger.log('Got global leaders successfully', { globalLeaders });
+      return globalLeaders;
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not get global leaders',
         error.stack
       );
     }
