@@ -8,7 +8,10 @@ import {
 } from '../../common';
 import * as bcrypt from 'bcrypt';
 import { UserResponseSchema } from '@nonogram-api-monorepo/types';
+import { Game } from '../game/entity/game.entity';
+import { Nonogram } from '../nonogram/entity/nonogram.entity';
 import { ValidationError } from 'sequelize';
+import { Sequelize } from 'sequelize-typescript';
 
 @Injectable()
 export class UserService {
@@ -125,5 +128,75 @@ export class UserService {
   parseObjectForReturn(object) {
     this.logger.log('Parsing user object for return');
     return UserResponseSchema.parse(object.toJSON());
+  }
+
+  async getGlobalLeaders() {
+    try {
+      const globalLeaders = await this.userModel.findAll({
+        group: [
+          'User.id',
+          'User.username',
+          'games.timer',
+          'games.id',
+          'difficulty',
+          'games->nonogram.id',
+          'games->nonogram->games.id',
+        ],
+        order: [
+          ['username', 'ASC'],
+          ['games', 'timer', 'ASC'],
+          ['games', 'nonogram', 'games', 'timer', 'ASC'],
+        ],
+        attributes: ['username'],
+        include: [
+          {
+            model: Game,
+            include: [
+              {
+                model: Nonogram,
+                where: { isPrivate: false },
+                attributes: [
+                  'difficulty',
+                  'id',
+                  [
+                    Sequelize.fn(
+                      'COUNT',
+                      Sequelize.col('games->nonogram->games')
+                    ),
+                    'sum',
+                  ],
+                ],
+                include: [
+                  {
+                    model: Game,
+                    where: { isFinished: true },
+                    attributes: [
+                      'id',
+                      [
+                        Sequelize.fn(
+                          'COUNT',
+                          Sequelize.col('games->nonogram->games')
+                        ),
+                        'count',
+                      ],
+                    ],
+                  },
+                ],
+              },
+            ],
+            attributes: ['nonogramId', 'timer'],
+            where: { isFinished: true },
+            required: true,
+          },
+        ],
+      });
+      this.logger.log('Got global leaders successfully', { globalLeaders });
+      return globalLeaders;
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not get global leaders',
+        error.stack
+      );
+    }
   }
 }

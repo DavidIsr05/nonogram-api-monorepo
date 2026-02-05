@@ -44,7 +44,7 @@ export class NonogramController {
   getNonogramLeaders(
     @Param('nonogramId', new ParseUUIDPipe({ version: '4' })) nonogramId: string
   ) {
-    return this.nonogramService.getNonogramLeaders(nonogramId);
+    return this.nonogramService.getNonogramLeaders(nonogramId, 10);
   }
 
   @Public() //TODO remove for "prod"🤓☝️

@@ -19,7 +19,7 @@ import {
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
-import { Op } from 'sequelize';
+import { Op, where } from 'sequelize';
 import { ForbiddenNonogramException } from '../../common';
 import { EncryptionService } from '@hedger/nestjs-encryption';
 import { Sequelize } from 'sequelize-typescript';
@@ -268,7 +268,7 @@ export class NonogramService {
     }
   }
 
-  async getNonogramLeaders(nonogramId) {
+  async getNonogramLeaders(nonogramId, limit) {
     try {
       const nonogramLeaders = await this.nonogramModel.findAll({
         include: [
@@ -288,7 +288,7 @@ export class NonogramService {
           },
         ],
         where: { id: nonogramId },
-        limit: 10,
+        limit: limit,
         attributes: ['id'],
         order: [['games', 'timer', 'ASC']],
       });
@@ -308,7 +308,7 @@ export class NonogramService {
     try {
       const globalLeaders = await this.nonogramModel.findAll({
         raw: true,
-        attributes: [],
+        attributes: ['id', 'difficulty'],
         where: { isPrivate: false },
         group: ['Nonogram.id'],
         include: [
