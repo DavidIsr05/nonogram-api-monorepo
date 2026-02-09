@@ -8,9 +8,7 @@ import {
 } from '../../common';
 import * as bcrypt from 'bcrypt';
 import { UserResponseSchema } from '@nonogram-api-monorepo/types';
-import { Game } from '../game/entity/game.entity';
 import { ValidationError } from 'sequelize';
-import { Nonogram } from '../nonogram/entity/nonogram.entity';
 
 @Injectable()
 export class UserService {
@@ -127,34 +125,5 @@ export class UserService {
   parseObjectForReturn(object) {
     this.logger.log('Parsing user object for return');
     return UserResponseSchema.parse(object.toJSON());
-  }
-
-  async getGlobalLeaders() {
-    try {
-      const globalLeaders = await this.userModel.findAll({
-        attributes: ['username'],
-        include: [
-          {
-            model: Game,
-            attributes: ['timer'],
-            where: { isFinished: true },
-            order: ['timer', 'ASC'],
-          },
-          {
-            model: Nonogram,
-            attributes: ['isPrivate'],
-            where: { isPrivate: false },
-          },
-        ],
-        raw: true,
-      });
-      this.logger.log('Got global leaders successfully', { globalLeaders });
-      return globalLeaders;
-    } catch (error) {
-      throw new BadRequestException(
-        'Could not get global leaders',
-        error.stack
-      );
-    }
   }
 }

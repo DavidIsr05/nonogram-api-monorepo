@@ -16,12 +16,18 @@ import {
   NonogramResponseSchema,
   TileStatesEnumValues,
   GenerateNonogramDto,
+  gamesForEachNonogramDto,
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
 import { Op } from 'sequelize';
-import { ForbiddenNonogramException } from '../../common';
+import {
+  ForbiddenNonogramException,
+  GlobalLeadersException,
+  NonogramLeadersException,
+} from '../../common';
 import { EncryptionService } from '@hedger/nestjs-encryption';
+import { chunk } from 'lodash';
 
 @Injectable()
 export class NonogramService {
@@ -115,43 +121,6 @@ export class NonogramService {
     }
   }
 
-  async getNonogramLeaders(nonogramId) {
-    try {
-      const nonogramLeaders = await this.nonogramModel.findAll({
-        include: [
-          {
-            model: Game,
-            where: {
-              isFinished: true,
-            },
-            attributes: ['timer'],
-            required: true,
-            include: [
-              {
-                model: User,
-                attributes: ['username'],
-              },
-            ],
-          },
-        ],
-        where: { id: nonogramId },
-        limit: 10,
-        attributes: ['id'],
-        order: [['games', 'timer', 'ASC']],
-        raw: true,
-      });
-      this.logger.log('Got nonogram leaders successfully', {
-        nonogramLeaders,
-      });
-      return nonogramLeaders;
-    } catch (error) {
-      throw new BadRequestException(
-        'Could not get nonogram leaders',
-        error.stack
-      );
-    }
-  }
-
   getNonogramSize(nonogram) {
     const DEFAULT_NONOGRAM_SIZE = 20;
     const sizeFactorBasedOnDifficulty = Object.keys(
@@ -234,23 +203,21 @@ export class NonogramService {
       throw new ForbiddenNonogramException();
     }
     try {
-      const playedNonograms = await this.nonogramModel.findAll({
-        attributes: ['id'],
+      const unplayedNonograms = await this.nonogramModel.findAll({
         include: {
           model: Game,
-          required: true,
           where: { userId },
+          attributes: ['nonogramId'],
+          required: false,
         },
-      });
-
-      const playedNonogramIds = playedNonograms.map((nonogram) => nonogram.id); //TODO make this one "shlifa"
-
-      const unplayedNonograms = await this.nonogramModel.findAll({
+        attributes: ['id'],
+        raw: true,
         where: {
-          [Op.or]: [{ isPrivate: false }, { creatorId: userId }],
-          id: { [Op.notIn]: playedNonogramIds },
+          [Op.or]: { isPrivate: false, creatorId: userId },
+          '$games.nonogramId$': { [Op.is]: null },
         },
       });
+
       this.logger.log('Got unplayed nonograms successfully', {
         unplayedNonograms,
       });
@@ -304,5 +271,148 @@ export class NonogramService {
         error.stack
       );
     }
+  }
+
+  async getNonogramLeaders(nonogramId, limit) {
+    try {
+      const nonogramLeaders = await this.nonogramModel.findAll({
+        include: [
+          {
+            model: Game,
+            where: {
+              isFinished: true,
+            },
+            attributes: ['timer'],
+            required: true,
+            include: [
+              {
+                model: User,
+                attributes: ['username'],
+              },
+            ],
+          },
+        ],
+        where: { id: nonogramId },
+        limit: limit,
+        attributes: ['id'],
+        order: [['games', 'timer', 'ASC']],
+      });
+      this.logger.log('Got nonogram leaders successfully', {
+        nonogramLeaders,
+      });
+      return nonogramLeaders;
+    } catch (error) {
+      throw new NonogramLeadersException(error.stack);
+    }
+  }
+
+  async getGlobalLeaders() {
+    try {
+      const publicNonogramsDoneGames = await this.getPublicNonogramsDoneGames();
+
+      const topTenPercentNonogramGames: gamesForEachNonogramDto[] =
+        await this.getTopTenPercentNonogramGames(publicNonogramsDoneGames);
+
+      const usersScoresMap = new Map<string, number>();
+
+      topTenPercentNonogramGames.forEach((nonogramGames) => {
+        const chunkSize = Math.ceil(nonogramGames.games.length * 0.1);
+
+        const usersDivisions = chunk(nonogramGames.games, chunkSize);
+
+        usersDivisions.forEach((chunk, index) => {
+          chunk.forEach((game) => {
+            const { username } = game.user;
+
+            if (usersScoresMap.has(username)) {
+              usersScoresMap.set(
+                username,
+                usersScoresMap.get(username) + 1 * (index + 1)
+              );
+            } else {
+              usersScoresMap.set(username, 1 * (index + 1));
+            }
+          });
+        });
+      });
+
+      const leaderboardMap = new Map(
+        [...usersScoresMap.entries()].sort(
+          (userA, userB) => userB[1] - userA[1]
+        )
+      );
+
+      this.logger.log('Got global leaders successfully', { leaderboardMap });
+      return Array.from(leaderboardMap.entries());
+    } catch (error) {
+      throw new GlobalLeadersException(error.stack);
+    }
+  }
+
+  async getPublicNonogramsDoneGames() {
+    try {
+      const gamesForEachNonogram: gamesForEachNonogramDto[] =
+        await this.nonogramModel.findAll({
+          attributes: ['id'],
+          where: { isPrivate: false },
+          group: [
+            'Nonogram.id',
+            'games.timer',
+            'games.mistakes',
+            'games.hints',
+            'games.id',
+            'games->user.id',
+          ],
+          order: [
+            ['games', 'timer'],
+            ['games', 'mistakes'],
+            ['games', 'hints'],
+          ],
+          include: {
+            model: Game,
+            where: { isFinished: true },
+            attributes: ['timer', 'mistakes', 'hints'],
+            include: [
+              {
+                model: User,
+                attributes: ['username'],
+              },
+            ],
+          },
+        });
+
+      const stringifiedGamesForEachNonogram =
+        JSON.stringify(gamesForEachNonogram);
+      const parsedGamesForEachNonogram: gamesForEachNonogramDto[] = JSON.parse(
+        stringifiedGamesForEachNonogram
+      );
+
+      this.logger.log('Successfully got public nonograms finished games:', {
+        parsedGamesForEachNonogram,
+      });
+
+      return parsedGamesForEachNonogram;
+    } catch (error) {
+      throw new BadRequestException(
+        'Could not game public nonograms finished games',
+        error.stack
+      );
+    }
+  }
+
+  getTopTenPercentNonogramGames(publicNonogramsDoneGames) {
+    const topTenPercentNonogramGames = publicNonogramsDoneGames.forEach(
+      (nonogramGames) => {
+        const countOfGamesForNonogram = nonogramGames.games.length;
+        const numberOfGamesInTopTen = Math.ceil(countOfGamesForNonogram * 0.1);
+
+        nonogramGames.games.splice(
+          numberOfGamesInTopTen,
+          countOfGamesForNonogram - numberOfGamesInTopTen
+        );
+      }
+    );
+
+    return topTenPercentNonogramGames;
   }
 }

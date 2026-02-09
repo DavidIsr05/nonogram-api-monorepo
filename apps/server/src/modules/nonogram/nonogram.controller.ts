@@ -13,7 +13,7 @@ import {
   GenerateNonogramDto,
 } from '@nonogram-api-monorepo/types';
 import { User } from '../user/entity/user.entity';
-import { CurrentUser } from '../../common';
+import { CurrentUser, Public } from '../../common';
 import { ZodValidationPipe } from 'nestjs-zod';
 
 @Controller('nonogram')
@@ -44,7 +44,13 @@ export class NonogramController {
   getNonogramLeaders(
     @Param('nonogramId', new ParseUUIDPipe({ version: '4' })) nonogramId: string
   ) {
-    return this.nonogramService.getNonogramLeaders(nonogramId);
+    return this.nonogramService.getNonogramLeaders(nonogramId, 10);
+  }
+
+  @Public() //TODO remove for "prod"🤓☝️
+  @Get('global-leaders')
+  getGlobalLeaders() {
+    return this.nonogramService.getGlobalLeaders();
   }
 
   @Get('all/:id')

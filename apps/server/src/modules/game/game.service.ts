@@ -160,4 +160,47 @@ export class GameService {
       );
     }
   }
+
+  async checkAndUpdateNonogramTile(currentUser, checkAndUpdateNonogramTileDto) {
+    const foundGame = await this.getGameById(
+      currentUser,
+      checkAndUpdateNonogramTileDto.gameId
+    );
+
+    const foundNonogram = await this.nonogramModel.getNonogramById(
+      currentUser,
+      foundGame.nonogramId
+    );
+
+    const { nonogramXIndex, nonogramYIndex } = checkAndUpdateNonogramTileDto;
+
+    const { uncompletedNonogram } = foundGame;
+
+    if (foundNonogram.nonogram[nonogramXIndex][nonogramYIndex]) {
+      uncompletedNonogram[nonogramXIndex][nonogramYIndex] = TileStates.FILLED;
+
+      this.updateGame(currentUser, {
+        id: foundGame.id,
+        uncompletedNonogram: uncompletedNonogram,
+      });
+
+      return TileStates.FILLED;
+    } else {
+      uncompletedNonogram[nonogramXIndex][nonogramYIndex] = TileStates.MISTAKE;
+
+      const updatedMistakesCount = foundGame.mistakes - 1;
+
+      if (!updatedMistakesCount) {
+        //TODO end game as failed because reached mistakes threshold
+      }
+
+      this.updateGame(currentUser, {
+        id: foundGame.id,
+        uncompletedNonogram: uncompletedNonogram,
+        mistakes: updatedMistakesCount,
+      });
+
+      return TileStates.MISTAKE;
+    }
+  }
 }
