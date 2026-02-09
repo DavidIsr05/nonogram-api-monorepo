@@ -21,7 +21,11 @@ import {
 import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
 import { Op } from 'sequelize';
-import { ForbiddenNonogramException } from '../../common';
+import {
+  ForbiddenNonogramException,
+  GlobalLeadersException,
+  NonogramLeadersException,
+} from '../../common';
 import { EncryptionService } from '@hedger/nestjs-encryption';
 import { chunk } from 'lodash';
 
@@ -298,10 +302,7 @@ export class NonogramService {
       });
       return nonogramLeaders;
     } catch (error) {
-      throw new BadRequestException(
-        'Could not get nonogram leaders',
-        error.stack
-      );
+      throw new NonogramLeadersException(error.stack);
     }
   }
 
@@ -344,10 +345,7 @@ export class NonogramService {
       this.logger.log('Got global leaders successfully', { leaderboardMap });
       return Array.from(leaderboardMap.entries());
     } catch (error) {
-      throw new BadRequestException(
-        'Could not get global leaders',
-        error.stack
-      );
+      throw new GlobalLeadersException(error.stack);
     }
   }
 
@@ -392,9 +390,13 @@ export class NonogramService {
       this.logger.log('Successfully got public nonograms finished games:', {
         parsedGamesForEachNonogram,
       });
+
       return parsedGamesForEachNonogram;
     } catch (error) {
-      throw new BadRequestException(error.stack);
+      throw new BadRequestException(
+        'Could not game public nonograms finished games',
+        error.stack
+      );
     }
   }
 
