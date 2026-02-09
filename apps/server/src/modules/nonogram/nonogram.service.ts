@@ -16,7 +16,6 @@ import {
   NonogramResponseSchema,
   TileStatesEnumValues,
   GenerateNonogramDto,
-  gamesCountForEachNonogramDto,
   gamesForEachNonogramDto,
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
@@ -24,7 +23,7 @@ import { User } from '../user/entity/user.entity';
 import { Op } from 'sequelize';
 import { ForbiddenNonogramException } from '../../common';
 import { EncryptionService } from '@hedger/nestjs-encryption';
-import { Sequelize } from 'sequelize-typescript';
+import { chunk } from 'lodash';
 
 @Injectable()
 export class NonogramService {
@@ -308,25 +307,6 @@ export class NonogramService {
 
   async getGlobalLeaders() {
     try {
-      const finishedGamesCountForNonograms: gamesCountForEachNonogramDto[] =
-        await this.nonogramModel.findAll({
-          attributes: [
-            'id',
-            'difficulty',
-            [Sequelize.fn('COUNT', Sequelize.col('games.id')), 'nonogramCount'],
-          ],
-          where: { isPrivate: false },
-          group: ['Nonogram.id'],
-          include: [
-            {
-              model: Game,
-              attributes: [],
-              where: { isFinished: true },
-              required: true,
-            },
-          ],
-        });
-
       const gamesForEachNonogram: gamesForEachNonogramDto[] =
         await this.nonogramModel.findAll({
           attributes: ['id'],
@@ -337,6 +317,7 @@ export class NonogramService {
             'games.mistakes',
             'games.hints',
             'games.id',
+            'games->user.id',
           ],
           order: [
             ['games', 'timer'],
@@ -347,31 +328,60 @@ export class NonogramService {
             model: Game,
             where: { isFinished: true },
             attributes: ['timer', 'mistakes', 'hints'],
+            include: [
+              {
+                model: User,
+                attributes: ['username'],
+              },
+            ],
           },
         });
 
-      const stringifiedFinishedGamesCountForNonograms = JSON.stringify(
-        finishedGamesCountForNonograms
-      );
-      const parsedFinishedGamesCountForNonograms = JSON.parse(
-        stringifiedFinishedGamesCountForNonograms
-      );
-
       const stringifiedGamesForEachNonogram =
         JSON.stringify(gamesForEachNonogram);
-      const parsedGamesForEachNonogram = JSON.parse(
+      const parsedGamesForEachNonogram: gamesForEachNonogramDto[] = JSON.parse(
         stringifiedGamesForEachNonogram
       );
 
-      for (const item of parsedFinishedGamesCountForNonograms) {
-        console.log(item);
-        console.log(item.nonogramCount);
+      for (const item of parsedGamesForEachNonogram) {
+        const countOfGamesForNonogram = item.games.length;
+        const numberOfGamesInTopTen = Math.ceil(countOfGamesForNonogram * 0.1);
+
+        item.games.splice(
+          numberOfGamesInTopTen,
+          countOfGamesForNonogram - numberOfGamesInTopTen
+        );
       }
 
-      this.logger.log('Got global leaders successfully', {
-        finishedGamesCountForNonograms,
-      });
-      return { gamesForEachNonogram, finishedGamesCountForNonograms };
+      const usersScoresMap = new Map<string, number>();
+
+      for (const nonogramObject of parsedGamesForEachNonogram) {
+        const chunkSize = Math.ceil(nonogramObject.games.length * 0.1);
+
+        const chunkedArray = chunk(nonogramObject.games, chunkSize);
+
+        for (const [index, chunk] of chunkedArray.entries()) {
+          for (const game of chunk) {
+            const currentUsername = game.user.username;
+
+            if (usersScoresMap.has(currentUsername)) {
+              usersScoresMap.set(
+                currentUsername,
+                usersScoresMap.get(currentUsername) + 1 * (index + 1)
+              );
+            } else {
+              usersScoresMap.set(currentUsername, 1 * (index + 1));
+            }
+          }
+        }
+      }
+
+      const sortedMap = new Map(
+        [...usersScoresMap.entries()].sort((a, b) => b[1] - a[1])
+      );
+
+      this.logger.log('Got global leaders successfully', { sortedMap });
+      return Array.from(sortedMap.entries());
     } catch (error) {
       throw new BadRequestException(
         'Could not get global leaders',
