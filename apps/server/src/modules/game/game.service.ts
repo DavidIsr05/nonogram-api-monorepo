@@ -172,22 +172,21 @@ export class GameService {
       foundGame.nonogramId
     );
 
-    const xIndex = checkAndUpdateNonogramTileDto.nonogramXIndex;
-    const yIndex = checkAndUpdateNonogramTileDto.nonogramYIndex;
+    const { nonogramXIndex, nonogramYIndex } = checkAndUpdateNonogramTileDto;
 
-    const updatedUncompletedNonogram = foundGame.uncompletedNonogram;
+    const { uncompletedNonogram } = foundGame;
 
-    if (foundNonogram.nonogram[xIndex][yIndex]) {
-      updatedUncompletedNonogram[xIndex][yIndex] = TileStates.FILLED;
+    if (foundNonogram.nonogram[nonogramXIndex][nonogramYIndex]) {
+      uncompletedNonogram[nonogramXIndex][nonogramYIndex] = TileStates.FILLED;
 
       this.updateGame(currentUser, {
         id: foundGame.id,
-        uncompletedNonogram: updatedUncompletedNonogram,
+        uncompletedNonogram: uncompletedNonogram,
       });
 
       return TileStates.FILLED;
     } else {
-      updatedUncompletedNonogram[xIndex][yIndex] = TileStates.MISTAKE;
+      uncompletedNonogram[nonogramXIndex][nonogramYIndex] = TileStates.MISTAKE;
 
       const updatedMistakesCount = foundGame.mistakes - 1;
 
@@ -197,7 +196,7 @@ export class GameService {
 
       this.updateGame(currentUser, {
         id: foundGame.id,
-        uncompletedNonogram: updatedUncompletedNonogram,
+        uncompletedNonogram: uncompletedNonogram,
         mistakes: updatedMistakesCount,
       });
 
