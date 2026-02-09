@@ -16,10 +16,12 @@ import {
   NonogramResponseSchema,
   TileStatesEnumValues,
   GenerateNonogramDto,
+  gamesCountForEachNonogramDto,
+  gamesForEachNonogramDto,
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
-import { Op, where } from 'sequelize';
+import { Op } from 'sequelize';
 import { ForbiddenNonogramException } from '../../common';
 import { EncryptionService } from '@hedger/nestjs-encryption';
 import { Sequelize } from 'sequelize-typescript';
@@ -306,26 +308,70 @@ export class NonogramService {
 
   async getGlobalLeaders() {
     try {
-      const globalLeaders = await this.nonogramModel.findAll({
-        raw: true,
-        attributes: ['id', 'difficulty'],
-        where: { isPrivate: false },
-        group: ['Nonogram.id'],
-        include: [
-          {
+      const finishedGamesCountForNonograms: gamesCountForEachNonogramDto[] =
+        await this.nonogramModel.findAll({
+          attributes: [
+            'id',
+            'difficulty',
+            [Sequelize.fn('COUNT', Sequelize.col('games.id')), 'nonogramCount'],
+          ],
+          where: { isPrivate: false },
+          group: ['Nonogram.id'],
+          include: [
+            {
+              model: Game,
+              attributes: [],
+              where: { isFinished: true },
+              required: true,
+            },
+          ],
+        });
+
+      const gamesForEachNonogram: gamesForEachNonogramDto[] =
+        await this.nonogramModel.findAll({
+          attributes: ['id'],
+          where: { isPrivate: false },
+          group: [
+            'Nonogram.id',
+            'games.timer',
+            'games.mistakes',
+            'games.hints',
+            'games.id',
+          ],
+          order: [
+            ['games', 'timer'],
+            ['games', 'mistakes'],
+            ['games', 'hints'],
+          ],
+          include: {
             model: Game,
-            as: 'games',
-            attributes: [
-              [Sequelize.fn('COUNT', Sequelize.col('Nonogram.id')), 'count'],
-            ],
             where: { isFinished: true },
-            required: true,
+            attributes: ['timer', 'mistakes', 'hints'],
           },
-        ],
-        order: [['count', 'DESC']],
+        });
+
+      const stringifiedFinishedGamesCountForNonograms = JSON.stringify(
+        finishedGamesCountForNonograms
+      );
+      const parsedFinishedGamesCountForNonograms = JSON.parse(
+        stringifiedFinishedGamesCountForNonograms
+      );
+
+      const stringifiedGamesForEachNonogram =
+        JSON.stringify(gamesForEachNonogram);
+      const parsedGamesForEachNonogram = JSON.parse(
+        stringifiedGamesForEachNonogram
+      );
+
+      for (const item of parsedFinishedGamesCountForNonograms) {
+        console.log(item);
+        console.log(item.nonogramCount);
+      }
+
+      this.logger.log('Got global leaders successfully', {
+        finishedGamesCountForNonograms,
       });
-      this.logger.log('Got global leaders successfully', { globalLeaders });
-      return globalLeaders;
+      return { gamesForEachNonogram, finishedGamesCountForNonograms };
     } catch (error) {
       throw new BadRequestException(
         'Could not get global leaders',
