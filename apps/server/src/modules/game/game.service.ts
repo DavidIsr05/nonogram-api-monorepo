@@ -161,10 +161,13 @@ export class GameService {
     }
   }
 
-  async checkAndUpdateNonogramTile(currentUser, checkAndUpdateNonogramTileDto) {
+  async checkAndUpdateInProgressNonogram(
+    currentUser,
+    checkAndUpdateInProgressNonogramDto
+  ) {
     const foundGame = await this.getGameById(
       currentUser,
-      checkAndUpdateNonogramTileDto.gameId
+      checkAndUpdateInProgressNonogramDto.gameId
     );
 
     const foundNonogram = await this.nonogramModel.getNonogramById(
@@ -172,35 +175,47 @@ export class GameService {
       foundGame.nonogramId
     );
 
-    const { nonogramXIndex, nonogramYIndex } = checkAndUpdateNonogramTileDto;
-
     const { uncompletedNonogram } = foundGame;
 
-    if (foundNonogram.nonogram[nonogramXIndex][nonogramYIndex]) {
-      uncompletedNonogram[nonogramXIndex][nonogramYIndex] = TileStates.FILLED;
+    let { mistakes } = foundGame;
 
-      this.updateGame(currentUser, {
-        id: foundGame.id,
-        uncompletedNonogram: uncompletedNonogram,
-      });
+    checkAndUpdateInProgressNonogramDto.inProgressNonogram.forEach(
+      (row, rowIndex) => {
+        row.forEach((tile, colIndex) => {
+          if (tile == TileStates.MARKED) {
+            if (foundNonogram.nonogram[rowIndex][colIndex]) {
+              uncompletedNonogram[rowIndex][colIndex] = TileStates.FILLED;
+            } else {
+              uncompletedNonogram[rowIndex][colIndex] = TileStates.MISTAKE;
 
-      return TileStates.FILLED;
-    } else {
-      uncompletedNonogram[nonogramXIndex][nonogramYIndex] = TileStates.MISTAKE;
-
-      const updatedMistakesCount = foundGame.mistakes - 1;
-
-      if (!updatedMistakesCount) {
-        //TODO end game as failed because reached mistakes threshold
+              mistakes++;
+            }
+          }
+        });
       }
+    );
 
+    const MAX_FAILURES = 3;
+
+    if (mistakes >= MAX_FAILURES) {
       this.updateGame(currentUser, {
         id: foundGame.id,
         uncompletedNonogram: uncompletedNonogram,
-        mistakes: updatedMistakesCount,
+        timer: checkAndUpdateInProgressNonogramDto.timer,
+        mistakes: mistakes,
+        isFinished: true,
       });
 
-      return TileStates.MISTAKE;
+      return 'YOU LOST'; //TODO
     }
+
+    this.updateGame(currentUser, {
+      id: foundGame.id,
+      uncompletedNonogram: uncompletedNonogram,
+      timer: checkAndUpdateInProgressNonogramDto.timer,
+      mistakes: mistakes,
+    });
+
+    return uncompletedNonogram;
   }
 }

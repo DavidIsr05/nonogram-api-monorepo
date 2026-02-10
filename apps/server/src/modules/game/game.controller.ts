@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { GameService } from './game.service';
 import {
-  CheckAndUpdateNonogramTileDto,
+  CheckAndUpdateInProgressNonogramDto,
   CreateGameDto,
   UpdateGameDto,
 } from '@nonogram-api-monorepo/types';
@@ -78,13 +78,13 @@ export class GameController {
     return this.gameService.deleteGame(currentUser, gameId);
   }
 
-  @Post('check-tile')
-  checkAndUpdateNonogramTile(
-    @Body(new ZodValidationPipe(CheckAndUpdateNonogramTileDto))
-    checkAndUpdateNonogramTileDto: CheckAndUpdateNonogramTileDto,
+  @Post('check-nonogram')
+  checkAndUpdateInProgressNonogram(
+    @Body(new ZodValidationPipe(CheckAndUpdateInProgressNonogramDto))
+    checkAndUpdateNonogramTileDto: CheckAndUpdateInProgressNonogramDto,
     @CurrentUser() currentUser: User
   ) {
-    return this.gameService.checkAndUpdateNonogramTile(
+    return this.gameService.checkAndUpdateInProgressNonogram(
       currentUser,
       checkAndUpdateNonogramTileDto
     );
