@@ -177,36 +177,42 @@ export class GameService {
 
     const { uncompletedNonogram } = foundGame;
 
+    var { mistakes } = foundGame;
+
     checkAndUpdateInProgressNonogramDto.inProgressNonogram.forEach(
       (row, rowIndex) => {
         row.forEach((tile, colIndex) => {
           if (tile == TileStates.MARKED) {
             if (foundNonogram.nonogram[rowIndex][colIndex]) {
               uncompletedNonogram[rowIndex][colIndex] = TileStates.FILLED;
-
-              this.updateGame(currentUser, {
-                id: foundGame.id,
-                uncompletedNonogram: uncompletedNonogram,
-              });
             } else {
               uncompletedNonogram[rowIndex][colIndex] = TileStates.MISTAKE;
 
-              const updatedMistakesCount = foundGame.mistakes - 1;
-
-              if (!updatedMistakesCount) {
-                //TODO end game as failed because reached mistakes threshold
-              }
-
-              this.updateGame(currentUser, {
-                id: foundGame.id,
-                uncompletedNonogram: uncompletedNonogram,
-                mistakes: updatedMistakesCount,
-              });
+              mistakes++;
             }
           }
         });
       }
     );
+
+    if (mistakes >= 3) {
+      this.updateGame(currentUser, {
+        id: foundGame.id,
+        uncompletedNonogram: uncompletedNonogram,
+        timer: checkAndUpdateInProgressNonogramDto.timer,
+        mistakes: mistakes,
+        isFinished: true,
+      });
+
+      return 'YOU LOST'; //TODO
+    }
+
+    this.updateGame(currentUser, {
+      id: foundGame.id,
+      uncompletedNonogram: uncompletedNonogram,
+      timer: checkAndUpdateInProgressNonogramDto.timer,
+      mistakes: mistakes,
+    });
 
     return uncompletedNonogram;
   }
