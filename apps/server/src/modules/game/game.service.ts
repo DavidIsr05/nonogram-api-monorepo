@@ -161,10 +161,13 @@ export class GameService {
     }
   }
 
-  async checkAndUpdateNonogramTile(currentUser, checkAndUpdateNonogramTileDto) {
+  async checkAndUpdateInProgressNonogram(
+    currentUser,
+    checkAndUpdateInProgressNonogramDto
+  ) {
     const foundGame = await this.getGameById(
       currentUser,
-      checkAndUpdateNonogramTileDto.gameId
+      checkAndUpdateInProgressNonogramDto.gameId
     );
 
     const foundNonogram = await this.nonogramModel.getNonogramById(
@@ -172,35 +175,39 @@ export class GameService {
       foundGame.nonogramId
     );
 
-    const { nonogramXIndex, nonogramYIndex } = checkAndUpdateNonogramTileDto;
-
     const { uncompletedNonogram } = foundGame;
 
-    if (foundNonogram.nonogram[nonogramXIndex][nonogramYIndex]) {
-      uncompletedNonogram[nonogramXIndex][nonogramYIndex] = TileStates.FILLED;
+    checkAndUpdateInProgressNonogramDto.inProgressNonogram.forEach(
+      (row, rowIndex) => {
+        row.forEach((tile, colIndex) => {
+          if (tile == TileStates.MARKED) {
+            if (foundNonogram.nonogram[rowIndex][colIndex]) {
+              uncompletedNonogram[rowIndex][colIndex] = TileStates.FILLED;
 
-      this.updateGame(currentUser, {
-        id: foundGame.id,
-        uncompletedNonogram: uncompletedNonogram,
-      });
+              this.updateGame(currentUser, {
+                id: foundGame.id,
+                uncompletedNonogram: uncompletedNonogram,
+              });
+            } else {
+              uncompletedNonogram[rowIndex][colIndex] = TileStates.MISTAKE;
 
-      return TileStates.FILLED;
-    } else {
-      uncompletedNonogram[nonogramXIndex][nonogramYIndex] = TileStates.MISTAKE;
+              const updatedMistakesCount = foundGame.mistakes - 1;
 
-      const updatedMistakesCount = foundGame.mistakes - 1;
+              if (!updatedMistakesCount) {
+                //TODO end game as failed because reached mistakes threshold
+              }
 
-      if (!updatedMistakesCount) {
-        //TODO end game as failed because reached mistakes threshold
+              this.updateGame(currentUser, {
+                id: foundGame.id,
+                uncompletedNonogram: uncompletedNonogram,
+                mistakes: updatedMistakesCount,
+              });
+            }
+          }
+        });
       }
+    );
 
-      this.updateGame(currentUser, {
-        id: foundGame.id,
-        uncompletedNonogram: uncompletedNonogram,
-        mistakes: updatedMistakesCount,
-      });
-
-      return TileStates.MISTAKE;
-    }
+    return uncompletedNonogram;
   }
 }

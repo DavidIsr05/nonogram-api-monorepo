@@ -5,6 +5,7 @@ export enum TileStates {
   FILLED = 'FILLED',
   HINT = 'HINT',
   MISTAKE = 'MISTAKE',
+  MARKED = 'MARKED',
 }
 
 export const TileStatesEnumValues = z.nativeEnum(TileStates);
