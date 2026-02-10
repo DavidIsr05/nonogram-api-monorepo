@@ -177,7 +177,7 @@ export class GameService {
 
     const { uncompletedNonogram } = foundGame;
 
-    var { mistakes } = foundGame;
+    let { mistakes } = foundGame;
 
     checkAndUpdateInProgressNonogramDto.inProgressNonogram.forEach(
       (row, rowIndex) => {
@@ -195,7 +195,9 @@ export class GameService {
       }
     );
 
-    if (mistakes >= 3) {
+    const MAX_FAILURES = 3;
+
+    if (mistakes >= MAX_FAILURES) {
       this.updateGame(currentUser, {
         id: foundGame.id,
         uncompletedNonogram: uncompletedNonogram,
