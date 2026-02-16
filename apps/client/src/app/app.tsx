@@ -1,35 +1,57 @@
-import { useState } from 'react';
+import { useState, FormEvent, ChangeEvent } from 'react';
 import { UserSignInDto } from '../../../../libs/types/src/lib/types';
+import { useLoginQuery } from '../store/api';
 
 export const App = () => {
-  const [objaa, setObjaa] = useState<UserSignInDto>({
+  const [userSignInDto, setUserSignInDto] = useState<UserSignInDto>({
     personalNumber: 0,
     password: '',
   });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const [shouldFetch, setShouldFetch] = useState(false);
+  const { data, error, isLoading } = useLoginQuery(userSignInDto, {
+    skip: !shouldFetch,
+  });
 
-    console.log(objaa);
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setShouldFetch(true);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setObjaa((objaa) => ({
-      ...objaa,
-      [name]: value,
+    setUserSignInDto((prev) => ({
+      ...prev,
+      [name]: name === 'personalNumber' ? parseInt(value, 10) : value,
     }));
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        value={objaa.personalNumber}
-        name="personalNumber"
-        onChange={handleChange}
-      />
-      <input value={objaa.password} name="password" onChange={handleChange} />
-      <button type="submit">Submit</button>
-    </form>
+    <div>
+      <form onSubmit={handleSubmit}>
+        <input
+          value={userSignInDto.personalNumber}
+          name="personalNumber"
+          onChange={handleChange}
+          type="number"
+        />
+        <input
+          value={userSignInDto.password}
+          name="password"
+          onChange={handleChange}
+          type="text"
+        />
+        <button type="submit">Submit</button>
+      </form>
+      {error ? (
+        <>Oh no, there was an error</>
+      ) : isLoading ? (
+        <>Loading...</>
+      ) : data ? (
+        <>
+          <h3>{data.access_token}</h3>
+        </>
+      ) : null}
+    </div>
   );
 };
