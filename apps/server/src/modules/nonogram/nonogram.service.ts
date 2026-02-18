@@ -92,7 +92,7 @@ export class NonogramService {
     try {
       const createdNonogram = await this.nonogramModel.create(
         createNonogramDto
-      ); //TODO need to parse this return statement to not inclide nonogram like in user
+      );
       this.logger.log('Created nonogram successfully', { createdNonogram });
 
       return this.parseObjectForReturn(createdNonogram);
