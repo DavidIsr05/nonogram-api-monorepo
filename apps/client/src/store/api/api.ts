@@ -3,6 +3,6 @@ import { API_URL } from '../../config/env.config';
 
 export const api = createApi({
   reducerPath: 'api',
-  baseQuery: fetchBaseQuery({ baseUrl: API_URL }),
+  baseQuery: fetchBaseQuery({ baseUrl: API_URL, credentials: 'include' }),
   endpoints: () => ({}),
 });
