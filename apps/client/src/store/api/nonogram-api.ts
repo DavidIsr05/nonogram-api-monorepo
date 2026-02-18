@@ -33,30 +33,35 @@ export const nonogramApi = api.injectEndpoints({
         url: `nonogram/leaders/${nonogramId}`,
         method: 'GET',
       }),
+      providesTags: ['Game'],
     }),
     getGlobalLeaders: build.query<void /*TODO!!!*/, void>({
       query: () => ({
         url: 'nonogram/global-leaders',
         method: 'GET',
       }),
+      providesTags: ['Game'],
     }),
     getAllAvaliableNonograms: build.query<Nonogram[], void>({
       query: (userId) => ({
         url: `nonogram/all/${userId}`,
         method: 'GET',
       }),
+      providesTags: ['Nonogram'],
     }),
     getUnplayedNonograms: build.query<Nonogram[], void>({
       query: (userId) => ({
         url: `nonogram/unplayed/${userId}`,
         method: 'GET',
       }),
+      providesTags: ['Nonogram', 'Game'],
     }),
     getNonogram: build.query<Nonogram, void>({
       query: (nonogramId) => ({
         url: `nonogram/${nonogramId}`,
         method: 'GET',
       }),
+      providesTags: ['Nonogram'],
     }),
   }),
 });
