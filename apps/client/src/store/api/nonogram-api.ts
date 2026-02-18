@@ -60,3 +60,13 @@ export const nonogramApi = api.injectEndpoints({
     }),
   }),
 });
+
+export const {
+  useGenerateNonogramQuery,
+  useCreateNonogramQuery,
+  useGetNonogramLeadersQuery,
+  useGetGlobalLeadersQuery,
+  useGetAllAvaliableNonogramsQuery,
+  useGetUnplayedNonogramsQuery,
+  useGetNonogramQuery,
+} = nonogramApi;
