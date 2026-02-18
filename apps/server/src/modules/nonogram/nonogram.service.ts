@@ -17,6 +17,7 @@ import {
   TileStatesEnumValues,
   GenerateNonogramDto,
   gamesForEachNonogramDto,
+  NonogramResponseDto,
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
@@ -93,7 +94,8 @@ export class NonogramService {
         createNonogramDto
       ); //TODO need to parse this return statement to not inclide nonogram like in user
       this.logger.log('Created nonogram successfully', { createdNonogram });
-      return createdNonogram;
+
+      return this.parseObjectForReturn(createdNonogram);
     } catch (error) {
       throw new BadRequestException(
         'Could not create your nonogram',
@@ -130,7 +132,7 @@ export class NonogramService {
     return DEFAULT_NONOGRAM_SIZE + 10 * sizeFactorBasedOnDifficulty;
   }
 
-  async getNonogramById(currentUser, id): Promise<Nonogram | null> {
+  async getNonogramById(currentUser, id): Promise<NonogramResponseDto | null> {
     try {
       const foundNonogram = await this.nonogramModel.findByPk(id);
 
@@ -140,7 +142,36 @@ export class NonogramService {
       ) {
         throw new ForbiddenNonogramException();
       }
+
       this.logger.log('Got nonogram by ID successfully', { foundNonogram });
+
+      return this.parseObjectForReturn(foundNonogram);
+    } catch (error) {
+      if (!(error instanceof ForbiddenException)) {
+        throw new BadRequestException(
+          'Could not find nonogram by ID: ' + id,
+          error.stack
+        );
+      }
+      throw new ForbiddenNonogramException();
+    }
+  }
+
+  async getNonogramByIdForGame(currentUser, id): Promise<Nonogram | null> {
+    try {
+      const foundNonogram = await this.nonogramModel.findByPk(id);
+
+      if (
+        foundNonogram.isPrivate &&
+        foundNonogram.creatorId !== currentUser.id
+      ) {
+        throw new ForbiddenNonogramException();
+      }
+
+      this.logger.log('Got nonogram by ID for game successfully', {
+        foundNonogram,
+      });
+
       return foundNonogram;
     } catch (error) {
       if (!(error instanceof ForbiddenException)) {
@@ -158,6 +189,16 @@ export class NonogramService {
     return NonogramResponseSchema.parse(object.toJSON());
   }
 
+  parseArrayForReturn(arr) {
+    this.logger.log('Parsing nonograms array for return');
+
+    for (const [index, nonogram] of arr.entries()) {
+      arr[index] = NonogramResponseSchema.parse(nonogram.toJSON());
+    }
+
+    return arr;
+  }
+
   async getAllAvaliableNonograms(currentUser, userId) {
     if (userId !== currentUser.id) {
       throw new ForbiddenNonogramException();
@@ -169,7 +210,8 @@ export class NonogramService {
         },
       });
       this.logger.log('Got all avaliable nonograms', { allAvaliableNonograms });
-      return allAvaliableNonograms;
+
+      return this.parseArrayForReturn(allAvaliableNonograms);
     } catch (error) {
       throw new BadRequestException(
         'Could not find avaliable nonograms',
@@ -186,10 +228,12 @@ export class NonogramService {
       const nonogramsCreatedByUser = await this.nonogramModel.findAll({
         where: { creatorId },
       });
+
       this.logger.log('Got nonograms created by user successfully', {
         nonogramsCreatedByUser,
       });
-      return nonogramsCreatedByUser;
+
+      return this.parseArrayForReturn(nonogramsCreatedByUser);
     } catch (error) {
       throw new BadRequestException(
         'Could not get nonograms created by you',
@@ -221,7 +265,8 @@ export class NonogramService {
       this.logger.log('Got unplayed nonograms successfully', {
         unplayedNonograms,
       });
-      return unplayedNonograms;
+
+      return this.parseArrayForReturn(unplayedNonograms);
     } catch (error) {
       throw new BadRequestException(
         'Could not get unplayed nonograms',
@@ -246,7 +291,8 @@ export class NonogramService {
         },
       });
       this.logger.log('Got played nonograms successfully', { playedNonograms });
-      return playedNonograms;
+
+      return this.parseArrayForReturn(playedNonograms);
     } catch (error) {
       throw new BadRequestException(
         'Could not get played nonograms',
@@ -265,6 +311,8 @@ export class NonogramService {
       this.logger.log('Deleted nonogram with ID successfully', {
         deletedNonogram,
       });
+
+      return deletedNonogram;
     } catch (error) {
       throw new BadRequestException(
         'Could not delete user with ID: ' + nonogramId,

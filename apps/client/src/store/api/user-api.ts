@@ -38,8 +38,8 @@ export const userApi = api.injectEndpoints({
 });
 
 export const {
-  useSignupQuery,
+  useLazySignupQuery,
   useGetUserByIdQuery,
-  useUpdateUserQuery,
-  useDeleteQuery,
+  useLazyUpdateUserQuery,
+  useLazyDeleteQuery,
 } = userApi;

@@ -30,7 +30,7 @@ export class GameController {
     return this.gameService.createGame(CurrentUser, createGameDto);
   }
 
-  @Get('all-games/:id')
+  @Get('all/:id')
   getAllUsersGames(
     @Param('id', new ParseUUIDPipe({ version: '4' })) userId: string,
     @CurrentUser() currentUser: User

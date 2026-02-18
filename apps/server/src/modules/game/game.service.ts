@@ -170,7 +170,7 @@ export class GameService {
       checkAndUpdateInProgressNonogramDto.gameId
     );
 
-    const foundNonogram = await this.nonogramModel.getNonogramById(
+    const foundNonogram = await this.nonogramModel.getNonogramByIdForGame(
       currentUser,
       foundGame.nonogramId
     );
