@@ -15,7 +15,7 @@ export const nonogramApi = api.injectEndpoints({
       query: (body) => ({
         url: 'nonogram/generate',
         method: 'POST',
-        body: body,
+        body,
       }),
     }),
     createNonogram: build.query<
@@ -25,7 +25,7 @@ export const nonogramApi = api.injectEndpoints({
       query: (body) => ({
         url: 'nonogram/create',
         method: 'POST',
-        body: body,
+        body,
       }),
     }),
     getNonogramLeaders: build.query<Nonogram[] /* here as well */, void>({

@@ -7,7 +7,7 @@ export const authApi = api.injectEndpoints({
       query: (body) => ({
         url: 'auth/login',
         method: 'POST',
-        body: body,
+        body,
       }),
     }),
   }),

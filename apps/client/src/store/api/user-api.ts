@@ -11,7 +11,7 @@ export const userApi = api.injectEndpoints({
       query: (body) => ({
         url: 'user/signup',
         method: 'POST',
-        body: body,
+        body,
       }),
     }),
     getUserById: build.query<UserResponseDto, void>({
@@ -25,7 +25,7 @@ export const userApi = api.injectEndpoints({
       query: (body) => ({
         url: 'user',
         method: 'PATCH',
-        body: body,
+        body,
       }),
     }),
     delete: build.query<boolean, void>({
