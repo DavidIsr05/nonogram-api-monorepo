@@ -63,7 +63,7 @@ export class GameController {
   }
 
   @Patch()
-  updateUser(
+  updateGame(
     @Body(new ZodValidationPipe(UpdateGameDto)) updateGameDto: UpdateGameDto,
     @CurrentUser() currentUser: User
   ) {
@@ -71,7 +71,7 @@ export class GameController {
   }
 
   @Delete(':id')
-  deleteUser(
+  deleteGame(
     @CurrentUser() currentUser: User,
     @Param('id', new ParseUUIDPipe({ version: '4' })) gameId: string
   ) {

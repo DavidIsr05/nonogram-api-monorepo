@@ -20,6 +20,14 @@ import { ZodValidationPipe } from 'nestjs-zod';
 export class NonogramController {
   constructor(private nonogramService: NonogramService) {}
 
+  @Post('generate')
+  generateNonogram(
+    @Body(new ZodValidationPipe(GenerateNonogramDto))
+    generateNonogramDto: GenerateNonogramDto
+  ) {
+    return this.nonogramService.generateNonogram(generateNonogramDto);
+  }
+
   @Post('create')
   createNonogram(
     @Body(new ZodValidationPipe(CreateNonogramRequestDto))
@@ -30,14 +38,6 @@ export class NonogramController {
       currentUser,
       createNonogramRequestDto
     );
-  }
-
-  @Post('generate')
-  generateNonogram(
-    @Body(new ZodValidationPipe(GenerateNonogramDto))
-    generateNonogramDto: GenerateNonogramDto
-  ) {
-    return this.nonogramService.generateNonogram(generateNonogramDto);
   }
 
   @Get('leaders/:nonogramId')
@@ -94,7 +94,7 @@ export class NonogramController {
   }
 
   @Delete(':id')
-  deleteUser(
+  deleteNonogram(
     @CurrentUser() currentUser: User,
     @Param('id', new ParseUUIDPipe({ version: '4' })) nonogramId: string
   ) {

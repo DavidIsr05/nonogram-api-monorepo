@@ -3,9 +3,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { urlencoded, json } from 'express';
 import { HttpExceptionFilter } from './utils';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors({
+    origin: process.env.CLIENT_URL,
+    credentials: true,
+  });
+  app.use(cookieParser());
   app.useGlobalFilters(new HttpExceptionFilter());
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);

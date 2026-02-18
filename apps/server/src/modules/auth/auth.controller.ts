@@ -1,4 +1,11 @@
-import { Body, Controller, Post, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  HttpCode,
+  HttpStatus,
+  Response,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { UserSignInDto } from '@nonogram-api-monorepo/types';
 import { Public } from '../../common';
@@ -11,10 +18,22 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body(new ZodValidationPipe(UserSignInDto)) signInDto: UserSignInDto) {
-    return this.authService.signIn(
+  async signIn(
+    @Response() res,
+    @Body(new ZodValidationPipe(UserSignInDto)) signInDto: UserSignInDto
+  ) {
+    const { access_token } = await this.authService.signIn(
       signInDto.personalNumber,
       signInDto.password
     );
+
+    res.cookie('access_token', access_token, {
+      httpOnly: true,
+      secure: false, //TODO change to true in prod
+      sameSite: 'lax',
+      maxAge: 3600000,
+    });
+
+    return res.json({ access_token });
   }
 }
