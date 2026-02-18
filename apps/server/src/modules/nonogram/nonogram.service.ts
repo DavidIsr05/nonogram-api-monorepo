@@ -147,13 +147,13 @@ export class NonogramService {
 
       return this.parseObjectForReturn(foundNonogram);
     } catch (error) {
-      if (!(error instanceof ForbiddenException)) {
-        throw new BadRequestException(
-          'Could not find nonogram by ID: ' + id,
-          error.stack
-        );
+      if (error instanceof ForbiddenException) {
+        throw new ForbiddenNonogramException();
       }
-      throw new ForbiddenNonogramException();
+      throw new BadRequestException(
+        'Could not find nonogram by ID: ' + id,
+        error.stack
+      );
     }
   }
 
@@ -189,14 +189,14 @@ export class NonogramService {
     return NonogramResponseSchema.parse(object.toJSON());
   }
 
-  parseArrayForReturn(arr) {
+  parseArrayForReturn(nonogramArray) {
     this.logger.log('Parsing nonograms array for return');
 
-    for (const [index, nonogram] of arr.entries()) {
-      arr[index] = NonogramResponseSchema.parse(nonogram.toJSON());
+    for (const [index, nonogram] of nonogramArray.entries()) {
+      nonogramArray[index] = NonogramResponseSchema.parse(nonogram.toJSON());
     }
 
-    return arr;
+    return nonogramArray;
   }
 
   async getAllAvaliableNonograms(currentUser, userId) {
