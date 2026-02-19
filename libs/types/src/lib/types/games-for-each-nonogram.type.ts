@@ -1,5 +1,4 @@
 import z from 'zod';
-import { NonogramDifficultiesEnumValues } from '../enums';
 import { createZodDto } from 'nestjs-zod';
 
 export const gamesForEachNonogramSchema = z.object({
