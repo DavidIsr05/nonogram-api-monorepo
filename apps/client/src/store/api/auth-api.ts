@@ -1,5 +1,5 @@
 import { api } from './api';
-import { UserSignInDto } from '../../../../../libs/types/src/lib/types';
+import { UserSignInDto } from '@nonogram-api-monorepo/types';
 
 export const authApi = api.injectEndpoints({
   endpoints: (build) => ({
