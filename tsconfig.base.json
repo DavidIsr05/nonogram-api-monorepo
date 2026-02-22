@@ -14,7 +14,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@nonogram-api-monorepo/types": ["libs/types/src/index.ts"]
+      "@nonogram-api-monorepo/types": ["libs/types/src/index.ts"],
+      "@nonogram-api-monorepo/ui-kit": ["libs/ui-kit/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

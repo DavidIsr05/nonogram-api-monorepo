@@ -13,4 +13,4 @@ export const authApi = api.injectEndpoints({
   }),
 });
 
-export const { useLoginQuery } = authApi;
+export const { useLazyLoginQuery } = authApi;

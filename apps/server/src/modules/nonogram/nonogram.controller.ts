@@ -13,7 +13,7 @@ import {
   GenerateNonogramDto,
 } from '@nonogram-api-monorepo/types';
 import { User } from '../user/entity/user.entity';
-import { CurrentUser, Public } from '../../common';
+import { CurrentUser } from '../../common';
 import { ZodValidationPipe } from 'nestjs-zod';
 
 @Controller('nonogram')
