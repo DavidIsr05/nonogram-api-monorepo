@@ -47,7 +47,6 @@ export class NonogramController {
     return this.nonogramService.getNonogramLeaders(nonogramId, 10);
   }
 
-  @Public() //TODO remove for "prod"🤓☝️
   @Get('global-leaders')
   getGlobalLeaders() {
     return this.nonogramService.getGlobalLeaders();
