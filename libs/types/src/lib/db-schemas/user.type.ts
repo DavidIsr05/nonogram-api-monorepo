@@ -11,7 +11,8 @@ export const UserSchema = z
       .refine(
         (val) => `${val}`.length === 7,
         'Personal number must be 7 characters long'
-      ),
+      )
+      .or(z.null()),
     isAdmin: z.boolean().default(false),
     createdAt: z.string().datetime(),
     updatedAt: z.string().datetime(),

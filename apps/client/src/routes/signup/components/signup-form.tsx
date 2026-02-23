@@ -1,40 +1,39 @@
-import { ExceptionType, UserSignInDto } from '@nonogram-api-monorepo/types';
-import { useLazyLoginQuery } from '../../../store/api';
+import { CreateUserDto, ExceptionType } from '@nonogram-api-monorepo/types';
+import { useLazySignupQuery } from '../../../store/api';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
-export const LoginForm: React.FC = () => {
-  const [userSignInDto, setUserSignInDto] = useState<UserSignInDto>({
-    personalNumber: '',
+export const SignupForm: React.FC = () => {
+  const [userSignupDto, setUserSignupDto] = useState<CreateUserDto>({
+    username: '',
     password: '',
+    personalNumber: null,
   });
 
   const navigate = useNavigate();
 
-  const [loginQuery] = useLazyLoginQuery();
+  const [signupQuery] = useLazySignupQuery();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (userSignInDto.password.trim() !== '' && userSignInDto.personalNumber) {
+    if (userSignupDto.password.trim() !== '' && userSignupDto.personalNumber) {
       try {
-        const result = await loginQuery(userSignInDto).unwrap();
+        console.log(userSignupDto);
 
-        if (typeof result.access_token === 'string') {
-          navigate('/home', { replace: true });
+        const result = await signupQuery(userSignupDto).unwrap();
+
+        if (result) {
+          navigate('/', { replace: true });
         }
       } catch (error) {
         const e = error as ExceptionType;
 
-        console.log(e);
-
         if (e.status === 400) {
           toast.error('Validation error');
-        } else if (e.status === 401) {
-          toast.error('Wrong credentials');
-        } else if (e.status === 404) {
-          toast.error('User with that personal number does not exist');
+        } else if (e.status === 409) {
+          toast.error('User with that personal number already exists');
         } else if (e.status === 'FETCH_ERROR') {
           toast.error('Could not fetch data from API');
         } else {
@@ -48,7 +47,7 @@ export const LoginForm: React.FC = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUserSignInDto((prev) => ({
+    setUserSignupDto((prev) => ({
       ...prev,
       [name]: name === 'personalNumber' ? parseInt(value, 10) : value,
     }));
@@ -61,7 +60,9 @@ export const LoginForm: React.FC = () => {
         className="flex flex-col gap-[2.5rem] items-center"
       >
         <input
-          value={userSignInDto.personalNumber}
+          value={
+            userSignupDto.personalNumber ? userSignupDto.personalNumber : ''
+          }
           name="personalNumber"
           onChange={handleChange}
           type="number"
@@ -70,22 +71,31 @@ export const LoginForm: React.FC = () => {
           required
         />
         <input
-          value={userSignInDto.password}
-          name="password"
+          value={userSignupDto.username}
+          name="username"
           onChange={handleChange}
           type="text"
+          placeholder="Username:"
+          className="rounded-lg border border-[#000000] w-2/3 h-9 p-3"
+          required
+        />
+        <input
+          value={userSignupDto.password}
+          name="password"
+          onChange={handleChange}
+          type="password"
           placeholder="Password:"
           className="rounded-lg border border-[#000000] w-2/3 h-9 p-3"
           required
         />
         <button
           type="submit"
-          className="bg-[#DA6DE4] w-1/4 h-9 border border-[#000000] rounded-lg"
+          className="bg-[#F5A623] w-1/4 h-9 border border-[#000000] rounded-lg"
         >
-          Log In
+          Sign up
         </button>
-        <Link to="/signup">
-          <button className="underline">Sign Up</button>
+        <Link to="/">
+          <button className="underline">Log in</button>
         </Link>
       </form>
     </div>

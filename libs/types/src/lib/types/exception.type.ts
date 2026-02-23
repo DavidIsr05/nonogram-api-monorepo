@@ -1,7 +1,7 @@
 import z from 'zod';
 
 const ExceptionSchema = z.object({
-  status: z.number(),
+  status: z.number().or(z.string()),
   data: z.object({
     statusCode: z.number(),
     message: z.object({
