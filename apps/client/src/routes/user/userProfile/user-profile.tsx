@@ -1,5 +1,11 @@
+import { Header } from '../../../components';
 import React from 'react';
 
 export const UserProfile: React.FC = () => {
-  return <>USERS PROFILE</>;
+  return (
+    <div className="w-screen h-screen">
+      <Header />
+      <>USER PROFILE</>
+    </div>
+  );
 };

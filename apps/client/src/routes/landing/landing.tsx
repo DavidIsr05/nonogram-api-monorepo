@@ -1,7 +1,7 @@
 import React from 'react';
 import bigLogo from '../../assets/images/bigLogo.svg';
-import { LoginForm } from './components/login-form';
 import { Toaster } from 'sonner';
+import { LoginForm } from './components';
 
 export const Landing: React.FC = () => {
   return (

@@ -22,12 +22,10 @@ export const LoginForm: React.FC = () => {
       userSignInDto.personalNumber.trim() !== ''
     ) {
       try {
-        setUserSignInDto((prev) => ({
-          ...prev,
+        const result = await loginQuery({
           personalNumber: parseInt(userSignInDto.personalNumber),
-        }));
-
-        const result = await loginQuery(userSignInDto).unwrap();
+          password: userSignInDto.password, //TODO take a look for making better solution for this
+        }).unwrap();
 
         if (typeof result.access_token === 'string') {
           navigate('/home', { replace: true });
@@ -62,7 +60,7 @@ export const LoginForm: React.FC = () => {
           type="text"
           placeholder="Personal Number:"
           className="rounded-lg border border-[#000000] w-2/3 h-9 p-3"
-          //required
+          required
         />
         <input
           value={userSignInDto ? userSignInDto.password : ''}
@@ -71,7 +69,7 @@ export const LoginForm: React.FC = () => {
           type="text"
           placeholder="Password:"
           className="rounded-lg border border-[#000000] w-2/3 h-9 p-3"
-          //required
+          required
         />
         <button
           type="submit"
