@@ -9,7 +9,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { TileStates, TileStatesEnumType } from '@nonogram-api-monorepo/types';
+import { TileStatesEnumType } from '@nonogram-api-monorepo/types';
 import { User } from '../../user/entity/user.entity';
 import { Nonogram } from '../../nonogram/entity/nonogram.entity';
 

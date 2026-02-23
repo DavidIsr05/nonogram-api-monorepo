@@ -1,10 +1,7 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
-    "default": [
-      "{projectRoot}/**/*",
-      "sharedGlobals"
-    ],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
     "production": [
       "default",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
@@ -47,9 +44,7 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": [
-        "apps/server-e2e/**/*"
-      ]
+      "exclude": ["apps/server-e2e/**/*"]
     }
   ],
   "generators": {
@@ -65,7 +60,8 @@
       },
       "library": {
         "style": "tailwind",
-        "linter": "eslint"
+        "linter": "eslint",
+        "unitTestRunner": "none"
       }
     }
   }

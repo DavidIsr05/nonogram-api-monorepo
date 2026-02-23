@@ -1,5 +1,5 @@
 import { api } from './api';
-import { UserSignInDto } from '../../../../../libs/types/src/lib/types';
+import { UserSignInDto } from '@nonogram-api-monorepo/types';
 
 export const authApi = api.injectEndpoints({
   endpoints: (build) => ({
@@ -13,4 +13,4 @@ export const authApi = api.injectEndpoints({
   }),
 });
 
-export const { useLoginQuery } = authApi;
+export const { useLazyLoginQuery } = authApi;

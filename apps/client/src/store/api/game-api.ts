@@ -1,50 +1,50 @@
 import {
   CheckAndUpdateInProgressNonogramDto,
   CreateGameDto,
+  GameDto,
   TileStates,
   UpdateGameDto,
 } from '@nonogram-api-monorepo/types';
 import { api } from './api';
-import { Game } from '../../../../server/src/modules/game/entity/game.entity';
 
 export const gameApi = api.injectEndpoints({
   endpoints: (build) => ({
-    createGame: build.query<Game, CreateGameDto>({
+    createGame: build.query<GameDto, CreateGameDto>({
       query: (body) => ({
         url: 'game',
         method: 'POST',
         body,
       }),
     }),
-    getAllUsersGames: build.query<Game[], void>({
+    getAllUsersGames: build.query<GameDto[], void>({
       query: (userId) => ({
         url: `game/all/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    getInProgresGames: build.query<Game[], void>({
+    getInProgresGames: build.query<GameDto[], void>({
       query: (userId) => ({
         url: `game/in-progress/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    getFinishedGames: build.query<Game[], void>({
+    getFinishedGames: build.query<GameDto[], void>({
       query: (userId) => ({
         url: `game/finished/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    getGameById: build.query<Game, void>({
+    getGameById: build.query<GameDto, void>({
       query: (userId) => ({
         url: `game/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    updateGame: build.query<Game, UpdateGameDto>({
+    updateGame: build.query<GameDto, UpdateGameDto>({
       query: (body) => ({
         url: `game`,
         method: 'PATCH',
