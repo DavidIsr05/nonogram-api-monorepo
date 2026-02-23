@@ -1,3 +1,5 @@
-export const Signup = () => {
-  return <h1>SIGN UP</h1>;
+import React from 'react';
+
+export const Signup: React.FC = () => {
+  return <>SIGN UP</>;
 };

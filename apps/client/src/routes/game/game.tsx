@@ -1,3 +1,5 @@
-export const Game = () => {
-  return <h1>GAME</h1>;
+import React from 'react';
+
+export const Game: React.FC = () => {
+  return <>GAME</>;
 };

@@ -1,3 +1,5 @@
-export const UserGames = () => {
-  return <h1>USERS GAMES</h1>;
+import React from 'react';
+
+export const UserGames: React.FC = () => {
+  return <>USERS GAMES</>;
 };

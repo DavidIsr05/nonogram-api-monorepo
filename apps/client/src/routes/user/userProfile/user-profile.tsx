@@ -1,3 +1,5 @@
-export const UserProfile = () => {
-  return <h1>USERS PROFILE</h1>;
+import React from 'react';
+
+export const UserProfile: React.FC = () => {
+  return <>USERS PROFILE</>;
 };

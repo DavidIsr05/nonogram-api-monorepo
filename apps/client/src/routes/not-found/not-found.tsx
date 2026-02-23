@@ -1,7 +1,5 @@
-export function NotFound() {
-  return (
-    <div className="text-center">
-      <h1>404</h1>
-    </div>
-  );
-}
+import React from 'react';
+
+export const NotFound: React.FC = () => {
+  return <div className="text-center">404</div>;
+};

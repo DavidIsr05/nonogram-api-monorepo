@@ -1,7 +1,6 @@
-import { createZodDto } from 'nestjs-zod';
 import z from 'zod';
 
-export const ExceptionSchema = z.object({
+const ExceptionSchema = z.object({
   status: z.number(),
   data: z.object({
     statusCode: z.number(),
@@ -20,4 +19,5 @@ export const ExceptionSchema = z.object({
     path: z.string(),
   }),
 });
-export class ExceptionType extends createZodDto(ExceptionSchema) {}
+
+export type ExceptionType = z.infer<typeof ExceptionSchema>;
