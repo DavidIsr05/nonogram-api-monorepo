@@ -449,18 +449,16 @@ export class NonogramService {
   }
 
   getTopTenPercentNonogramGames(publicNonogramsDoneGames) {
-    const topTenPercentNonogramGames = publicNonogramsDoneGames.forEach(
-      (nonogramGames) => {
-        const countOfGamesForNonogram = nonogramGames.games.length;
-        const numberOfGamesInTopTen = Math.ceil(countOfGamesForNonogram * 0.1);
+    publicNonogramsDoneGames.forEach((nonogramGames) => {
+      const countOfGamesForNonogram = nonogramGames.games.length;
+      const numberOfGamesInTopTen = Math.ceil(countOfGamesForNonogram * 0.1);
 
-        nonogramGames.games.splice(
-          numberOfGamesInTopTen,
-          countOfGamesForNonogram - numberOfGamesInTopTen
-        );
-      }
-    );
+      nonogramGames.games.splice(
+        numberOfGamesInTopTen,
+        countOfGamesForNonogram - numberOfGamesInTopTen
+      );
+    });
 
-    return topTenPercentNonogramGames;
+    return publicNonogramsDoneGames;
   }
 }

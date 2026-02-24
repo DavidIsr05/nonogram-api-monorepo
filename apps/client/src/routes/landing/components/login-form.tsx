@@ -73,7 +73,7 @@ export const LoginForm: React.FC = () => {
           value={userSignInDto.password}
           name="password"
           onChange={handleChange}
-          type="text"
+          type="password"
           placeholder="Password:"
           className="rounded-lg border border-[#000000] w-2/3 h-9 p-3"
           required
