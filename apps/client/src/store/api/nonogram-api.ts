@@ -33,7 +33,7 @@ export const nonogramApi = api.injectEndpoints({
       }),
       providesTags: ['Game'],
     }),
-    getGlobalLeaders: build.query<[], void>({
+    getGlobalLeaders: build.query<Record<string, number>[], void>({
       //TODO maybe make type for this
       query: () => ({
         url: 'nonogram/global-leaders',

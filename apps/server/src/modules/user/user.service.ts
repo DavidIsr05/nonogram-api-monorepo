@@ -45,6 +45,9 @@ export class UserService {
           personalNumber: personalNumber,
         },
       });
+      if (!foundUserByPersonalNumber) {
+        throw new UserNotFoundException(personalNumber);
+      }
       this.logger.log('Found user by personla number successfully', {
         foundUserByPersonalNumber,
       });

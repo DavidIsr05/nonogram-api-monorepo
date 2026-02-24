@@ -1,30 +1,30 @@
-import { ExceptionType, UserSignInDto } from '@nonogram-api-monorepo/types';
-import { useLazyLoginQuery } from '../../../store/api';
+import { CreateUserDto, ExceptionType } from '@nonogram-api-monorepo/types';
+import { useLazySignupQuery } from '../../../store/api';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { ERROR_TEXT_BASED_ON_EXCEPTION } from '../../../consts';
 
-export const LoginForm: React.FC = () => {
-  const [userSignInDto, setUserSignInDto] = useState<UserSignInDto>({
-    personalNumber: '',
+export const SignupForm: React.FC = () => {
+  const [userSignupDto, setUserSignupDto] = useState<CreateUserDto>({
+    username: '',
     password: '',
+    personalNumber: null,
   });
 
   const navigate = useNavigate();
 
-  const [loginQuery] = useLazyLoginQuery();
+  const [signupQuery] = useLazySignupQuery();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (userSignInDto.password.trim() !== '' && userSignInDto.personalNumber) {
-      //TODO check that password gets stored/checked correctly
+    if (userSignupDto.password.trim() !== '' && userSignupDto.personalNumber) {
       try {
-        const result = await loginQuery(userSignInDto).unwrap();
+        const result = await signupQuery(userSignupDto).unwrap();
 
-        if (typeof result.access_token === 'string') {
-          navigate('/home', { replace: true });
+        if (result) {
+          navigate('/', { replace: true });
         }
       } catch (error) {
         const e = error as ExceptionType;
@@ -42,20 +42,22 @@ export const LoginForm: React.FC = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setUserSignInDto((prev) => ({
+    setUserSignupDto((prev) => ({
       ...prev,
       [name]: name === 'personalNumber' ? parseInt(value, 10) : value,
     }));
   };
 
   return (
-    <div className="flex flex-col w-1/2 h-full">
+    <div className="flex flex-col w-1/2">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-[2.5rem] items-center"
       >
         <input
-          value={userSignInDto.personalNumber}
+          value={
+            userSignupDto.personalNumber ? userSignupDto.personalNumber : ''
+          }
           name="personalNumber"
           onChange={handleChange}
           type="number"
@@ -64,7 +66,16 @@ export const LoginForm: React.FC = () => {
           required
         />
         <input
-          value={userSignInDto.password}
+          value={userSignupDto.username}
+          name="username"
+          onChange={handleChange}
+          type="text"
+          placeholder="Username:"
+          className="rounded-lg border border-absoluteBlack w-2/3 h-9 p-3"
+          required
+        />
+        <input
+          value={userSignupDto.password}
           name="password"
           onChange={handleChange}
           type="password"
@@ -74,12 +85,12 @@ export const LoginForm: React.FC = () => {
         />
         <button
           type="submit"
-          className="bg-loginButtonColor w-1/4 h-9 border border-absoluteBlack rounded-lg"
+          className="bg-signupButtonColor w-1/4 h-9 border border-absoluteBlack rounded-lg"
         >
-          Log In
+          Sign up
         </button>
-        <Link to="/signup">
-          <button className="underline">Sign Up</button>
+        <Link to="/">
+          <button className="underline">Log in</button>
         </Link>
       </form>
     </div>
