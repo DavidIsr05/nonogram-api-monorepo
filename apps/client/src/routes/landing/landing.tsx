@@ -5,14 +5,14 @@ import { LoginForm } from './components';
 
 export const Landing: React.FC = () => {
   return (
-    <div className="bg-[#DA6DE4] h-screen w-screen relative">
+    <div className="bg-landingPageBackground h-screen w-screen relative">
       <img
         src={bigLogo}
-        className="h-screen w-screen absolute z-0 right-[15vh]"
+        className="h-screen w-screen z-0 absolute right-[10%]"
         alt="Project logo"
       />
-      <div className="bg-[#F5E6FA] w-1/2  h-screen inset-y-0 right-0 absolute z-10 border-l-2 border-[#A90FB8] flex flex-col items-center  gap-[6rem]">
-        <div className="text-[3rem] pt-[10rem]">Welcome to Pixelit!</div>
+      <div className="bg-loginFormBackground w-[50%]  h-full inset-y-0 right-0 absolute z-10 border-l-2 border-loginFormComponentBorder flex flex-col items-center  gap-[6rem]">
+        <div className="text-[3rem] pt-[20%]">Welcome to Pixelit!</div>
         <LoginForm />
       </div>
       <Toaster richColors />

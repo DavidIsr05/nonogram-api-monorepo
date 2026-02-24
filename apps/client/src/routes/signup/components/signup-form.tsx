@@ -3,6 +3,7 @@ import { useLazySignupQuery } from '../../../store/api';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { ERROR_TEXT_BASED_ON_EXCEPTION } from '../../../consts';
 
 export const SignupForm: React.FC = () => {
   const [userSignupDto, setUserSignupDto] = useState<CreateUserDto>({
@@ -20,8 +21,6 @@ export const SignupForm: React.FC = () => {
 
     if (userSignupDto.password.trim() !== '' && userSignupDto.personalNumber) {
       try {
-        console.log(userSignupDto);
-
         const result = await signupQuery(userSignupDto).unwrap();
 
         if (result) {
@@ -30,12 +29,8 @@ export const SignupForm: React.FC = () => {
       } catch (error) {
         const e = error as ExceptionType;
 
-        if (e.status === 400) {
-          toast.error('Validation error');
-        } else if (e.status === 409) {
-          toast.error('User with that personal number already exists');
-        } else if (e.status === 'FETCH_ERROR') {
-          toast.error('Could not fetch data from API');
+        if (ERROR_TEXT_BASED_ON_EXCEPTION[e.status]) {
+          toast.error(ERROR_TEXT_BASED_ON_EXCEPTION[e.status]);
         } else {
           toast.error('error');
         }
@@ -67,7 +62,7 @@ export const SignupForm: React.FC = () => {
           onChange={handleChange}
           type="number"
           placeholder="Personal Number:"
-          className="rounded-lg border border-[#000000] w-2/3 h-9 p-3"
+          className="rounded-lg border border-absoluteBlack w-2/3 h-9 p-3"
           required
         />
         <input
@@ -76,7 +71,7 @@ export const SignupForm: React.FC = () => {
           onChange={handleChange}
           type="text"
           placeholder="Username:"
-          className="rounded-lg border border-[#000000] w-2/3 h-9 p-3"
+          className="rounded-lg border border-absoluteBlack w-2/3 h-9 p-3"
           required
         />
         <input
@@ -85,12 +80,12 @@ export const SignupForm: React.FC = () => {
           onChange={handleChange}
           type="password"
           placeholder="Password:"
-          className="rounded-lg border border-[#000000] w-2/3 h-9 p-3"
+          className="rounded-lg border border-absoluteBlack w-2/3 h-9 p-3"
           required
         />
         <button
           type="submit"
-          className="bg-[#F5A623] w-1/4 h-9 border border-[#000000] rounded-lg"
+          className="bg-signupButtonColor w-1/4 h-9 border border-absoluteBlack rounded-lg"
         >
           Sign up
         </button>

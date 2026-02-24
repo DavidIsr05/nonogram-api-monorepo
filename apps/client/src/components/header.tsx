@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 export const Header: React.FC = () => {
   return (
-    <div className="w-screen h-[9%] flex flex-row gap-[1%] items-center bg-gradient-to-r from-[#e8ae48] to-[#c95ddc]">
+    <div className="w-screen h-[9%] flex flex-row gap-[1%] items-center bg-gradient-to-r from-gradientStartYellow to-gradientEndPurple">
       <Link to="/home" className="h-full">
         <img src={logo} alt="Project logo" className="h-full" />
       </Link>

@@ -3,6 +3,7 @@ import { useLazyLoginQuery } from '../../../store/api';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { ERROR_TEXT_BASED_ON_EXCEPTION } from '../../../consts';
 
 export const LoginForm: React.FC = () => {
   const [userSignInDto, setUserSignInDto] = useState<UserSignInDto>({
@@ -18,6 +19,7 @@ export const LoginForm: React.FC = () => {
     e.preventDefault();
 
     if (userSignInDto.password.trim() !== '' && userSignInDto.personalNumber) {
+      //TODO check that password gets stored/checked correctly
       try {
         const result = await loginQuery(userSignInDto).unwrap();
 
@@ -27,16 +29,8 @@ export const LoginForm: React.FC = () => {
       } catch (error) {
         const e = error as ExceptionType;
 
-        console.log(e);
-
-        if (e.status === 400) {
-          toast.error('Validation error');
-        } else if (e.status === 401) {
-          toast.error('Wrong credentials');
-        } else if (e.status === 404) {
-          toast.error('User with that personal number does not exist');
-        } else if (e.status === 'FETCH_ERROR') {
-          toast.error('Could not fetch data from API');
+        if (ERROR_TEXT_BASED_ON_EXCEPTION[e.status]) {
+          toast.error(ERROR_TEXT_BASED_ON_EXCEPTION[e.status]);
         } else {
           toast.error('error');
         }
@@ -55,7 +49,7 @@ export const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col w-1/2">
+    <div className="flex flex-col w-1/2 h-full">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-[2.5rem] items-center"
@@ -66,7 +60,7 @@ export const LoginForm: React.FC = () => {
           onChange={handleChange}
           type="number"
           placeholder="Personal Number:"
-          className="rounded-lg border border-[#000000] w-2/3 h-9 p-3"
+          className="rounded-lg border border-absoluteBlack w-2/3 h-9 p-3"
           required
         />
         <input
@@ -75,12 +69,12 @@ export const LoginForm: React.FC = () => {
           onChange={handleChange}
           type="password"
           placeholder="Password:"
-          className="rounded-lg border border-[#000000] w-2/3 h-9 p-3"
+          className="rounded-lg border border-absoluteBlack w-2/3 h-9 p-3"
           required
         />
         <button
           type="submit"
-          className="bg-[#DA6DE4] w-1/4 h-9 border border-[#000000] rounded-lg"
+          className="bg-loginButtonColor w-1/4 h-9 border border-absoluteBlack rounded-lg"
         >
           Log In
         </button>

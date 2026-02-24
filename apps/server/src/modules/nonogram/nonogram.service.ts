@@ -361,7 +361,7 @@ export class NonogramService {
       const topTenPercentNonogramGames: gamesForEachNonogramDto[] =
         await this.getTopTenPercentNonogramGames(publicNonogramsDoneGames);
 
-      const usersScoresMap = new Map<string, number>();
+      const usersScores: Record<string, number> = {};
 
       topTenPercentNonogramGames.forEach((nonogramGames) => {
         const chunkSize = Math.ceil(nonogramGames.games.length * 0.1);
@@ -372,26 +372,21 @@ export class NonogramService {
           chunk.forEach((game) => {
             const { username } = game.user;
 
-            if (usersScoresMap.has(username)) {
-              usersScoresMap.set(
-                username,
-                usersScoresMap.get(username) + 1 * (index + 1)
-              );
+            if (usersScores[username]) {
+              usersScores[username] = usersScores[username] + 1 * (index + 1);
             } else {
-              usersScoresMap.set(username, 1 * (index + 1));
+              usersScores[username] = 1 * (index + 1);
             }
           });
         });
       });
 
-      const leaderboardMap = new Map(
-        [...usersScoresMap.entries()].sort(
-          (userA, userB) => userB[1] - userA[1]
-        )
-      );
+      const leaderboard = Object.entries(usersScores)
+        .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+        .map(([username, score]) => ({ username, score }));
 
-      this.logger.log('Got global leaders successfully', { leaderboardMap });
-      return Array.from(leaderboardMap.entries());
+      this.logger.log('Got global leaders successfully', { leaderboard });
+      return leaderboard;
     } catch (error) {
       throw new GlobalLeadersException(error.stack);
     }

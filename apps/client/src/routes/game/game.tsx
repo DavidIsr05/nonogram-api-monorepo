@@ -5,7 +5,7 @@ export const Game: React.FC = () => {
   return (
     <div className="w-screen h-screen">
       <Header />
-      <>GAME</>
+      GAME
     </div>
   );
 };
