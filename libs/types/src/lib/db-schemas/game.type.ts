@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { createZodDto } from 'nestjs-zod';
 import { TileStates } from '../enums';
 
 export const GameSchema = z
@@ -38,8 +37,6 @@ export const UpdateGameSchema = GameSchema.partial()
   .required({ id: true })
   .strict();
 
-export class GameDto extends createZodDto(GameSchema) {}
-
-export class CreateGameDto extends createZodDto(CreateGameSchema) {}
-
-export class UpdateGameDto extends createZodDto(UpdateGameSchema) {}
+export type GameDto = z.infer<typeof GameSchema>;
+export type CreateGameDto = z.infer<typeof CreateGameSchema>;
+export type UpdateGameDto = z.infer<typeof UpdateGameSchema>;

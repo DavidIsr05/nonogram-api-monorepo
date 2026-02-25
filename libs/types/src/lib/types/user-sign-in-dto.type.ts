@@ -1,4 +1,3 @@
-import { createZodDto } from 'nestjs-zod';
 import z from 'zod';
 
 export const UserSignInSchema = z
@@ -11,4 +10,4 @@ export const UserSignInSchema = z
   })
   .strict();
 
-export class UserSignInDto extends createZodDto(UserSignInSchema) {}
+export type UserSignInDto = z.infer<typeof UserSignInSchema>;

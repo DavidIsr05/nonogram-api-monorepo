@@ -1,5 +1,4 @@
 import { z } from 'zod';
-import { createZodDto } from 'nestjs-zod';
 
 export const UserSchema = z
   .object({
@@ -33,8 +32,6 @@ export const UpdateUserSchema = UserSchema.partial()
   .omit({ isAdmin: true })
   .strict();
 
-export class UserDto extends createZodDto(UserSchema) {}
-
-export class CreateUserDto extends createZodDto(CreateUserSchema) {}
-
-export class UpdateUserDto extends createZodDto(UpdateUserSchema) {}
+export type UserDto = z.infer<typeof UserSchema>;
+export type CreateUserDto = z.infer<typeof CreateUserSchema>;
+export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;

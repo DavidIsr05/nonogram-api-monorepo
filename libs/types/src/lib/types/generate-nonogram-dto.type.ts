@@ -1,6 +1,5 @@
 import z from 'zod';
 import { NonogramDifficultiesEnumValues } from '../enums';
-import { createZodDto } from 'nestjs-zod';
 
 export const GenerateNonogramSchema = z
   .object({
@@ -11,4 +10,4 @@ export const GenerateNonogramSchema = z
   })
   .strict();
 
-export class GenerateNonogramDto extends createZodDto(GenerateNonogramSchema) {}
+export type GenerateNonogramDto = z.infer<typeof GenerateNonogramSchema>;
