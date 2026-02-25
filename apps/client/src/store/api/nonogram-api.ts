@@ -25,7 +25,7 @@ export const nonogramApi = api.injectEndpoints({
         body,
       }),
     }),
-    getNonogramLeaders: build.query<[], void>({
+    getNonogramLeaders: build.query<[], string>({
       //TODO maybe make type for this
       query: (nonogramId) => ({
         url: `nonogram/leaders/${nonogramId}`,
@@ -34,28 +34,27 @@ export const nonogramApi = api.injectEndpoints({
       providesTags: ['Game'],
     }),
     getGlobalLeaders: build.query<Record<string, number>[], void>({
-      //TODO maybe make type for this
       query: () => ({
         url: 'nonogram/global-leaders',
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    getAllAvaliableNonograms: build.query<NonogramResponseDto[], void>({
+    getAllAvaliableNonograms: build.query<NonogramResponseDto[], string>({
       query: (userId) => ({
         url: `nonogram/all/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Nonogram'],
     }),
-    getUnplayedNonograms: build.query<NonogramResponseDto[], void>({
+    getUnplayedNonograms: build.query<NonogramResponseDto[], string>({
       query: (userId) => ({
         url: `nonogram/unplayed/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Nonogram', 'Game'],
     }),
-    getNonogram: build.query<NonogramResponseDto, void>({
+    getNonogram: build.query<NonogramResponseDto, string>({
       query: (nonogramId) => ({
         url: `nonogram/${nonogramId}`,
         method: 'GET',

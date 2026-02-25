@@ -1,5 +1,7 @@
 import { ExceptionType, UserSignInDto } from '@nonogram-api-monorepo/types';
 import { useLazyLoginQuery } from '../../../store/api';
+import { useDispatch } from 'react-redux';
+import { setUserId } from '../../../store/slices';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -12,7 +14,7 @@ export const LoginForm: React.FC = () => {
   });
 
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const [loginQuery] = useLazyLoginQuery();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -24,6 +26,8 @@ export const LoginForm: React.FC = () => {
         const result = await loginQuery(userSignInDto).unwrap();
 
         if (typeof result.access_token === 'string') {
+          console.log('login result:', result);
+          dispatch(setUserId(result.userId));
           navigate('/home', { replace: true });
         }
       } catch (error) {

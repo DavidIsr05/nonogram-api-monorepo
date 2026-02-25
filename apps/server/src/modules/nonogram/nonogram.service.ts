@@ -254,8 +254,6 @@ export class NonogramService {
           attributes: ['nonogramId'],
           required: false,
         },
-        attributes: ['id'],
-        raw: true,
         where: {
           [Op.or]: { isPrivate: false, creatorId: userId },
           '$games.nonogramId$': { [Op.is]: null },

@@ -16,28 +16,28 @@ export const gameApi = api.injectEndpoints({
         body,
       }),
     }),
-    getAllUsersGames: build.query<GameDto[], void>({
+    getAllUsersGames: build.query<GameDto[], string>({
       query: (userId) => ({
         url: `game/all/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    getInProgresGames: build.query<GameDto[], void>({
+    getInProgresGames: build.query<GameDto[], string>({
       query: (userId) => ({
         url: `game/in-progress/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    getFinishedGames: build.query<GameDto[], void>({
+    getFinishedGames: build.query<GameDto[], string>({
       query: (userId) => ({
         url: `game/finished/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    getGameById: build.query<GameDto, void>({
+    getGameById: build.query<GameDto, string>({
       query: (userId) => ({
         url: `game/${userId}`,
         method: 'GET',
@@ -51,7 +51,7 @@ export const gameApi = api.injectEndpoints({
         body,
       }),
     }),
-    deleteGame: build.query<boolean, void>({
+    deleteGame: build.query<boolean, string>({
       query: (gameId) => ({
         url: `game/${gameId}`,
         method: 'DELETE',

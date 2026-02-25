@@ -38,7 +38,7 @@ export const DifficultyFilter: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-1 flex-row">
       {Object.values(NonogramDifficultiesEnumValues.enum).map(
         (difficultyValue, difficultyIndex) => (
           <button
