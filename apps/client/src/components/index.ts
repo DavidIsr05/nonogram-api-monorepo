@@ -1,3 +1,3 @@
 export * from './header';
-export * from './big-container';
+export * from './game-selector';
 export * from './difficulty-filter';
