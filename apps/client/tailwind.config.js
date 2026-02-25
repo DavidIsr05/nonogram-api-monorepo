@@ -29,7 +29,8 @@ module.exports = {
         signupPageBackground: '#F5A623',
         signupFormBackground: '#FFF6E5',
         signupFormComponentBorder: '#F5A623',
-        nonogramsBackground: '#FBE6C1'
+        nonogramsBackground: '#FBE6C1',
+        filledDifficultyStar: '#FFFF00'
       }
     },
   },
