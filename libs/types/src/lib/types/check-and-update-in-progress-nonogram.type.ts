@@ -1,4 +1,3 @@
-import { createZodDto } from 'nestjs-zod';
 import z from 'zod';
 import { TileStates } from '../enums';
 
@@ -8,6 +7,4 @@ export const CheckAndUpdateInProgressNonogramSchema = z.object({
   gameId: z.string().uuid(),
 });
 
-export class CheckAndUpdateInProgressNonogramDto extends createZodDto(
-  CheckAndUpdateInProgressNonogramSchema
-) {}
+export type CheckAndUpdateInProgressNonogramDto = z.infer<typeof CheckAndUpdateInProgressNonogramSchema>;

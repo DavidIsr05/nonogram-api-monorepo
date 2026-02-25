@@ -1,9 +1,6 @@
 import React from 'react';
 import StarSvg from '../assets/images/blankStar.svg?react';
-import {
-  NonogramDifficultiesEnumValues,
-  NonogramDifficultiesEnumType,
-} from '../../../../libs/types/src/lib/enums';
+import { NonogramDifficultiesEnumType, NonogramDifficultiesEnumValues } from '@nonogram-api-monorepo/types';
 
 interface Props {
   setDifficultyFilter: (

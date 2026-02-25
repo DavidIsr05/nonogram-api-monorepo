@@ -9,8 +9,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto, UpdateUserDto } from '@nonogram-api-monorepo/types';
-import { Public, CurrentUser } from '../../common';
+import { Public, CurrentUser, CreateUserDto, UpdateUserDto } from '../../common';
 import { User } from './entity/user.entity';
 import { ZodValidationPipe } from 'nestjs-zod';
 

@@ -9,11 +9,11 @@ import {
 } from '@nestjs/common';
 import { NonogramService } from './nonogram.service';
 import {
+  CurrentUser,
   CreateNonogramRequestDto,
   GenerateNonogramDto,
-} from '@nonogram-api-monorepo/types';
+} from '../../common';
 import { User } from '../user/entity/user.entity';
-import { CurrentUser } from '../../common';
 import { ZodValidationPipe } from 'nestjs-zod';
 
 @Controller('nonogram')

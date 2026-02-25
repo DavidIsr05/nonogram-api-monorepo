@@ -7,8 +7,7 @@ import {
   Response,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { UserSignInDto } from '@nonogram-api-monorepo/types';
-import { Public } from '../../common';
+import { Public, UserSignInDto } from '../../common';
 import { ZodValidationPipe } from 'nestjs-zod';
 
 @Controller('auth')

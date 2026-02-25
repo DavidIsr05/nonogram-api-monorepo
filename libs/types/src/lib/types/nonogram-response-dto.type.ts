@@ -1,6 +1,5 @@
 import z from 'zod';
 import { NonogramDifficultiesEnumValues } from '../enums';
-import { createZodDto } from 'nestjs-zod';
 
 export const NonogramResponseSchema = z.object({
   id: z.string().uuid(),
@@ -12,4 +11,4 @@ export const NonogramResponseSchema = z.object({
   isPrivate: z.boolean().default(true),
 });
 
-export class NonogramResponseDto extends createZodDto(NonogramResponseSchema) {}
+export type NonogramResponseDto = z.infer<typeof NonogramResponseSchema>;

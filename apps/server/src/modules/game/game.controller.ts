@@ -10,11 +10,11 @@ import {
 } from '@nestjs/common';
 import { GameService } from './game.service';
 import {
+  CurrentUser,
   CheckAndUpdateInProgressNonogramDto,
   CreateGameDto,
   UpdateGameDto,
-} from '@nonogram-api-monorepo/types';
-import { CurrentUser } from '../../common';
+} from '../../common';
 import { User } from '../user/entity/user.entity';
 import { ZodValidationPipe } from 'nestjs-zod';
 

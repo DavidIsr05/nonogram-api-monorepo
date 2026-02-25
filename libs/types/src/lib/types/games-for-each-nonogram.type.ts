@@ -1,5 +1,4 @@
 import z from 'zod';
-import { createZodDto } from 'nestjs-zod';
 
 export const gamesForEachNonogramSchema = z.object({
   id: z.string().uuid(),
@@ -15,6 +14,4 @@ export const gamesForEachNonogramSchema = z.object({
   ),
 });
 
-export class gamesForEachNonogramDto extends createZodDto(
-  gamesForEachNonogramSchema
-) {}
+export type gamesForEachNonogramDto = z.infer<typeof gamesForEachNonogramSchema>;

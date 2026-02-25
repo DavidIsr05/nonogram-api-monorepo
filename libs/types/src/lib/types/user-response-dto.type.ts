@@ -1,4 +1,3 @@
-import { createZodDto } from 'nestjs-zod';
 import z from 'zod';
 
 export const UserResponseSchema = z.object({
@@ -8,4 +7,4 @@ export const UserResponseSchema = z.object({
   isAdmin: z.boolean(),
 });
 
-export class UserResponseDto extends createZodDto(UserResponseSchema) {}
+export type UserResponseDto = z.infer<typeof UserResponseSchema>;
