@@ -1,10 +1,10 @@
 import { NonogramDifficultiesEnumType } from '@nonogram-api-monorepo/types';
-import React, { useState } from 'react';
+import React, { SetStateAction, useState } from 'react';
 import { DifficultyFilter } from './difficulty-filter';
 
-export const BigContainer: React.FC = () => {
+export const gameSelector: React.FC = () => {
   const [difficultyFilter, setDifficultyFilter] =
-    useState<NonogramDifficultiesEnumType | null>(null);
+    useState<SetStateAction<NonogramDifficultiesEnumType> | null>(null);
 
   return (
     <DifficultyFilter

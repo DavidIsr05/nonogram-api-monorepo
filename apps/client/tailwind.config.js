@@ -16,10 +16,10 @@ module.exports = {
         jakarta: ['Plus Jakarta Sans', 'sans-serif'],
       },
       colors: {
-        absoluteWhite: '#ffffff',
+        absoluteWhite: '#FFFFFF',
         absoluteBlack: '#000000',
-        gradientStartYellow: '#e8ae48',
-        gradientEndPurple: '#c95ddc',
+        gradientStartYellow: '#E8AE48',
+        gradientEndPurple: '#C95DDC',
         globalLeaderboardsBackground: '#F4E1C6',
         landingPageBackground: '#DA6DE4',
         loginFormBackground: '#F5E6FA',

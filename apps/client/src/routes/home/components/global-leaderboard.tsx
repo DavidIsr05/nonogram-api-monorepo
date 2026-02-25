@@ -38,7 +38,7 @@ export const GlobalLeaderboard: React.FC = () => {
   });
 
   return (
-    <div className="flex flex-col h-[95%] w-[30%] border ml-6 items-center bg-globalLeaderboardsBackground rounded-xl shadow-xl">
+    <div className="flex flex-col h-[95%] w-[30%] border items-center bg-globalLeaderboardsBackground rounded-xl shadow-xl">
       <img
         src={trophy}
         className="aspect-square w-[10%rem] m-7"

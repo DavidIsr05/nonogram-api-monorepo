@@ -1,13 +1,16 @@
-import React from 'react';
+import React, { SetStateAction } from 'react';
 import StarSvg from '../assets/images/blankStar.svg?react';
-import { NonogramDifficultiesEnumType, NonogramDifficultiesEnumValues } from '@nonogram-api-monorepo/types';
+import {
+  NonogramDifficultiesEnumType,
+  NonogramDifficultiesEnumValues,
+} from '@nonogram-api-monorepo/types';
 
-interface Props {
+type Props = {
   setDifficultyFilter: (
-    difficultyEnum: NonogramDifficultiesEnumType | null
+    difficultyEnum: SetStateAction<NonogramDifficultiesEnumType> | null
   ) => void;
-  difficultyFilter: NonogramDifficultiesEnumType | null;
-}
+  difficultyFilter: SetStateAction<NonogramDifficultiesEnumType> | null;
+};
 
 export const DifficultyFilter: React.FC<Props> = ({
   setDifficultyFilter,
@@ -16,14 +19,14 @@ export const DifficultyFilter: React.FC<Props> = ({
   const getStarColor = (starIndex: number) => {
     if (difficultyFilter) {
       return starIndex >
-        Object.keys(NonogramDifficultiesEnumValues.enum).indexOf(
-          difficultyFilter
+        Object.values(NonogramDifficultiesEnumValues.enum).indexOf(
+          difficultyFilter as NonogramDifficultiesEnumType
         )
-        ? 'absoluteWhite'
-        : 'filledDifficultyStar';
+        ? 'fill-absoluteWhite'
+        : 'fill-filledDifficultyStar';
+    } else {
+      return 'absoluteWhite';
     }
-
-    return 'absoluteWhite';
   };
 
   const handleClick = (clickedDifficulty: NonogramDifficultiesEnumType) => {
@@ -36,17 +39,17 @@ export const DifficultyFilter: React.FC<Props> = ({
 
   return (
     <div className="flex gap-1">
-      {Object.entries(NonogramDifficultiesEnumValues.enum).map(
+      {Object.values(NonogramDifficultiesEnumValues.enum).map(
         (difficultyValue, difficultyIndex) => (
           <button
             className="transition-transform hover:scale-110"
             onClick={() => {
-              handleClick(difficultyValue[1]);
+              handleClick(difficultyValue);
             }}
             type="button"
             key={difficultyIndex}
           >
-            <StarSvg className={`fill-${getStarColor(difficultyIndex)}`} />
+            <StarSvg className={getStarColor(difficultyIndex)} />
           </button>
         )
       )}
