@@ -20,7 +20,7 @@ module.exports = {
         absoluteBlack: '#000000',
         gradientStartYellow: '#e8ae48',
         gradientEndPurple: '#c95ddc',
-        globalLeaderboardsBackgroundYellow: '#F4E1C6',
+        globalLeaderboardsBackground: '#F4E1C6',
         landingPageBackground: '#DA6DE4',
         loginFormBackground: '#F5E6FA',
         loginFormComponentBorder: '#A90FB8',
@@ -29,7 +29,7 @@ module.exports = {
         signupPageBackground: '#F5A623',
         signupFormBackground: '#FFF6E5',
         signupFormComponentBorder: '#F5A623',
-
+        nonogramsBackground: '#FBE6C1'
       }
     },
   },
