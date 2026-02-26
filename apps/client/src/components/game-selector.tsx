@@ -16,18 +16,6 @@ export const GameSelector: React.FC<Props> = ({
   const [difficultyFilter, setDifficultyFilter] =
     useState<NonogramDifficultiesEnumType | null>(null);
 
-  const Header = ({ Component }: { Component: React.FC | null }) => {
-    if (Component) {
-      return (
-        <li>
-          <Component />
-        </li>
-      );
-    } else {
-      return <li />;
-    }
-  };
-
   return (
     <div className="h-[95%] w-[60%] border p-3 text-4xl">
       <div className="justify-between flex flex-row">
@@ -37,7 +25,13 @@ export const GameSelector: React.FC<Props> = ({
           difficultyFilter={difficultyFilter}
         />
         <ul>
-          <Header Component={Component} />
+          {Component ? (
+            <li>
+              <Component />
+            </li>
+          ) : (
+            <li />
+          )}
         </ul>
       </div>
       {renderList(difficultyFilter)}

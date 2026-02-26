@@ -26,7 +26,6 @@ export const LoginForm: React.FC = () => {
         const result = await loginQuery(userSignInDto).unwrap();
 
         if (typeof result.access_token === 'string') {
-          console.log('login result:', result);
           dispatch(setUserId(result.userId));
           navigate('/home', { replace: true });
         }
