@@ -1,7 +1,7 @@
 import React from 'react';
 import { GameSelector, Header } from '../../components';
 import { Toaster } from 'sonner';
-import { GlobalLeaderboard, NonogramList } from './components';
+import { GlobalLeaderboard, NonogramList, CreateNonogramPopup } from './components';
 
 export const Home: React.FC = () => {
   return (
@@ -12,7 +12,7 @@ export const Home: React.FC = () => {
         <GameSelector
           name="Nonograms:"
           renderList={(difficulty) => <NonogramList difficulty={difficulty} />}
-          Component={null}
+          Component={CreateNonogramPopup}
         />
       </div>
       <Toaster richColors />

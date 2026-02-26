@@ -27,10 +27,15 @@ module.exports = {
         loginButtonColor: '#DA6DE4',
         signupButtonColor: '#F5A623',
         signupPageBackground: '#F5A623',
-        signupFormBackground: '#FFF6E5',
+        signupFormBackground: '#FFF6E5', //TODO duplicated colors 🤞😭
         signupFormComponentBorder: '#F5A623',
         nonogramsBackground: '#FBE6C1',
-        filledDifficultyStar: '#FFFF00'
+        filledDifficultyStar: '#FFFF00',
+        imageUploadBackground: '#F9FAFB',
+        buttonTextGray: '#4B5563',
+        buttonHoverGray: '#F9FAFB',
+        buttonGreen: '#22C55E',
+        buttonHoverGreen: '#16A34A',
       }
     },
   },
