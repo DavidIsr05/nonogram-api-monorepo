@@ -26,6 +26,10 @@ export class Nonogram extends Model<Partial<Nonogram>> {
   @Column(DataType.UUID)
   id: string;
 
+  @Expose()
+  @Column({ type: DataType.TEXT, allowNull: false })
+  name: string;
+
   @Exclude()
   @Column({ type: DataType.JSONB, allowNull: false })
   nonogram: boolean[][];

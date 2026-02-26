@@ -5,7 +5,7 @@ type UserState = {
 };
 
 const initialState: UserState = {
-  userId: null,
+  userId: localStorage.getItem('userId'),
 };
 
 export const userSlice = createSlice({
@@ -14,9 +14,11 @@ export const userSlice = createSlice({
   reducers: {
     setUserId: (state, action: PayloadAction<string>) => {
       state.userId = action.payload;
+      localStorage.setItem('userId', action.payload);
     },
     clearUserId: (state) => {
       state.userId = null;
+      localStorage.removeItem('userId');
     },
   },
 });

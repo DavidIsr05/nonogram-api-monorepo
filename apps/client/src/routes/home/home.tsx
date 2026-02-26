@@ -10,7 +10,7 @@ export const Home: React.FC = () => {
       <div className="h-[90%] w-[95%] flex flex-row items-center justify-around">
         <GlobalLeaderboard />
         <GameSelector
-          name="hi"
+          name="Nonograms:"
           renderList={(difficulty) => <NonogramList difficulty={difficulty} />}
           Component={null}
         />
