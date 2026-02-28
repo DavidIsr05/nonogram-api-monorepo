@@ -1,17 +1,9 @@
-import {
-  NonogramDifficulties,
-  NonogramDifficultiesEnumType,
-} from '@nonogram-api-monorepo/types';
+import { NonogramDifficultiesEnumType } from '@nonogram-api-monorepo/types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useGetUnplayedNonogramsQuery } from '../../../store/api';
 import { RootState } from '../../../store/store';
-
-const DIFFICULTY_SIZE: Record<NonogramDifficultiesEnumType, string> = {
-  [NonogramDifficulties.EASY]: '20x20',
-  [NonogramDifficulties.MEDIUM]: '30x30',
-  [NonogramDifficulties.HARD]: '40x40',
-};
+import { DIFFICULTY_SIZE } from 'apps/client/src/consts';
 
 type Props = {
   difficulty: NonogramDifficultiesEnumType | null;
@@ -26,12 +18,13 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
     isError,
   } = useGetUnplayedNonogramsQuery(userId ?? '', { skip: !userId });
 
-  if (!userId)
+  if (!userId) {
     return (
       <ul>
         <li>Not logged in</li>
       </ul>
     );
+  }
 
   if (isLoading) {
     return (
@@ -50,7 +43,7 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
   }
 
   const filteredNonograms = difficulty
-    ? nonograms?.filter((nonogram) => nonogram.difficulty === difficulty) //TODO idk this or make different routes for different difficulty nonograms
+    ? nonograms?.filter((nonogram) => nonogram.difficulty === difficulty)
     : nonograms;
 
   return (

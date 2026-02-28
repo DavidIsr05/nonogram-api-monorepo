@@ -77,7 +77,7 @@ export const LoginForm: React.FC = () => {
         />
         <button
           type="submit"
-          className="bg-loginButtonColor w-1/4 h-9 border border-absoluteBlack rounded-lg"
+          className="bg-loginPagePurple w-1/4 h-9 border border-absoluteBlack rounded-lg"
         >
           Log In
         </button>

@@ -15,17 +15,9 @@ import PlusCreate from '../../../assets/images/plusCreate.svg?react';
 import imagePlaceholder from '../../../assets/images/imagePlaceholder.svg';
 import UploadSvg from '../../../assets/images/upload.svg?react';
 import { toast } from 'sonner';
+import { DEFAULT_FORM, DIM_FACTOR_OPTIONS } from 'apps/client/src/consts';
 
 export const CreateNonogramPopup: React.FC = () => {
-  const DIM_FACTOR_OPTIONS = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8];
-
-  const DEFAULT_FORM: GenerateNonogramDto = {
-    difficulty: NonogramDifficulties.MEDIUM,
-    mainObjectDimFactor: 0.3,
-    imageBase64: '',
-    previewImageIntRGB: 0,
-  };
-
   const [open, setOpen] = useState(false);
 
   const [name, setName] = useState('');
@@ -115,7 +107,7 @@ export const CreateNonogramPopup: React.FC = () => {
           >
             <div className="flex flex-col gap-2">
               <div
-                className="relative border rounded-xl aspect-square flex items-center justify-center bg-imageUploadBackground cursor-pointer overflow-hidden"
+                className="relative border rounded-xl aspect-square flex items-center justify-center bg-simpleGray cursor-pointer overflow-hidden"
                 onClick={() => fileInputRef.current?.click()}
               >
                 {form.imageBase64 ? (
@@ -150,7 +142,7 @@ export const CreateNonogramPopup: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex-1 flex items-center justify-center gap-1 border rounded-lg py-1.5 text-sm text-buttonTextGray hover:bg-buttonHoverGray"
+                  className="flex-1 flex items-center justify-center gap-1 border rounded-lg py-1.5 text-sm text-buttonTextGray hover:bg-simpleGray"
                 >
                   <UploadSvg className="w-4 h-4" />
                   Upload Image
@@ -159,7 +151,7 @@ export const CreateNonogramPopup: React.FC = () => {
                   type="button"
                   disabled={!form.imageBase64 || isGenerating}
                   onClick={handleGenerate}
-                  className="flex-1 border rounded-lg py-1.5 text-sm text-buttonTextGray hover:bg-buttonHoverGray disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex-1 border rounded-lg py-1.5 text-sm text-buttonTextGray hover:bg-simpleGray disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {isGenerating ? 'Generating...' : 'Generate Preview'}
                 </button>
@@ -199,7 +191,7 @@ export const CreateNonogramPopup: React.FC = () => {
                   onChange={(e) => {
                     setForm((prev) => ({
                       ...prev,
-                      mainObjectDimFactor: Number(e.target.value),
+                      mainObjectDimFactor: +e.target.value,
                     }));
                     setGenerated(null);
                   }}
@@ -217,7 +209,7 @@ export const CreateNonogramPopup: React.FC = () => {
               <button
                 type="button"
                 onClick={handleReset}
-                className="px-5 py-2 border rounded-lg text-sm hover:bg-buttonHoverGray"
+                className="px-5 py-2 border rounded-lg text-sm hover:bg-simpleGray"
               >
                 Reset
               </button>
@@ -225,7 +217,7 @@ export const CreateNonogramPopup: React.FC = () => {
                 type="button"
                 disabled={!generated || !name || isCreating}
                 onClick={handleCreate}
-                className="px-5 py-2 bg-buttonGreen text-absoluteWhite rounded-lg text-sm hover:bg-green-600 disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-5 py-2 bg-buttonGreen text-absoluteWhite rounded-lg text-sm hover:bg-buttonHoverGreen disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {isCreating ? 'Creating...' : 'Submit'}
               </button>

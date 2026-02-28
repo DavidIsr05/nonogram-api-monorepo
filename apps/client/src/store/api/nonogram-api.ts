@@ -26,7 +26,6 @@ export const nonogramApi = api.injectEndpoints({
       }),
     }),
     getNonogramLeaders: build.query<[], string>({
-      //TODO maybe make type for this
       query: (nonogramId) => ({
         url: `nonogram/leaders/${nonogramId}`,
         method: 'GET',
