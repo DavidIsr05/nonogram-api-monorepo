@@ -5,7 +5,7 @@ import { LoginForm } from './components';
 
 export const Landing: React.FC = () => {
   return (
-    <div className="bg-landingPageBackground h-screen w-screen relative">
+    <div className="bg-loginPagePurple h-screen w-screen relative">
       <img
         src={bigLogo}
         className="h-screen w-screen z-0 absolute right-[10%]"

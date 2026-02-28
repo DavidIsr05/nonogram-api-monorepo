@@ -4,6 +4,7 @@ import { NonogramDifficultiesEnumValues } from '../enums';
 export const NonogramSchema = z
   .object({
     id: z.string().uuid(),
+    name: z.string(),
     nonogram: z.array(z.array(z.boolean())),
     previewImageBase64: z.string(),
     completeNonogramImageBase64: z.string(),

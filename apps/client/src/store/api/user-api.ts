@@ -14,7 +14,7 @@ export const userApi = api.injectEndpoints({
         body,
       }),
     }),
-    getUserById: build.query<UserResponseDto, void>({
+    getUserById: build.query<UserResponseDto, string>({
       query: (userId) => ({
         url: `user/${userId}`,
         method: 'GET',
@@ -28,7 +28,7 @@ export const userApi = api.injectEndpoints({
         body,
       }),
     }),
-    delete: build.query<boolean, void>({
+    delete: build.query<boolean, string>({
       query: (userId) => ({
         url: `user/${userId}`,
         method: 'DELETE',

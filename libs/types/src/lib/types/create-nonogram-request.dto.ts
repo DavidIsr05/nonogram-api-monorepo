@@ -3,6 +3,7 @@ import { NonogramDifficultiesEnumValues } from '../enums';
 
 export const CreateNonogramRequestSchema = z
   .object({
+    name: z.string(),
     nonogram: z.string(),
     previewImageBase64: z.string(),
     completeNonogramImageBase64: z.string(),

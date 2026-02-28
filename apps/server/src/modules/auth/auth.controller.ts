@@ -21,7 +21,7 @@ export class AuthController {
     @Response() res,
     @Body(new ZodValidationPipe(UserSignInDto)) signInDto: UserSignInDto
   ) {
-    const { access_token } = await this.authService.signIn(
+    const { access_token, userId } = await this.authService.signIn(
       signInDto.personalNumber,
       signInDto.password
     );
@@ -33,6 +33,6 @@ export class AuthController {
       maxAge: 3600000,
     });
 
-    return res.json({ access_token });
+    return res.json({ access_token, userId });
   }
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import trophy from '../../../assets/images/trophy.svg';
+import Trophy from '../../../assets/images/trophy.svg?react';
 import { useGetGlobalLeadersQuery } from '../../../store/api';
 import { useNavigate } from 'react-router-dom';
 
@@ -39,11 +39,7 @@ export const GlobalLeaderboard: React.FC = () => {
 
   return (
     <div className="flex flex-col h-[95%] w-[30%] border items-center bg-globalLeaderboardsBackground rounded-xl shadow-xl">
-      <img
-        src={trophy}
-        className="aspect-square w-[10%rem] m-7"
-        alt="trophy icon"
-      />
+      <Trophy className="aspect-square m-7" />
       <ul className="list-inside w-[95%] h-[80%]">{leaders}</ul>
     </div>
   );
