@@ -3,7 +3,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { useGetUnplayedNonogramsQuery } from '../../../store/api';
 import { RootState } from '../../../store/store';
-import { DIFFICULTY_SIZE } from 'apps/client/src/consts';
+import { DIFFICULTY_SIZE } from '../../../consts';
 
 type Props = {
   difficulty: NonogramDifficultiesEnumType | null;

@@ -15,7 +15,7 @@ import PlusCreate from '../../../assets/images/plusCreate.svg?react';
 import imagePlaceholder from '../../../assets/images/imagePlaceholder.svg';
 import UploadSvg from '../../../assets/images/upload.svg?react';
 import { toast } from 'sonner';
-import { DEFAULT_FORM, DIM_FACTOR_OPTIONS } from 'apps/client/src/consts';
+import { DEFAULT_FORM, DIM_FACTOR_OPTIONS } from '../../../consts';
 
 export const CreateNonogramPopup: React.FC = () => {
   const [open, setOpen] = useState(false);
