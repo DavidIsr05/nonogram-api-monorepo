@@ -21,6 +21,7 @@ module.exports = {
         gradientStartYellow: '#E8AE48',
         gradientEndPurple: '#C95DDC',
         globalLeaderboardsBackground: '#F4E1C6',
+        gameSelectorBackground: '#FBE6C1',
         loginFormBackground: '#F5E6FA',
         loginFormComponentBorder: '#A90FB8',
         signupFormBackground: '#FFF6E5',

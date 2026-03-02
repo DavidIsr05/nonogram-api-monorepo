@@ -17,8 +17,8 @@ export const GameSelector: React.FC<Props> = ({
     useState<NonogramDifficultiesEnumType | null>(null);
 
   return (
-    <div className="h-[95%] w-[60%] border p-3 text-4xl">
-      <div className="justify-between flex flex-row">
+    <div className="h-[95%] w-[60%] border p-3 text-4xl rounded-xl bg-gameSelectorBackground">
+      <div className="justify-between flex flex-row ">
         {name}
         <DifficultyFilter
           setDifficultyFilter={setDifficultyFilter}

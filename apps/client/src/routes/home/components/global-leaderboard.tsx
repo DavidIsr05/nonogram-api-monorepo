@@ -27,7 +27,7 @@ export const GlobalLeaderboard: React.FC = () => {
 
     return (
       <li
-        className="h-[7%] mb-7 border flex flex-row items-center justify-between p-5 rounded-xl shadow-lg bg-absoluteWhite"
+        className="h-[7%] mb-7 border flex flex-row items-center justify-between p-5 rounded-xl shadow-lg backdrop-blur-lg bg-absoluteWhite/40"
         key={position}
       >
         <div className="text-xl">{positionSymbol}</div>
