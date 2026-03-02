@@ -55,7 +55,7 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
         >
           <div className="text-lg font-bold">{nonogram.name}</div>
           <div className="gap-4 text-sm">
-            <>📐 {DIFFICULTY_SIZE[nonogram.difficulty]}</>
+            📐 {DIFFICULTY_SIZE[nonogram.difficulty]}
             {/* will be more then 1 div inside.... no cr comment needed */}
           </div>
         </li>

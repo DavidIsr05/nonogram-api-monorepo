@@ -113,20 +113,20 @@ export const CreateNonogramPopup: React.FC = () => {
                 {form.imageBase64 ? (
                   <img
                     src={`data:image/png;base64,${form.imageBase64}`}
-                    alt="uploaded image"
+                    alt="uploaded"
                     className="w-full h-full"
                   />
                 ) : (
                   <img
                     src={imagePlaceholder}
-                    alt="image placeholder"
+                    alt="placeholder"
                     className="w-16 h-16"
                   />
                 )}
                 {generated && (
                   <img
                     src={`data:image/png;base64,${generated.previewImageBase64}`}
-                    alt="preview iamge"
+                    alt="preview"
                     className="absolute w-full h-full"
                   />
                 )}
