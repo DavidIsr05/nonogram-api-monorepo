@@ -1,8 +1,6 @@
 import React from 'react';
-import Logo from '../assets/images/logo.svg?react';
-import Games from '../assets/images/games.svg?react';
-import Profile from '../assets/images/profile.svg?react';
 import { Link } from 'react-router-dom';
+import { Profile, Games, Logo } from '../assets/images';
 
 export const Header: React.FC = () => {
   return (

@@ -1,5 +1,5 @@
 import React from 'react';
-import StarSvg from '../assets/images/star.svg?react';
+import { Star } from '../assets/images';
 import {
   NonogramDifficultiesEnumType,
   NonogramDifficultiesEnumValues,
@@ -49,7 +49,7 @@ export const DifficultyFilter: React.FC<Props> = ({
             type="button"
             key={difficultyIndex}
           >
-            <StarSvg
+            <Star
               className={`w-full h-full ${getStarColor(difficultyIndex)}`}
             />
           </button>

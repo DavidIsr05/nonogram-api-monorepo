@@ -48,21 +48,21 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
 
   return (
     <ul className="flex flex-col gap-2 overflow-y-auto max-h-[93%]">
-      {filteredGames?.map((game) => (
+      {filteredGames?.map(({ id, nonogram, timer, mistakes, hints }) => (
         <li
-          key={game.id}
+          key={id}
           className="flex flex-col shadow-lg rounded-xl p-5 gap-1 backdrop-blur-lg bg-absoluteWhite/30"
         >
-          <div className="text-xl font-bold">{game.nonogram.name}</div>
+          <div className="text-xl font-bold">{nonogram.name}</div>
           <div className="text-lg flex flex-row justify-around">
             <div className="flex flex-col">
-              <span>⏱️ Time: {game.timer}</span>
+              <span>⏱️ Time: {timer}</span>
               {/* //TODO need to fix time/format */}
-              <span>❌ Mistakes: {game.mistakes}/3</span>
+              <span>❌ Mistakes: {mistakes}/3</span>
             </div>
             <div className="flex flex-col">
-              <span>💡 Hints: {3 - game.hints}/3</span>
-              <span>📐 {DIFFICULTY_SIZE[game.nonogram.difficulty]}</span>
+              <span>💡 Hints: {3 - hints}/3</span>
+              <span>📐 {DIFFICULTY_SIZE[nonogram.difficulty]}</span>
             </div>
           </div>
         </li>

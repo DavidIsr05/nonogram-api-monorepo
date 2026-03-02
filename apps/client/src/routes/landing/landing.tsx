@@ -1,5 +1,5 @@
 import React from 'react';
-import BigLogo from '../../assets/images/bigLogo.svg?react';
+import { BigLogo } from '../../assets/images';
 import { Toaster } from 'sonner';
 import { LoginForm } from './components';
 

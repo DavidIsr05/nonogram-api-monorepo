@@ -1,5 +1,5 @@
 import React from 'react';
-import Trophy from '../../../assets/images/trophy.svg?react';
+import { Trophy } from '../../../assets/images';
 import { useGetGlobalLeadersQuery } from '../../../store/api';
 import { useNavigate } from 'react-router-dom';
 
