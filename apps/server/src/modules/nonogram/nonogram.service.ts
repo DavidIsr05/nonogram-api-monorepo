@@ -21,7 +21,7 @@ import {
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
-import { Op } from 'sequelize';
+import { Op, fn, col } from 'sequelize';
 import {
   ForbiddenNonogramException,
   GlobalLeadersException,
@@ -208,6 +208,19 @@ export class NonogramService {
         where: {
           [Op.or]: [{ isPrivate: false }, { creatorId: userId }],
         },
+        attributes: {
+          include: [[fn('COUNT', col('games.id')), 'likeCount']],
+        },
+        include: [
+          {
+            model: Game,
+            attributes: [],
+            where: { isLiked: true },
+            required: false,
+          },
+        ],
+        group: ['Nonogram.id'],
+        order: [[fn('COUNT', col('games.id')), 'DESC']],
       });
       this.logger.log('Got all avaliable nonograms', { allAvaliableNonograms });
 
@@ -227,6 +240,19 @@ export class NonogramService {
     try {
       const nonogramsCreatedByUser = await this.nonogramModel.findAll({
         where: { creatorId },
+        attributes: {
+          include: [[fn('COUNT', col('games.id')), 'likeCount']],
+        },
+        include: [
+          {
+            model: Game,
+            attributes: [],
+            where: { isLiked: true },
+            required: false,
+          },
+        ],
+        group: ['Nonogram.id'],
+        order: [[fn('COUNT', col('games.id')), 'DESC']],
       });
 
       this.logger.log('Got nonograms created by user successfully', {

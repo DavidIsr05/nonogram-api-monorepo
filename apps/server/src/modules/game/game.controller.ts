@@ -78,6 +78,14 @@ export class GameController {
     return this.gameService.deleteGame(currentUser, gameId);
   }
 
+  @Patch(':id/like')
+  toggleLike(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) gameId: string,
+    @CurrentUser() currentUser: User
+  ) {
+    return this.gameService.toggleLike(currentUser, gameId);
+  }
+
   @Post('check-nonogram')
   checkAndUpdateInProgressNonogram(
     @Body(new ZodValidationPipe(CheckAndUpdateInProgressNonogramDto))

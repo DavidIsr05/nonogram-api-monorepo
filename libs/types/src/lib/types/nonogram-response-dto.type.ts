@@ -10,6 +10,7 @@ export const NonogramResponseSchema = z.object({
   difficulty: NonogramDifficultiesEnumValues,
   creatorId: z.string().uuid(),
   isPrivate: z.boolean().default(true),
+  likeCount: z.number().optional(),
 });
 
 export type NonogramResponseDto = z.infer<typeof NonogramResponseSchema>;
