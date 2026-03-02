@@ -12,6 +12,7 @@ import {
   ForbiddenGameException,
   LikingUnfinishedGameException,
 } from '../../common';
+import { Nonogram } from '../nonogram/entity/nonogram.entity';
 
 @Injectable()
 export class GameService {
@@ -79,7 +80,12 @@ export class GameService {
     }
     try {
       const inProgresGames = await this.gameModel.findAll({
-        where: { isFinished: false },
+        where: { isFinished: false, userId },
+        include: {
+          model: Nonogram,
+          attributes: ['difficulty', 'name'],
+        },
+        attributes: ['timer', 'hints', 'mistakes'],
       });
       this.logger.log('Got in progress games successfully', { inProgresGames });
       return inProgresGames;
