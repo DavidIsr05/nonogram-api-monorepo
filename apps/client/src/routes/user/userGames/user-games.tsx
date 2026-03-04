@@ -8,7 +8,7 @@ export const UserGames: React.FC = () => {
       <Header />
       <div className="h-[90%] w-full flex flex-row items-center justify-around">
         <GameSelector
-          name="Games:"
+          name="Your Games:"
           renderList={(difficulty) => <GameList difficulty={difficulty} />}
           NonogramCreationPopup={null}
         />

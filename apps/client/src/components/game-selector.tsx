@@ -18,13 +18,15 @@ export const GameSelector: React.FC<Props> = ({
 
   return (
     <div className="h-[95%] w-[60%] border p-3 text-4xl rounded-xl bg-gameSelectorBackground">
-      <div className="justify-between flex flex-row">
-        {name}
-        <DifficultyFilter //TODO difficulty filter is not really centered because of name lenght idk need QA
-          setDifficultyFilter={setDifficultyFilter}
-          difficultyFilter={difficultyFilter}
-        />
-        <ul>
+      <div className="grid grid-cols-[1fr_1fr_1fr]">
+        <span>{name}</span>
+        <div className="justify-self-center">
+          <DifficultyFilter
+            setDifficultyFilter={setDifficultyFilter}
+            difficultyFilter={difficultyFilter}
+          />
+        </div>
+        <ul className="justify-self-end">
           {NonogramCreationPopup ? (
             <li>
               <NonogramCreationPopup />

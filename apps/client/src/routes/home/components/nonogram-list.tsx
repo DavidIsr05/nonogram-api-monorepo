@@ -47,24 +47,24 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
     : nonograms;
 
   return (
-    <ul className="flex flex-col gap-2 overflow-y-scroll max-h-[93%]">
+    <ul className="flex flex-col gap-2 overflow-y-auto max-h-[93%] pb-2">
       {filteredNonograms?.map(
         ({ id, name, likeCount, gameCount, difficulty, user }) => (
           <li
             key={id}
-            className="flex flex-col shadow-lg rounded-xl p-5 gap-1 backdrop-blur-lg bg-absoluteWhite/30"
+            className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
           >
-            <div className="text-xl font-bold">{name}</div>
-            <div className="text-lg flex flex-row justify-around">
-              <div className="flex flex-col">
-                <span>👍 Likes: {likeCount}</span>
-                <span>🎮 Game count: {gameCount}</span>
-              </div>
-              <div className="flex flex-col">
-                <span>👨‍🎨 Creator: {user?.username}</span>
-                <span>📐 {DIFFICULTY_SIZE[difficulty]}</span>
-              </div>
-            </div>
+            <span className="font-semibold text-center">{user?.username}</span>
+            <span className="text-dividorGray">|</span>
+            <span className="font-bold text-center">{name}</span>
+            <span className="text-dividorGray">|</span>
+            <span className="text-center">
+              📐 {DIFFICULTY_SIZE[difficulty]}
+            </span>
+            <span className="text-dividorGray">|</span>
+            <span className="text-center">👍 {likeCount}</span>
+            <span className="text-dividorGray">|</span>
+            <span className="text-center">🎮 {gameCount}</span>
           </li>
         )
       )}

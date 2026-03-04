@@ -33,6 +33,10 @@ module.exports = {
         loginPagePurple: '#DA6DE4',
         signupPageOrange: '#F5A623',
         simpleGray: '#F9FAFB',
+        firstPlaceGoldBackground: '#FFF564',
+        secondPlaceSilverBackground: '#909090',
+        thirdPlaceBronzeBackground: '#CC8B00',
+        dividorGray: '#9CA3AF',
       }
     },
   },

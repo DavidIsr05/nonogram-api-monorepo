@@ -58,12 +58,6 @@ export const gameApi = api.injectEndpoints({
         method: 'DELETE',
       }),
     }),
-    toggleLike: build.mutation<GameDto, string>({
-      query: (gameId) => ({
-        url: `game/${gameId}/like`,
-        method: 'PATCH',
-      }),
-    }),
     checkAndUpdateInProgressNonogram: build.query<
       TileStates[][],
       CheckAndUpdateInProgressNonogramDto
@@ -85,6 +79,5 @@ export const {
   useGetGameByIdQuery,
   useLazyUpdateGameQuery,
   useLazyDeleteGameQuery,
-  useToggleLikeMutation,
   useCheckAndUpdateInProgressNonogramQuery,
 } = gameApi;

@@ -11,7 +11,7 @@ export const Header: React.FC = () => {
       <Link to="/games" className="ml-auto h-[90%]">
         <Games className="h-full" />
       </Link>
-      <Link to="/profile" className="h-[90%]">
+      <Link to="/profile" className="h-[90%] mr-3">
         <Profile className="h-full" />
       </Link>
     </div>

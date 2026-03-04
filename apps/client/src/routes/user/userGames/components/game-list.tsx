@@ -47,24 +47,24 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
     : games;
 
   return (
-    <ul className="flex flex-col gap-2 overflow-y-auto max-h-[93%]">
+    <ul className="flex flex-col gap-2 overflow-y-auto max-h-[93%] pb-2">
       {filteredGames?.map(({ id, nonogram, timer, mistakes, hints }) => (
         <li
           key={id}
-          className="flex flex-col shadow-lg rounded-xl p-5 gap-1 backdrop-blur-lg bg-absoluteWhite/30"
+          className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
         >
-          <div className="text-xl font-bold">{nonogram.name}</div>
-          <div className="text-lg flex flex-row justify-around">
-            <div className="flex flex-col">
-              <span>⏱️ Time: {timer}</span>
-              {/* //TODO need to fix time/format */}
-              <span>❌ Mistakes: {mistakes}/3</span>
-            </div>
-            <div className="flex flex-col">
-              <span>💡 Hints: {3 - hints}/3</span>
-              <span>📐 {DIFFICULTY_SIZE[nonogram.difficulty]}</span>
-            </div>
-          </div>
+          <span className="text-center font-bold">{nonogram.name}</span>
+          <span className="text-dividorGray">|</span>
+          <span className="text-center">⏱️ : {timer}</span>
+          {/* //TODO need to fix time/format */}
+          <span className="text-dividorGray">|</span>
+          <span className="text-center">❌ : {mistakes}/3</span>
+          <span className="text-dividorGray">|</span>
+          <span className="text-center">💡 : {3 - hints}/3</span>
+          <span className="text-dividorGray">|</span>
+          <span className="text-center">
+            📐 {DIFFICULTY_SIZE[nonogram.difficulty]}
+          </span>
         </li>
       ))}
     </ul>

@@ -154,6 +154,10 @@ export class GameService {
   async updateGame(currentUser, updateGameDto) {
     const game = await this.getGameById(currentUser, updateGameDto.id);
 
+    if (updateGameDto.isLiked && !game.isFinished) {
+      throw new LikingUnfinishedGameException();
+    }
+
     game.set({
       ...updateGameDto,
     });
@@ -226,26 +230,5 @@ export class GameService {
     });
 
     return uncompletedNonogram;
-  }
-
-  async toggleLike(currentUser, gameId) {
-    const game = await this.getGameById(currentUser, gameId);
-
-    if (!game.isFinished) {
-      throw new LikingUnfinishedGameException();
-    }
-
-    game.set({ isLiked: !game.isLiked });
-
-    try {
-      const updatedGame = await game.save();
-      this.logger.log('toggled like successfully', { updatedGame });
-      return updatedGame;
-    } catch (error) {
-      throw new BadRequestException(
-        'could not toggle like for game: ' + gameId,
-        error.stack
-      );
-    }
   }
 }
