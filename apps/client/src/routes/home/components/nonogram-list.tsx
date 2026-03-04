@@ -47,19 +47,27 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
     : nonograms;
 
   return (
-    <ul className="flex flex-col gap-2">
-      {filteredNonograms?.map((nonogram) => (
-        <li
-          key={nonogram.id}
-          className="flex flex-col border rounded-lg p-3 gap-1"
-        >
-          <div className="text-lg font-bold">{nonogram.name}</div>
-          <div className="gap-4 text-sm">
-            <>📐 {DIFFICULTY_SIZE[nonogram.difficulty]}</>
-            {/* will be more then 1 div inside.... no cr comment needed */}
-          </div>
-        </li>
-      ))}
+    <ul className="flex flex-col gap-2 overflow-y-auto max-h-[93%] pb-2">
+      {filteredNonograms?.map(
+        ({ id, name, likeCount, gameCount, difficulty, user }) => (
+          <li
+            key={id}
+            className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
+          >
+            <span className="font-semibold text-center">{user?.username}</span>
+            <span className="text-dividorGray">|</span>
+            <span className="font-bold text-center">{name}</span>
+            <span className="text-dividorGray">|</span>
+            <span className="text-center">
+              📐 {DIFFICULTY_SIZE[difficulty]}
+            </span>
+            <span className="text-dividorGray">|</span>
+            <span className="text-center">👍 {likeCount}</span>
+            <span className="text-dividorGray">|</span>
+            <span className="text-center">🎮 {gameCount}</span>
+          </li>
+        )
+      )}
     </ul>
   );
 };

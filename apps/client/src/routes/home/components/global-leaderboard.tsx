@@ -1,5 +1,5 @@
 import React from 'react';
-import Trophy from '../../../assets/images/trophy.svg?react';
+import { Trophy } from '../../../assets/images';
 import { useGetGlobalLeadersQuery } from '../../../store/api';
 import { useNavigate } from 'react-router-dom';
 
@@ -18,16 +18,22 @@ export const GlobalLeaderboard: React.FC = () => {
 
   const globalLeaders: Record<string, number>[] = data!;
 
+  const topThreeLeadersColorfulBackgrounds = [
+    'bg-firstPlaceGoldBackground/40',
+    'bg-secondPlaceSilverBackground/40',
+    'bg-thirdPlaceBronzeBackground/40',
+  ];
   const positionSymbols = ['🥇', '🥈', '🥉'];
 
   const leaders = globalLeaders.map(({ username, score }, position) => {
-    const positionSymbol = positionSymbols[position]
-      ? positionSymbols[position]
-      : position + 1;
+    const positionSymbol = positionSymbols[position] ?? position + 1;
+
+    const backgroundColor =
+      topThreeLeadersColorfulBackgrounds[position] ?? 'bg-absoluteWhite/40';
 
     return (
       <li
-        className="h-[7%] mb-7 border flex flex-row items-center justify-between p-5 rounded-xl shadow-lg bg-absoluteWhite"
+        className={`h-[7%] mb-7 flex flex-row items-center justify-between p-5 rounded-xl shadow-lg backdrop-blur-lg ${backgroundColor}`}
         key={position}
       >
         <div className="text-xl">{positionSymbol}</div>

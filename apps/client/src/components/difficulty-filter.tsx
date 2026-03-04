@@ -1,12 +1,14 @@
 import React from 'react';
-import StarSvg from '../assets/images/star.svg?react';
+import { Star } from '../assets/images';
 import {
   NonogramDifficultiesEnumType,
   NonogramDifficultiesEnumValues,
 } from '@nonogram-api-monorepo/types';
 
 type Props = {
-  setDifficultyFilter: (difficultyEnum: NonogramDifficultiesEnumType | null) => void;
+  setDifficultyFilter: (
+    difficultyEnum: NonogramDifficultiesEnumType | null
+  ) => void;
   difficultyFilter: NonogramDifficultiesEnumType | null;
 };
 
@@ -20,10 +22,10 @@ export const DifficultyFilter: React.FC<Props> = ({
         Object.values(NonogramDifficultiesEnumValues.enum).indexOf(
           difficultyFilter
         )
-        ? 'fill-absoluteWhite'
+        ? 'fill-absoluteWhite/30'
         : 'fill-filledDifficultyStar';
     } else {
-      return 'fill-absoluteWhite';
+      return 'fill-absoluteWhite/30';
     }
   };
 
@@ -36,7 +38,7 @@ export const DifficultyFilter: React.FC<Props> = ({
   };
 
   return (
-    <div className="flex gap-1 flex-row">
+    <div className="flex gap-2 flex-row">
       {Object.values(NonogramDifficultiesEnumValues.enum).map(
         (difficultyValue, difficultyIndex) => (
           <button
@@ -47,7 +49,7 @@ export const DifficultyFilter: React.FC<Props> = ({
             type="button"
             key={difficultyIndex}
           >
-            <StarSvg
+            <Star
               className={`w-full h-full ${getStarColor(difficultyIndex)}`}
             />
           </button>

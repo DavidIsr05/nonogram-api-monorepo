@@ -1,0 +1,16 @@
+export { default as BigLogo } from './bigLogo.svg?react';
+export { default as Edit } from './edit.svg?react';
+export { default as Games } from './games.svg?react';
+export { default as Hint } from './hint.svg?react';
+export { default as ImagePlaceholder } from './imagePlaceholder.svg?react';
+export { default as Like } from './like.svg?react';
+export { default as Logo } from './logo.svg?react';
+export { default as Mistakes } from './mistakes.svg?react';
+export { default as PlusCreate } from './plusCreate.svg?react';
+export { default as Profile } from './profile.svg?react';
+export { default as Restart } from './restart.svg?react';
+export { default as Save } from './save.svg?react';
+export { default as Star } from './star.svg?react';
+export { default as Timer } from './timer.svg?react';
+export { default as Trophy } from './trophy.svg?react';
+export { default as Upload } from './upload.svg?react';

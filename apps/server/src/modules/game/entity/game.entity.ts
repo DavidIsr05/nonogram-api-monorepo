@@ -46,8 +46,9 @@ export class Game extends Model<Partial<Game>> {
   @Column({ type: DataType.BOOLEAN, allowNull: false })
   isFinished: boolean;
 
-  @Column(DataType.INTEGER)
-  rating: number | null;
+  @Default(false)
+  @Column({ type: DataType.BOOLEAN, allowNull: false })
+  isLiked: boolean;
 
   @BelongsTo(() => User)
   user: User;

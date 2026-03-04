@@ -11,11 +11,9 @@ import {
   useLazyGenerateNonogramQuery,
 } from '../../../store/api';
 import { RootState } from '../../../store/store';
-import PlusCreate from '../../../assets/images/plusCreate.svg?react';
-import imagePlaceholder from '../../../assets/images/imagePlaceholder.svg';
-import UploadSvg from '../../../assets/images/upload.svg?react';
 import { toast } from 'sonner';
 import { DEFAULT_FORM, DIM_FACTOR_OPTIONS } from '../../../consts';
+import { PlusCreate, ImagePlaceholder, Upload } from '../../../assets/images';
 
 export const CreateNonogramPopup: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -113,20 +111,16 @@ export const CreateNonogramPopup: React.FC = () => {
                 {form.imageBase64 ? (
                   <img
                     src={`data:image/png;base64,${form.imageBase64}`}
-                    alt="uploaded image"
+                    alt="uploaded"
                     className="w-full h-full"
                   />
                 ) : (
-                  <img
-                    src={imagePlaceholder}
-                    alt="image placeholder"
-                    className="w-16 h-16"
-                  />
+                  <ImagePlaceholder className="w-16 h-16" />
                 )}
                 {generated && (
                   <img
                     src={`data:image/png;base64,${generated.previewImageBase64}`}
-                    alt="preview iamge"
+                    alt="preview"
                     className="absolute w-full h-full"
                   />
                 )}
@@ -144,7 +138,7 @@ export const CreateNonogramPopup: React.FC = () => {
                   onClick={() => fileInputRef.current?.click()}
                   className="flex-1 flex items-center justify-center gap-1 border rounded-lg py-1.5 text-sm text-buttonTextGray hover:bg-simpleGray"
                 >
-                  <UploadSvg className="w-4 h-4" />
+                  <Upload className="w-4 h-4" />
                   Upload Image
                 </button>
                 <button

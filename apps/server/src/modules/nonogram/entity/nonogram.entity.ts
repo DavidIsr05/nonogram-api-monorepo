@@ -68,4 +68,10 @@ export class Nonogram extends Model<Partial<Nonogram>> {
 
   @HasMany(() => Game)
   games: Game[];
+
+  @HasMany(() => Game, { as: 'likedGames' })
+  likedGames: Game[];
+
+  @HasMany(() => Game, { as: 'allGames' })
+  allGames: Game[];
 }

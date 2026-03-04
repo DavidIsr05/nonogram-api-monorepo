@@ -21,7 +21,7 @@ import {
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
-import { Op } from 'sequelize';
+import { Op, fn, col } from 'sequelize';
 import {
   ForbiddenNonogramException,
   GlobalLeadersException,
@@ -208,6 +208,20 @@ export class NonogramService {
         where: {
           [Op.or]: [{ isPrivate: false }, { creatorId: userId }],
         },
+        attributes: {
+          include: [[fn('COUNT', col('likedGames.id')), 'likeCount']],
+        },
+        include: [
+          {
+            model: Game,
+            as: 'likedGames',
+            attributes: [],
+            where: { isLiked: true },
+            required: false,
+          },
+        ],
+        group: ['Nonogram.id'],
+        order: [[fn('COUNT', col('likedGames.id')), 'DESC']],
       });
       this.logger.log('Got all avaliable nonograms', { allAvaliableNonograms });
 
@@ -227,6 +241,20 @@ export class NonogramService {
     try {
       const nonogramsCreatedByUser = await this.nonogramModel.findAll({
         where: { creatorId },
+        attributes: {
+          include: [[fn('COUNT', col('likedGames.id')), 'likeCount']],
+        },
+        include: [
+          {
+            model: Game,
+            as: 'likedGames',
+            attributes: [],
+            where: { isLiked: true },
+            required: false,
+          },
+        ],
+        group: ['Nonogram.id'],
+        order: [[fn('COUNT', col('likedGames.id')), 'DESC']],
       });
 
       this.logger.log('Got nonograms created by user successfully', {
@@ -248,16 +276,44 @@ export class NonogramService {
     }
     try {
       const unplayedNonograms = await this.nonogramModel.findAll({
-        include: {
-          model: Game,
-          where: { userId },
-          attributes: ['nonogramId'],
-          required: false,
-        },
         where: {
-          [Op.or]: { isPrivate: false, creatorId: userId },
-          '$games.nonogramId$': { [Op.is]: null },
+          [Op.or]: [{ isPrivate: false }, { creatorId: userId }],
+          '$games.nonogramId$': null,
         },
+        attributes: {
+          include: [
+            [fn('COUNT', fn('DISTINCT', col('likedGames.id'))), 'likeCount'],
+            [fn('COUNT', fn('DISTINCT', col('allGames.id'))), 'gameCount'],
+          ],
+        },
+        include: [
+          {
+            model: Game,
+            as: 'games',
+            attributes: [],
+            where: { userId },
+            required: false,
+          },
+          {
+            model: Game,
+            as: 'likedGames',
+            attributes: [],
+            where: { isLiked: true },
+            required: false,
+          },
+          {
+            model: Game,
+            as: 'allGames',
+            attributes: [],
+            required: false,
+          },
+          {
+            model: User,
+            attributes: ['username'],
+          },
+        ],
+        group: ['Nonogram.id', 'user.id', 'user.username'],
+        order: [[fn('COUNT', col('likedGames.id')), 'DESC']],
       });
 
       this.logger.log('Got unplayed nonograms successfully', {
@@ -284,6 +340,7 @@ export class NonogramService {
         },
         include: {
           model: Game,
+          as: 'games',
           required: true,
           where: { userId },
         },
@@ -325,6 +382,7 @@ export class NonogramService {
         include: [
           {
             model: Game,
+            as: 'games',
             where: {
               isFinished: true,
             },
@@ -411,6 +469,7 @@ export class NonogramService {
           ],
           include: {
             model: Game,
+            as: 'games',
             where: { isFinished: true },
             attributes: ['timer', 'mistakes', 'hints'],
             include: [

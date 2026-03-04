@@ -17,14 +17,16 @@ export const GameSelector: React.FC<Props> = ({
     useState<NonogramDifficultiesEnumType | null>(null);
 
   return (
-    <div className="h-[95%] w-[60%] border p-3 text-4xl">
-      <div className="justify-between flex flex-row">
-        {name}
-        <DifficultyFilter
-          setDifficultyFilter={setDifficultyFilter}
-          difficultyFilter={difficultyFilter}
-        />
-        <ul>
+    <div className="h-[95%] w-[60%] border p-3 text-4xl rounded-xl bg-gameSelectorBackground">
+      <div className="grid grid-cols-[1fr_1fr_1fr]">
+        <span>{name}</span>
+        <div className="justify-self-center">
+          <DifficultyFilter
+            setDifficultyFilter={setDifficultyFilter}
+            difficultyFilter={difficultyFilter}
+          />
+        </div>
+        <ul className="justify-self-end">
           {NonogramCreationPopup ? (
             <li>
               <NonogramCreationPopup />

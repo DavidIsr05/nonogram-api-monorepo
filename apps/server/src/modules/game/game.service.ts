@@ -8,7 +8,11 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Game } from './entity/game.entity';
 import { TileStates, TileStatesEnumType } from '@nonogram-api-monorepo/types';
 import { NonogramService } from '../nonogram';
-import { ForbiddenGameException } from '../../common';
+import {
+  ForbiddenGameException,
+  LikingUnfinishedGameException,
+} from '../../common';
+import { Nonogram } from '../nonogram/entity/nonogram.entity';
 
 @Injectable()
 export class GameService {
@@ -76,7 +80,12 @@ export class GameService {
     }
     try {
       const inProgresGames = await this.gameModel.findAll({
-        where: { isFinished: false },
+        where: { isFinished: false, userId },
+        include: {
+          model: Nonogram,
+          attributes: ['difficulty', 'name'],
+        },
+        attributes: ['timer', 'hints', 'mistakes'],
       });
       this.logger.log('Got in progress games successfully', { inProgresGames });
       return inProgresGames;
@@ -144,6 +153,10 @@ export class GameService {
 
   async updateGame(currentUser, updateGameDto) {
     const game = await this.getGameById(currentUser, updateGameDto.id);
+
+    if (updateGameDto.isLiked && !game.isFinished) {
+      throw new LikingUnfinishedGameException();
+    }
 
     game.set({
       ...updateGameDto,

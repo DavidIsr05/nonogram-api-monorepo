@@ -1,20 +1,18 @@
 import React from 'react';
-import logo from '../assets/images/logo.svg';
-import games from '../assets/images/games.svg';
-import profile from '../assets/images/profile.svg';
 import { Link } from 'react-router-dom';
+import { Profile, Games, Logo } from '../assets/images';
 
 export const Header: React.FC = () => {
   return (
     <div className="w-screen h-[9%] flex flex-row gap-[1%] items-center bg-gradient-to-r from-gradientStartYellow to-gradientEndPurple">
       <Link to="/home" className="h-full">
-        <img src={logo} alt="Project logo" className="h-full" />
+        <Logo className="h-full aspect-auto" />
       </Link>
       <Link to="/games" className="ml-auto h-[90%]">
-        <img src={games} alt="joystick/games button" className="h-full" />
+        <Games className="h-full" />
       </Link>
-      <Link to="/profile" className="h-[90%]">
-        <img src={profile} alt="profile button" className="h-full" />
+      <Link to="/profile" className="h-[90%] mr-3">
+        <Profile className="h-full" />
       </Link>
     </div>
   );

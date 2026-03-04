@@ -2,6 +2,7 @@ import {
   CheckAndUpdateInProgressNonogramDto,
   CreateGameDto,
   GameDto,
+  GameResponseDto,
   TileStates,
   UpdateGameDto,
 } from '@nonogram-api-monorepo/types';
@@ -23,7 +24,7 @@ export const gameApi = api.injectEndpoints({
       }),
       providesTags: ['Game'],
     }),
-    getInProgresGames: build.query<GameDto[], string>({
+    getInProgresGames: build.query<GameResponseDto[], string>({
       query: (userId) => ({
         url: `game/in-progress/${userId}`,
         method: 'GET',
@@ -73,7 +74,7 @@ export const gameApi = api.injectEndpoints({
 export const {
   useLazyCreateGameQuery,
   useGetAllUsersGamesQuery,
-  useLazyGetInProgresGamesQuery,
+  useGetInProgresGamesQuery,
   useLazyGetFinishedGamesQuery,
   useGetGameByIdQuery,
   useLazyUpdateGameQuery,
