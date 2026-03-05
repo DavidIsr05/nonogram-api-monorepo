@@ -1,19 +1,17 @@
 import React from 'react';
 import { Trophy } from '../../../assets/images';
 import { useGetGlobalLeadersQuery } from '../../../store/api';
-import { useNavigate } from 'react-router-dom';
+import { LoadingState, ErrorState } from '../../../consts';
 
 export const GlobalLeaderboard: React.FC = () => {
   const { data, isLoading, error } = useGetGlobalLeadersQuery();
 
-  const navigate = useNavigate();
-
-  if (error && 'status' in error && error.status === 401) {
-    navigate('/', { replace: true });
+  if (isLoading) {
+    return <>{LoadingState}</>;
   }
 
-  if (isLoading) {
-    return <>LOADING</>;
+  if (error) {
+    return <ErrorState error={error} />;
   }
 
   const globalLeaders: Record<string, number>[] = data!;
