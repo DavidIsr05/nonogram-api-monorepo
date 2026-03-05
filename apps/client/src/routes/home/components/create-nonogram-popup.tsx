@@ -7,8 +7,8 @@ import {
 import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
-  useLazyCreateNonogramQuery,
-  useLazyGenerateNonogramQuery,
+  useCreateNonogramMutation,
+  useGenerateNonogramMutation,
 } from '../../../store/api';
 import { RootState } from '../../../store/store';
 import { toast } from 'sonner';
@@ -27,10 +27,10 @@ export const CreateNonogramPopup: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const userId = useSelector((state: RootState) => state.user.userId);
 
-  const [triggerGenerate, { isFetching: isGenerating }] =
-    useLazyGenerateNonogramQuery();
-  const [triggerCreate, { isFetching: isCreating }] =
-    useLazyCreateNonogramQuery();
+  const [triggerGenerate, { isLoading: isGenerating }] =
+    useGenerateNonogramMutation();
+  const [triggerCreate, { isLoading: isCreating }] =
+    useCreateNonogramMutation();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

@@ -135,6 +135,67 @@ export class GameService {
     }
   }
 
+  async getGameWithClues(currentUser, gameId) {
+    const foundGame = await this.getGameById(currentUser, gameId);
+
+    const foundNonogram = await this.nonogramModel.getNonogramByIdForGame(
+      currentUser,
+      foundGame.nonogramId
+    );
+
+    const { rowClues, colClues } = this.calculateClues(foundNonogram.nonogram);
+
+    return {
+      ...foundGame.toJSON(),
+      rowClues,
+      colClues,
+    };
+  }
+
+  private calculateClues(nonogram: boolean[][]) {
+    const rowClues: number[][] = nonogram.map((row) => {
+      const clues: number[] = [];
+      let count = 0;
+
+      row.forEach((tile) => {
+        if (tile) {
+          count++;
+        } else if (count > 0) {
+          clues.push(count);
+          count = 0;
+        }
+      });
+
+      if (count > 0) {
+        clues.push(count);
+      }
+
+      return clues.length ? clues : [0];
+    });
+
+    const colClues: number[][] = nonogram[0].map((_, colIndex) => {
+      const clues: number[] = [];
+      let count = 0;
+
+      nonogram.forEach((row) => {
+        if (row[colIndex]) {
+          count++;
+        } else if (count > 0) {
+          clues.push(count);
+          count = 0;
+        }
+      });
+
+      if (count > 0) {
+        clues.push(count);
+      }
+
+      return clues.length ? clues : [0];
+    });
+
+    return { rowClues, colClues };
+  }
+
   async deleteGame(currentUser, gameId) {
     await this.getGameById(currentUser, gameId);
 
@@ -216,10 +277,28 @@ export class GameService {
         uncompletedNonogram: uncompletedNonogram,
         timer: checkAndUpdateInProgressNonogramDto.timer,
         mistakes: mistakes,
+      });
+
+      return { board: uncompletedNonogram, status: 'LOST' };
+    }
+
+    const isWon = foundNonogram.nonogram.every((row, rowIndex) =>
+      row.every(
+        (tile, colIndex) =>
+          !tile || uncompletedNonogram[rowIndex][colIndex] === TileStates.FILLED
+      )
+    );
+
+    if (isWon) {
+      this.updateGame(currentUser, {
+        id: foundGame.id,
+        uncompletedNonogram: uncompletedNonogram,
+        timer: checkAndUpdateInProgressNonogramDto.timer,
+        mistakes: mistakes,
         isFinished: true,
       });
 
-      return 'YOU LOST'; //TODO
+      return { board: uncompletedNonogram, status: 'WON' };
     }
 
     this.updateGame(currentUser, {
@@ -229,6 +308,6 @@ export class GameService {
       mistakes: mistakes,
     });
 
-    return uncompletedNonogram;
+    return { board: uncompletedNonogram, status: 'FINE' };
   }
 }

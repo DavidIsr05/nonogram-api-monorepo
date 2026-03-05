@@ -1,21 +1,23 @@
 import {
   CheckAndUpdateInProgressNonogramDto,
+  CheckNonogramResponseDto,
   CreateGameDto,
   GameDto,
   GameResponseDto,
-  TileStates,
+  GameWithCluesResponseDto,
   UpdateGameDto,
 } from '@nonogram-api-monorepo/types';
 import { api } from './api';
 
 export const gameApi = api.injectEndpoints({
   endpoints: (build) => ({
-    createGame: build.query<GameDto, CreateGameDto>({
+    createGame: build.mutation<GameDto, CreateGameDto>({
       query: (body) => ({
         url: 'game',
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Game'],
     }),
     getAllUsersGames: build.query<GameDto[], string>({
       query: (userId) => ({
@@ -38,28 +40,30 @@ export const gameApi = api.injectEndpoints({
       }),
       providesTags: ['Game'],
     }),
-    getGameById: build.query<GameDto, string>({
-      query: (userId) => ({
-        url: `game/${userId}`,
+    getGameById: build.query<GameWithCluesResponseDto, string>({
+      query: (gameId) => ({
+        url: `game/${gameId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    updateGame: build.query<GameDto, UpdateGameDto>({
+    updateGame: build.mutation<GameDto, UpdateGameDto>({
       query: (body) => ({
         url: `game`,
         method: 'PATCH',
         body,
       }),
+      invalidatesTags: ['Game'],
     }),
-    deleteGame: build.query<boolean, string>({
+    deleteGame: build.mutation<boolean, string>({
       query: (gameId) => ({
         url: `game/${gameId}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Game'],
     }),
-    checkAndUpdateInProgressNonogram: build.query<
-      TileStates[][],
+    checkAndUpdateInProgressNonogram: build.mutation<
+      CheckNonogramResponseDto,
       CheckAndUpdateInProgressNonogramDto
     >({
       query: (body) => ({
@@ -67,17 +71,18 @@ export const gameApi = api.injectEndpoints({
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Game'],
     }),
   }),
 });
 
 export const {
-  useLazyCreateGameQuery,
+  useCreateGameMutation,
   useGetAllUsersGamesQuery,
   useGetInProgresGamesQuery,
   useLazyGetFinishedGamesQuery,
   useGetGameByIdQuery,
-  useLazyUpdateGameQuery,
-  useLazyDeleteGameQuery,
-  useCheckAndUpdateInProgressNonogramQuery,
+  useUpdateGameMutation,
+  useDeleteGameMutation,
+  useCheckAndUpdateInProgressNonogramMutation,
 } = gameApi;

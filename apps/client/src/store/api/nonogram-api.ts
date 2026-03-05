@@ -8,7 +8,7 @@ import { api } from './api';
 
 export const nonogramApi = api.injectEndpoints({
   endpoints: (build) => ({
-    generateNonogram: build.query<
+    generateNonogram: build.mutation<
       GeneratedNonogramResponseDto,
       GenerateNonogramDto
     >({
@@ -18,12 +18,16 @@ export const nonogramApi = api.injectEndpoints({
         body,
       }),
     }),
-    createNonogram: build.query<NonogramResponseDto, CreateNonogramRequestDto>({
+    createNonogram: build.mutation<
+      NonogramResponseDto,
+      CreateNonogramRequestDto
+    >({
       query: (body) => ({
         url: 'nonogram/create',
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Nonogram'],
     }),
     getNonogramLeaders: build.query<[], string>({
       query: (nonogramId) => ({
@@ -64,8 +68,8 @@ export const nonogramApi = api.injectEndpoints({
 });
 
 export const {
-  useLazyGenerateNonogramQuery,
-  useLazyCreateNonogramQuery,
+  useGenerateNonogramMutation,
+  useCreateNonogramMutation,
   useGetNonogramLeadersQuery,
   useGetGlobalLeadersQuery,
   useGetAllAvaliableNonogramsQuery,
