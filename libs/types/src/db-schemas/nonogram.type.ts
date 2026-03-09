@@ -29,6 +29,6 @@ export const CreateNonogramSchema = NonogramSchema.omit({
 
 export const UpdateNonogramSchema = NonogramSchema.partial();
 
-export type NonogramDto = z.infer<typeof NonogramSchema>;
-export type CreateNonogramDto = z.infer<typeof CreateNonogramSchema>;
-export type UpdateNonogramDto = z.infer<typeof UpdateNonogramSchema>;
+export type NonogramType = z.infer<typeof NonogramSchema>;
+export type CreateNonogramType = z.infer<typeof CreateNonogramSchema>;
+export type UpdateNonogramType = z.infer<typeof UpdateNonogramSchema>;

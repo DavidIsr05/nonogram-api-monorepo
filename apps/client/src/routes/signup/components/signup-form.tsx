@@ -1,12 +1,12 @@
-import { CreateUserDto, ExceptionType } from '@nonogram-api-monorepo/types';
+import { CreateUserType, ExceptionType } from '@nonogram-api-monorepo/types';
 import { useLazySignupQuery } from '../../../store/api';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { ERROR_TEXT_BASED_ON_EXCEPTION } from '../../../consts';
+import { ERROR_TEXT_BASED_ON_EXCEPTION } from '../../../constants';
 
 export const SignupForm: React.FC = () => {
-  const [userSignupDto, setUserSignupDto] = useState<CreateUserDto>({
+  const [userSignupDto, setUserSignupDto] = useState<CreateUserType>({
     username: '',
     password: '',
     personalNumber: null,

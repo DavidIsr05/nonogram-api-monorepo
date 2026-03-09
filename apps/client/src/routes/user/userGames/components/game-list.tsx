@@ -1,9 +1,11 @@
 import { NonogramDifficultiesEnumType } from '@nonogram-api-monorepo/types';
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../../../store/store';
 import { useGetInProgresGamesQuery } from '../../../../store/api';
-import { DIFFICULTY_SIZE } from '../../../../consts';
+import { DIFFICULTY_SIZE } from '../../../../constants';
+import { LoadingState, ErrorState } from '../../../../components';
 
 type Props = {
   difficulty: NonogramDifficultiesEnumType | null;
@@ -11,35 +13,26 @@ type Props = {
 
 export const GameList: React.FC<Props> = ({ difficulty }) => {
   const userId = useSelector((state: RootState) => state.user.userId);
+  const navigate = useNavigate();
 
   const {
     data: games,
     isLoading,
     isError,
+    error,
   } = useGetInProgresGamesQuery(userId ?? '', { skip: !userId });
 
   if (!userId) {
-    return (
-      <ul>
-        <li>Not logged in</li>
-      </ul>
-    );
+    navigate('/', { replace: true });
+    return null;
   }
 
   if (isLoading) {
-    return (
-      <ul>
-        <li>Loading...</li>
-      </ul>
-    );
+    return <LoadingState />;
   }
 
   if (isError) {
-    return (
-      <ul>
-        <li>Failed to load games</li>
-      </ul>
-    );
+    return <ErrorState error={error} />;
   }
 
   const filteredGames = difficulty
@@ -55,14 +48,20 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
         >
           <span className="text-center font-bold">{nonogram.name}</span>
           <span className="text-dividorGray">|</span>
-          <span className="text-center">⏱️ : {timer}</span>
+          <span className="text-center" role="img" aria-label="timer emoji">
+            ⏱️ : {timer}
+          </span>
           {/* //TODO need to fix time/format */}
           <span className="text-dividorGray">|</span>
-          <span className="text-center">❌ : {mistakes}/3</span>
+          <span className="text-center" role="img" aria-label="mistakes emoji">
+            ❌ : {mistakes}/3
+          </span>
           <span className="text-dividorGray">|</span>
-          <span className="text-center">💡 : {3 - hints}/3</span>
+          <span className="text-center" role="img" aria-label="hints emoji">
+            💡 : {3 - hints}/3
+          </span>
           <span className="text-dividorGray">|</span>
-          <span className="text-center">
+          <span className="text-center" role="img" aria-label="size emoji">
             📐 {DIFFICULTY_SIZE[nonogram.difficulty]}
           </span>
         </li>

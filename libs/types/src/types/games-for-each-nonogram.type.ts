@@ -14,4 +14,6 @@ export const gamesForEachNonogramSchema = z.object({
   ),
 });
 
-export type gamesForEachNonogramDto = z.infer<typeof gamesForEachNonogramSchema>;
+export type GamesForEachNonogramType = z.infer<
+  typeof gamesForEachNonogramSchema
+>;

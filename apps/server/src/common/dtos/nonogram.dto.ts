@@ -19,6 +19,6 @@ export class GenerateNonogramDto extends createZodDto(GenerateNonogramSchema) {}
 export class GeneratedNonogramResponseDto extends createZodDto(
   GeneratedNonogramResponseSchema
 ) {}
-export class gamesForEachNonogramDto extends createZodDto(
+export class GamesForEachNonogramDto extends createZodDto(
   gamesForEachNonogramSchema
 ) {}

@@ -1,36 +1,36 @@
 import {
   NonogramDifficulties,
   NonogramDifficultiesEnumType,
-  GenerateNonogramDto,
-  GeneratedNonogramResponseDto,
+  GenerateNonogramType,
+  GeneratedNonogramResponseType,
 } from '@nonogram-api-monorepo/types';
 import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
-  useLazyCreateNonogramQuery,
-  useLazyGenerateNonogramQuery,
+  useCreateNonogramMutation,
+  useGenerateNonogramMutation,
 } from '../../../store/api';
 import { RootState } from '../../../store/store';
 import { toast } from 'sonner';
-import { DEFAULT_FORM, DIM_FACTOR_OPTIONS } from '../../../consts';
+import { DEFAULT_FORM, DIM_FACTOR_OPTIONS } from '../../../constants';
 import { PlusCreate, ImagePlaceholder, Upload } from '../../../assets/images';
 
 export const CreateNonogramPopup: React.FC = () => {
   const [open, setOpen] = useState(false);
 
   const [name, setName] = useState('');
-  const [form, setForm] = useState<GenerateNonogramDto>(DEFAULT_FORM);
+  const [form, setForm] = useState<GenerateNonogramType>(DEFAULT_FORM);
 
   const [generated, setGenerated] =
-    useState<GeneratedNonogramResponseDto | null>(null);
+    useState<GeneratedNonogramResponseType | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
   const userId = useSelector((state: RootState) => state.user.userId);
 
-  const [triggerGenerate, { isFetching: isGenerating }] =
-    useLazyGenerateNonogramQuery();
-  const [triggerCreate, { isFetching: isCreating }] =
-    useLazyCreateNonogramQuery();
+  const [triggerGenerate, { isLoading: isGenerating }] =
+    useGenerateNonogramMutation();
+  const [triggerCreate, { isLoading: isCreating }] =
+    useCreateNonogramMutation();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

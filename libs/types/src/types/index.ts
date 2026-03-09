@@ -8,3 +8,5 @@ export * from './check-and-update-in-progress-nonogram.type';
 export * from './games-for-each-nonogram.type';
 export * from './exception.type';
 export * from './game-response-dto.type';
+export * from './game-with-clues-response-dto.type';
+export * from './check-nonogram-response-dto.type';

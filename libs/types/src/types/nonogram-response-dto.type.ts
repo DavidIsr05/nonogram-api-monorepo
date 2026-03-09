@@ -15,4 +15,4 @@ export const NonogramResponseSchema = z.object({
   user: z.object({ username: z.string() }).optional(),
 });
 
-export type NonogramResponseDto = z.infer<typeof NonogramResponseSchema>;
+export type NonogramResponseType = z.infer<typeof NonogramResponseSchema>;

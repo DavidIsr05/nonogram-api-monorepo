@@ -1,19 +1,17 @@
 import React from 'react';
 import { Trophy } from '../../../assets/images';
 import { useGetGlobalLeadersQuery } from '../../../store/api';
-import { useNavigate } from 'react-router-dom';
+import { LoadingState, ErrorState } from '../../../components';
 
 export const GlobalLeaderboard: React.FC = () => {
   const { data, isLoading, error } = useGetGlobalLeadersQuery();
 
-  const navigate = useNavigate();
-
-  if (error && 'status' in error && error.status === 401) {
-    navigate('/', { replace: true });
+  if (isLoading) {
+    return <LoadingState />;
   }
 
-  if (isLoading) {
-    return <>LOADING</>;
+  if (error) {
+    return <ErrorState error={error} />;
   }
 
   const globalLeaders: Record<string, number>[] = data!;
@@ -38,7 +36,9 @@ export const GlobalLeaderboard: React.FC = () => {
       >
         <div className="text-xl">{positionSymbol}</div>
         <div className="text-2xl">{username}</div>
-        <div className="text-xl">🌟: {score}</div>
+        <span className="text-xl" role="img" aria-label="score emoji">
+          🌟: {score}
+        </span>
       </li>
     );
   });

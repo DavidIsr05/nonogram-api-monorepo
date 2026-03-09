@@ -1,83 +1,88 @@
 import {
-  CheckAndUpdateInProgressNonogramDto,
-  CreateGameDto,
-  GameDto,
-  GameResponseDto,
-  TileStates,
-  UpdateGameDto,
+  CheckAndUpdateInProgressNonogramType,
+  CheckNonogramResponseType,
+  CreateGameType,
+  GameType,
+  GameResponseType,
+  GameWithCluesResponseType,
+  UpdateGameType,
 } from '@nonogram-api-monorepo/types';
 import { api } from './api';
 
 export const gameApi = api.injectEndpoints({
   endpoints: (build) => ({
-    createGame: build.query<GameDto, CreateGameDto>({
+    createGame: build.mutation<GameType, CreateGameType>({
       query: (body) => ({
         url: 'game',
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Game'],
     }),
-    getAllUsersGames: build.query<GameDto[], string>({
+    getAllUsersGames: build.query<GameType[], string>({
       query: (userId) => ({
         url: `game/all/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    getInProgresGames: build.query<GameResponseDto[], string>({
+    getInProgresGames: build.query<GameResponseType[], string>({
       query: (userId) => ({
         url: `game/in-progress/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    getFinishedGames: build.query<GameDto[], string>({
+    getFinishedGames: build.query<GameType[], string>({
       query: (userId) => ({
         url: `game/finished/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    getGameById: build.query<GameDto, string>({
-      query: (userId) => ({
-        url: `game/${userId}`,
+    getGameById: build.query<GameWithCluesResponseType, string>({
+      query: (gameId) => ({
+        url: `game/${gameId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    updateGame: build.query<GameDto, UpdateGameDto>({
+    updateGame: build.mutation<GameType, UpdateGameType>({
       query: (body) => ({
         url: `game`,
         method: 'PATCH',
         body,
       }),
+      invalidatesTags: ['Game'],
     }),
-    deleteGame: build.query<boolean, string>({
+    deleteGame: build.mutation<boolean, string>({
       query: (gameId) => ({
         url: `game/${gameId}`,
         method: 'DELETE',
       }),
+      invalidatesTags: ['Game'],
     }),
-    checkAndUpdateInProgressNonogram: build.query<
-      TileStates[][],
-      CheckAndUpdateInProgressNonogramDto
+    checkAndUpdateInProgressNonogram: build.mutation<
+      CheckNonogramResponseType,
+      CheckAndUpdateInProgressNonogramType
     >({
       query: (body) => ({
         url: 'game/check-nonogram',
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Game'],
     }),
   }),
 });
 
 export const {
-  useLazyCreateGameQuery,
+  useCreateGameMutation,
   useGetAllUsersGamesQuery,
   useGetInProgresGamesQuery,
   useLazyGetFinishedGamesQuery,
   useGetGameByIdQuery,
-  useLazyUpdateGameQuery,
-  useLazyDeleteGameQuery,
-  useCheckAndUpdateInProgressNonogramQuery,
+  useUpdateGameMutation,
+  useDeleteGameMutation,
+  useCheckAndUpdateInProgressNonogramMutation,
 } = gameApi;

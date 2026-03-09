@@ -37,6 +37,6 @@ export const UpdateGameSchema = GameSchema.partial()
   .required({ id: true })
   .strict();
 
-export type GameDto = z.infer<typeof GameSchema>;
-export type CreateGameDto = z.infer<typeof CreateGameSchema>;
-export type UpdateGameDto = z.infer<typeof UpdateGameSchema>;
+export type GameType = z.infer<typeof GameSchema>;
+export type CreateGameType = z.infer<typeof CreateGameSchema>;
+export type UpdateGameType = z.infer<typeof UpdateGameSchema>;

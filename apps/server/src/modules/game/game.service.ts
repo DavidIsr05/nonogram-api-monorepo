@@ -6,7 +6,11 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Game } from './entity/game.entity';
-import { TileStates, TileStatesEnumType } from '@nonogram-api-monorepo/types';
+import {
+  GameStatus,
+  TileStates,
+  TileStatesEnumType,
+} from '@nonogram-api-monorepo/types';
 import { NonogramService } from '../nonogram';
 import {
   ForbiddenGameException,
@@ -135,6 +139,50 @@ export class GameService {
     }
   }
 
+  async getGameWithClues(currentUser, gameId) {
+    const foundGame = await this.getGameById(currentUser, gameId);
+
+    const foundNonogram = await this.nonogramModel.getNonogramByIdForGame(
+      currentUser,
+      foundGame.nonogramId
+    );
+
+    return {
+      ...foundGame.toJSON(),
+      ...this.returnRowAndColClues(foundNonogram.nonogram),
+    };
+  }
+
+  returnRowAndColClues(nonogram: boolean[][]) {
+    const rowClues: number[][] = nonogram.map(this.calculateClues);
+
+    const colClues: number[][] = nonogram[0].map((_, columnIndex) =>
+      this.calculateClues(nonogram.map((row) => row[columnIndex]))
+    );
+
+    return { rowClues, colClues };
+  }
+
+  calculateClues = (idk) => {
+    const clues: number[] = [];
+    let count = 0;
+
+    idk.forEach((tile) => {
+      if (tile) {
+        count++;
+      } else if (count > 0) {
+        clues.push(count);
+        count = 0;
+      }
+    });
+
+    if (count > 0) {
+      clues.push(count);
+    }
+
+    return clues.length ? clues : [0];
+  };
+
   async deleteGame(currentUser, gameId) {
     await this.getGameById(currentUser, gameId);
 
@@ -210,25 +258,29 @@ export class GameService {
 
     const MAX_FAILURES = 3;
 
-    if (mistakes >= MAX_FAILURES) {
-      this.updateGame(currentUser, {
-        id: foundGame.id,
-        uncompletedNonogram: uncompletedNonogram,
-        timer: checkAndUpdateInProgressNonogramDto.timer,
-        mistakes: mistakes,
-        isFinished: true,
-      });
-
-      return 'YOU LOST'; //TODO
-    }
+    const isWon = foundNonogram.nonogram.every((row, rowIndex) =>
+      row.every(
+        (tile, colIndex) =>
+          !tile || uncompletedNonogram[rowIndex][colIndex] === TileStates.FILLED
+      )
+    );
 
     this.updateGame(currentUser, {
       id: foundGame.id,
       uncompletedNonogram: uncompletedNonogram,
       timer: checkAndUpdateInProgressNonogramDto.timer,
       mistakes: mistakes,
+      isFinished: isWon,
     });
 
-    return uncompletedNonogram;
+    return {
+      board: uncompletedNonogram,
+      status:
+        mistakes >= MAX_FAILURES
+          ? GameStatus.LOST
+          : isWon
+          ? GameStatus.WON
+          : GameStatus.FINE,
+    };
   }
 }

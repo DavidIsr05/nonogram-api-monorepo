@@ -1,16 +1,16 @@
 import {
-  CreateNonogramRequestDto,
-  GenerateNonogramDto,
-  GeneratedNonogramResponseDto,
-  NonogramResponseDto,
+  CreateNonogramRequestType,
+  GenerateNonogramType,
+  GeneratedNonogramResponseType,
+  NonogramResponseType,
 } from '@nonogram-api-monorepo/types';
 import { api } from './api';
 
 export const nonogramApi = api.injectEndpoints({
   endpoints: (build) => ({
-    generateNonogram: build.query<
-      GeneratedNonogramResponseDto,
-      GenerateNonogramDto
+    generateNonogram: build.mutation<
+      GeneratedNonogramResponseType,
+      GenerateNonogramType
     >({
       query: (body) => ({
         url: 'nonogram/generate',
@@ -18,12 +18,16 @@ export const nonogramApi = api.injectEndpoints({
         body,
       }),
     }),
-    createNonogram: build.query<NonogramResponseDto, CreateNonogramRequestDto>({
+    createNonogram: build.mutation<
+      NonogramResponseType,
+      CreateNonogramRequestType
+    >({
       query: (body) => ({
         url: 'nonogram/create',
         method: 'POST',
         body,
       }),
+      invalidatesTags: ['Nonogram'],
     }),
     getNonogramLeaders: build.query<[], string>({
       query: (nonogramId) => ({
@@ -39,21 +43,21 @@ export const nonogramApi = api.injectEndpoints({
       }),
       providesTags: ['Game'],
     }),
-    getAllAvaliableNonograms: build.query<NonogramResponseDto[], string>({
+    getAllAvaliableNonograms: build.query<NonogramResponseType[], string>({
       query: (userId) => ({
         url: `nonogram/all/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Nonogram'],
     }),
-    getUnplayedNonograms: build.query<NonogramResponseDto[], string>({
+    getUnplayedNonograms: build.query<NonogramResponseType[], string>({
       query: (userId) => ({
         url: `nonogram/unplayed/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Nonogram', 'Game'],
     }),
-    getNonogram: build.query<NonogramResponseDto, string>({
+    getNonogram: build.query<NonogramResponseType, string>({
       query: (nonogramId) => ({
         url: `nonogram/${nonogramId}`,
         method: 'GET',
@@ -64,8 +68,8 @@ export const nonogramApi = api.injectEndpoints({
 });
 
 export const {
-  useLazyGenerateNonogramQuery,
-  useLazyCreateNonogramQuery,
+  useGenerateNonogramMutation,
+  useCreateNonogramMutation,
   useGetNonogramLeadersQuery,
   useGetGlobalLeadersQuery,
   useGetAllAvaliableNonogramsQuery,

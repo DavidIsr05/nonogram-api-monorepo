@@ -10,4 +10,4 @@ export const UserSignInSchema = z
   })
   .strict();
 
-export type UserSignInDto = z.infer<typeof UserSignInSchema>;
+export type UserSignInType = z.infer<typeof UserSignInSchema>;

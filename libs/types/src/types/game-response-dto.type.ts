@@ -12,4 +12,4 @@ export const GameResponseSchema = z.object({
   }),
 });
 
-export type GameResponseDto = z.infer<typeof GameResponseSchema>;
+export type GameResponseType = z.infer<typeof GameResponseSchema>;
