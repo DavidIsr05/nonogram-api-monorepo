@@ -2,10 +2,14 @@ import { NonogramDifficultiesEnumType } from '@nonogram-api-monorepo/types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { useGetUnplayedNonogramsQuery } from '../../../store/api';
+import {
+  useCreateGameMutation,
+  useGetUnplayedNonogramsQuery,
+} from '../../../store/api';
 import { RootState } from '../../../store/store';
 import { DIFFICULTY_SIZE } from '../../../constants';
 import { LoadingState, ErrorState } from '../../../components';
+import { Toaster, toast } from 'sonner';
 
 type Props = {
   difficulty: NonogramDifficultiesEnumType | null;
@@ -14,6 +18,7 @@ type Props = {
 export const NonogramList: React.FC<Props> = ({ difficulty }) => {
   const userId = useSelector((state: RootState) => state.user.userId);
   const navigate = useNavigate();
+  const [createGame] = useCreateGameMutation();
 
   const {
     data: nonograms,
@@ -35,6 +40,15 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
     return <ErrorState error={error} />;
   }
 
+  const handleNonogramClick = async (nonogramId: string) => {
+    const createdGameData = await createGame({
+      nonogramId,
+    }).unwrap();
+
+    navigate(`/game/${createdGameData.id}`);
+    return null;
+  };
+
   const filteredNonograms = difficulty
     ? nonograms?.filter((nonogram) => nonogram.difficulty === difficulty)
     : nonograms;
@@ -46,6 +60,7 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
           <li
             key={id}
             className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
+            onClick={() => handleNonogramClick(id)}
           >
             <span className="font-semibold text-center">{user?.username}</span>
             <span className="text-dividorGray">|</span>

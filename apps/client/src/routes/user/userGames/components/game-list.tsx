@@ -35,6 +35,11 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
     return <ErrorState error={error} />;
   }
 
+  const handleGameClick = (gameId: string) => {
+    navigate(`/game/${gameId}`);
+    return null;
+  };
+
   const filteredGames = difficulty
     ? games?.filter((game) => game.nonogram.difficulty === difficulty)
     : games;
@@ -45,6 +50,7 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
         <li
           key={id}
           className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
+          onClick={() => handleGameClick(id)}
         >
           <span className="text-center font-bold">{nonogram.name}</span>
           <span className="text-dividorGray">|</span>

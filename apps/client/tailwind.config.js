@@ -37,6 +37,7 @@ module.exports = {
         secondPlaceSilverBackground: '#909090',
         thirdPlaceBronzeBackground: '#CC8B00',
         dividorGray: '#9CA3AF',
+        graishWhiteBackground: '#F5F6F8'
       }
     },
   },

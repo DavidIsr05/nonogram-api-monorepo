@@ -89,7 +89,7 @@ export class GameService {
           model: Nonogram,
           attributes: ['difficulty', 'name'],
         },
-        attributes: ['timer', 'hints', 'mistakes'],
+        attributes: ['id', 'timer', 'hints', 'mistakes'],
       });
       this.logger.log('Got in progress games successfully', { inProgresGames });
       return inProgresGames;

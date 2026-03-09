@@ -9,7 +9,7 @@ import {
 
 export const Home: React.FC = () => {
   return (
-    <div className="h-screen w-screen items-center flex flex-col">
+    <div className="h-screen w-screen items-center flex flex-col bg-graishWhiteBackground">
       <Header />
       <div className="h-[90%] w-full flex flex-row items-center justify-around">
         <GlobalLeaderboard />

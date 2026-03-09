@@ -1,14 +1,22 @@
 import React from 'react';
 import { Trophy } from '../../../assets/images';
-import { useGetGlobalLeadersQuery } from '../../../store/api';
+import { useGetNonogramLeadersQuery } from '../../../store/api';
 import { LoadingState, ErrorState } from '../../../components';
 import {
   TOP_THREE_COLORFUL_BACKGROUND,
   POSITION_SYMBOLS,
 } from '../../../constants';
 
-export const GlobalLeaderboard: React.FC = () => {
-  const { data: globalLeaders, isLoading, error } = useGetGlobalLeadersQuery();
+type Props = {
+  nonogramId: string;
+};
+
+export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
+  const {
+    data: nonogramLeaders,
+    isLoading,
+    error,
+  } = useGetNonogramLeadersQuery(nonogramId);
 
   if (isLoading) {
     return <LoadingState />;
@@ -18,7 +26,7 @@ export const GlobalLeaderboard: React.FC = () => {
     return <ErrorState error={error} />;
   }
 
-  const leaders = globalLeaders!.map(({ username, score }, position) => {
+  const leaders = nonogramLeaders!.map(({ username, timer }, position) => {
     const positionSymbol = POSITION_SYMBOLS[position] ?? position + 1;
 
     const backgroundColor =
@@ -31,8 +39,8 @@ export const GlobalLeaderboard: React.FC = () => {
       >
         <div className="text-xl">{positionSymbol}</div>
         <div className="text-2xl">{username}</div>
-        <span className="text-xl" role="img" aria-label="score emoji">
-          🌟: {score}
+        <span className="text-xl" role="img" aria-label="timer emoji">
+          ⏱️: {timer}
         </span>
       </li>
     );
