@@ -4,7 +4,8 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { useGetUnplayedNonogramsQuery } from '../../../store/api';
 import { RootState } from '../../../store/store';
-import { DIFFICULTY_SIZE, LoadingState, ErrorState } from '../../../consts';
+import { DIFFICULTY_SIZE } from '../../../constants';
+import { LoadingState, ErrorState } from '../../../components';
 
 type Props = {
   difficulty: NonogramDifficultiesEnumType | null;
@@ -27,7 +28,7 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
   }
 
   if (isLoading) {
-    return <>{LoadingState}</>;
+    return <LoadingState />;
   }
 
   if (isError) {
@@ -50,13 +51,21 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
             <span className="text-dividorGray">|</span>
             <span className="font-bold text-center">{name}</span>
             <span className="text-dividorGray">|</span>
-            <span className="text-center">
+            <span className="text-center" role="img" aria-label="size emoji">
               📐 {DIFFICULTY_SIZE[difficulty]}
             </span>
             <span className="text-dividorGray">|</span>
-            <span className="text-center">👍 {likeCount}</span>
+            <span className="text-center" role="img" aria-label="like emoji">
+              👍 {likeCount}
+            </span>
             <span className="text-dividorGray">|</span>
-            <span className="text-center">🎮 {gameCount}</span>
+            <span
+              className="text-center"
+              role="img"
+              aria-label="joystick emoji"
+            >
+              🎮 {gameCount}
+            </span>
           </li>
         )
       )}

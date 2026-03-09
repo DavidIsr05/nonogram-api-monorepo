@@ -1,9 +1,9 @@
 import {
-  GenerateNonogramDto,
+  GenerateNonogramType,
   NonogramDifficulties,
 } from '@nonogram-api-monorepo/types';
 
-export const DEFAULT_FORM: GenerateNonogramDto = {
+export const DEFAULT_FORM: GenerateNonogramType = {
   difficulty: NonogramDifficulties.MEDIUM,
   mainObjectDimFactor: 0.3,
   imageBase64: '',

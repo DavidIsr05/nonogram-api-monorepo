@@ -14,4 +14,6 @@ export const CreateNonogramRequestSchema = z
   })
   .strict();
 
-export type CreateNonogramRequestDto = z.infer<typeof CreateNonogramRequestSchema>;
+export type CreateNonogramRequestType = z.infer<
+  typeof CreateNonogramRequestSchema
+>;

@@ -6,7 +6,11 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Game } from './entity/game.entity';
-import { TileStates, TileStatesEnumType } from '@nonogram-api-monorepo/types';
+import {
+  GameStatus,
+  TileStates,
+  TileStatesEnumType,
+} from '@nonogram-api-monorepo/types';
 import { NonogramService } from '../nonogram';
 import {
   ForbiddenGameException,
@@ -143,58 +147,41 @@ export class GameService {
       foundGame.nonogramId
     );
 
-    const { rowClues, colClues } = this.calculateClues(foundNonogram.nonogram);
-
     return {
       ...foundGame.toJSON(),
-      rowClues,
-      colClues,
+      ...this.returnRowAndColClues(foundNonogram.nonogram),
     };
   }
 
-  private calculateClues(nonogram: boolean[][]) {
-    const rowClues: number[][] = nonogram.map((row) => {
-      const clues: number[] = [];
-      let count = 0;
+  returnRowAndColClues(nonogram: boolean[][]) {
+    const rowClues: number[][] = nonogram.map(this.calculateClues);
 
-      row.forEach((tile) => {
-        if (tile) {
-          count++;
-        } else if (count > 0) {
-          clues.push(count);
-          count = 0;
-        }
-      });
-
-      if (count > 0) {
-        clues.push(count);
-      }
-
-      return clues.length ? clues : [0];
-    });
-
-    const colClues: number[][] = nonogram[0].map((_, colIndex) => {
-      const clues: number[] = [];
-      let count = 0;
-
-      nonogram.forEach((row) => {
-        if (row[colIndex]) {
-          count++;
-        } else if (count > 0) {
-          clues.push(count);
-          count = 0;
-        }
-      });
-
-      if (count > 0) {
-        clues.push(count);
-      }
-
-      return clues.length ? clues : [0];
-    });
+    const colClues: number[][] = nonogram[0].map((_, columnIndex) =>
+      this.calculateClues(nonogram.map((row) => row[columnIndex]))
+    );
 
     return { rowClues, colClues };
   }
+
+  calculateClues = (idk) => {
+    const clues: number[] = [];
+    let count = 0;
+
+    idk.forEach((tile) => {
+      if (tile) {
+        count++;
+      } else if (count > 0) {
+        clues.push(count);
+        count = 0;
+      }
+    });
+
+    if (count > 0) {
+      clues.push(count);
+    }
+
+    return clues.length ? clues : [0];
+  };
 
   async deleteGame(currentUser, gameId) {
     await this.getGameById(currentUser, gameId);
@@ -271,17 +258,6 @@ export class GameService {
 
     const MAX_FAILURES = 3;
 
-    if (mistakes >= MAX_FAILURES) {
-      this.updateGame(currentUser, {
-        id: foundGame.id,
-        uncompletedNonogram: uncompletedNonogram,
-        timer: checkAndUpdateInProgressNonogramDto.timer,
-        mistakes: mistakes,
-      });
-
-      return { board: uncompletedNonogram, status: 'LOST' };
-    }
-
     const isWon = foundNonogram.nonogram.every((row, rowIndex) =>
       row.every(
         (tile, colIndex) =>
@@ -289,25 +265,22 @@ export class GameService {
       )
     );
 
-    if (isWon) {
-      this.updateGame(currentUser, {
-        id: foundGame.id,
-        uncompletedNonogram: uncompletedNonogram,
-        timer: checkAndUpdateInProgressNonogramDto.timer,
-        mistakes: mistakes,
-        isFinished: true,
-      });
-
-      return { board: uncompletedNonogram, status: 'WON' };
-    }
-
     this.updateGame(currentUser, {
       id: foundGame.id,
       uncompletedNonogram: uncompletedNonogram,
       timer: checkAndUpdateInProgressNonogramDto.timer,
       mistakes: mistakes,
+      isFinished: isWon,
     });
 
-    return { board: uncompletedNonogram, status: 'FINE' };
+    return {
+      board: uncompletedNonogram,
+      status:
+        mistakes >= MAX_FAILURES
+          ? GameStatus.LOST
+          : isWon
+          ? GameStatus.WON
+          : GameStatus.FINE,
+    };
   }
 }

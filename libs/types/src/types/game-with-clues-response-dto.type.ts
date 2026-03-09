@@ -6,4 +6,6 @@ export const GameWithCluesResponseSchema = GameSchema.extend({
   colClues: z.array(z.array(z.number())),
 });
 
-export type GameWithCluesResponseDto = z.infer<typeof GameWithCluesResponseSchema>;
+export type GameWithCluesResponseType = z.infer<
+  typeof GameWithCluesResponseSchema
+>;

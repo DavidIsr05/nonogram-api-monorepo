@@ -1,4 +1,4 @@
-import { cn } from '@nonogram-api-monorepo/ui-kit';
+import { cn } from './cn';
 import { Loader2Icon, type LucideProps } from 'lucide-react';
 
 function Spinner({ className, ...props }: LucideProps) {

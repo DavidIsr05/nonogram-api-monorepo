@@ -32,6 +32,6 @@ export const UpdateUserSchema = UserSchema.partial()
   .omit({ isAdmin: true })
   .strict();
 
-export type UserDto = z.infer<typeof UserSchema>;
-export type CreateUserDto = z.infer<typeof CreateUserSchema>;
-export type UpdateUserDto = z.infer<typeof UpdateUserSchema>;
+export type UserType = z.infer<typeof UserSchema>;
+export type CreateUserType = z.infer<typeof CreateUserSchema>;
+export type UpdateUserType = z.infer<typeof UpdateUserSchema>;

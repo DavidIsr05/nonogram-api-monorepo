@@ -7,4 +7,4 @@ export const UserResponseSchema = z.object({
   isAdmin: z.boolean(),
 });
 
-export type UserResponseDto = z.infer<typeof UserResponseSchema>;
+export type UserResponseType = z.infer<typeof UserResponseSchema>;

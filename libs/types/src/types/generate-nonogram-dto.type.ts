@@ -10,4 +10,4 @@ export const GenerateNonogramSchema = z
   })
   .strict();
 
-export type GenerateNonogramDto = z.infer<typeof GenerateNonogramSchema>;
+export type GenerateNonogramType = z.infer<typeof GenerateNonogramSchema>;

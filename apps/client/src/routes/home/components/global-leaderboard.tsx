@@ -1,13 +1,13 @@
 import React from 'react';
 import { Trophy } from '../../../assets/images';
 import { useGetGlobalLeadersQuery } from '../../../store/api';
-import { LoadingState, ErrorState } from '../../../consts';
+import { LoadingState, ErrorState } from '../../../components';
 
 export const GlobalLeaderboard: React.FC = () => {
   const { data, isLoading, error } = useGetGlobalLeadersQuery();
 
   if (isLoading) {
-    return <>{LoadingState}</>;
+    return <LoadingState />;
   }
 
   if (error) {
@@ -36,7 +36,9 @@ export const GlobalLeaderboard: React.FC = () => {
       >
         <div className="text-xl">{positionSymbol}</div>
         <div className="text-2xl">{username}</div>
-        <div className="text-xl">🌟: {score}</div>
+        <span className="text-xl" role="img" aria-label="score emoji">
+          🌟: {score}
+        </span>
       </li>
     );
   });

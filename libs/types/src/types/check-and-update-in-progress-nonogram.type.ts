@@ -7,4 +7,6 @@ export const CheckAndUpdateInProgressNonogramSchema = z.object({
   gameId: z.string().uuid(),
 });
 
-export type CheckAndUpdateInProgressNonogramDto = z.infer<typeof CheckAndUpdateInProgressNonogramSchema>;
+export type CheckAndUpdateInProgressNonogramType = z.infer<
+  typeof CheckAndUpdateInProgressNonogramSchema
+>;

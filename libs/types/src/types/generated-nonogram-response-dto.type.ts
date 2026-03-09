@@ -11,6 +11,6 @@ export const GeneratedNonogramResponseSchema = z
   })
   .strict();
 
-export type GeneratedNonogramResponseDto = z.infer<
+export type GeneratedNonogramResponseType = z.infer<
   typeof GeneratedNonogramResponseSchema
 >;

@@ -10,14 +10,14 @@ import { InjectModel } from '@nestjs/sequelize';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom, map } from 'rxjs';
 import {
-  CreateNonogramDto,
-  CreateNonogramRequestDto,
-  GeneratedNonogramResponseDto,
+  CreateNonogramType,
+  CreateNonogramRequestType,
+  GeneratedNonogramResponseType,
   NonogramResponseSchema,
   TileStatesEnumValues,
-  GenerateNonogramDto,
-  gamesForEachNonogramDto,
-  NonogramResponseDto,
+  GenerateNonogramType,
+  GamesForEachNonogramType,
+  NonogramResponseType,
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
@@ -40,11 +40,11 @@ export class NonogramService {
 
   private readonly logger = new Logger(NonogramService.name);
 
-  async generateNonogram(generateNonogramDto: GenerateNonogramDto) {
+  async generateNonogram(generateNonogramDto: GenerateNonogramType) {
     const response = await this.generateNonogramResponse(generateNonogramDto);
 
     try {
-      const generatedNonogram: GeneratedNonogramResponseDto =
+      const generatedNonogram: GeneratedNonogramResponseType =
         await firstValueFrom(response);
 
       const nonogramToEncrypt = JSON.stringify(generatedNonogram.nonogram);
@@ -72,7 +72,7 @@ export class NonogramService {
 
   async createNonogram(
     currentUser: User,
-    createNonogramRequestDto: CreateNonogramRequestDto
+    createNonogramRequestDto: CreateNonogramRequestType
   ) {
     if (!createNonogramRequestDto.isPrivate && !currentUser.isAdmin) {
       throw new ForbiddenException('Can not create public nonograms');
@@ -84,7 +84,7 @@ export class NonogramService {
 
     const nonogramMatrix: boolean[][] = JSON.parse(decrypted);
 
-    const createNonogramDto: CreateNonogramDto = {
+    const createNonogramDto: CreateNonogramType = {
       ...createNonogramRequestDto,
       nonogram: nonogramMatrix,
     };
@@ -132,7 +132,7 @@ export class NonogramService {
     return DEFAULT_NONOGRAM_SIZE + 10 * sizeFactorBasedOnDifficulty;
   }
 
-  async getNonogramById(currentUser, id): Promise<NonogramResponseDto | null> {
+  async getNonogramById(currentUser, id): Promise<NonogramResponseType | null> {
     try {
       const foundNonogram = await this.nonogramModel.findByPk(id);
 
@@ -414,7 +414,7 @@ export class NonogramService {
     try {
       const publicNonogramsDoneGames = await this.getPublicNonogramsDoneGames();
 
-      const topTenPercentNonogramGames: gamesForEachNonogramDto[] =
+      const topTenPercentNonogramGames: GamesForEachNonogramType[] =
         await this.getTopTenPercentNonogramGames(publicNonogramsDoneGames);
 
       const usersScores: Record<string, number> = {};
@@ -450,7 +450,7 @@ export class NonogramService {
 
   async getPublicNonogramsDoneGames() {
     try {
-      const gamesForEachNonogram: gamesForEachNonogramDto[] =
+      const gamesForEachNonogram: GamesForEachNonogramType[] =
         await this.nonogramModel.findAll({
           attributes: ['id'],
           where: { isPrivate: false },
@@ -483,7 +483,7 @@ export class NonogramService {
 
       const stringifiedGamesForEachNonogram =
         JSON.stringify(gamesForEachNonogram);
-      const parsedGamesForEachNonogram: gamesForEachNonogramDto[] = JSON.parse(
+      const parsedGamesForEachNonogram: GamesForEachNonogramType[] = JSON.parse(
         stringifiedGamesForEachNonogram
       );
 

@@ -1,14 +1,14 @@
-import { ExceptionType, UserSignInDto } from '@nonogram-api-monorepo/types';
+import { ExceptionType, UserSignInType } from '@nonogram-api-monorepo/types';
 import { useLazyLoginQuery } from '../../../store/api';
 import { useDispatch } from 'react-redux';
 import { setUserId } from '../../../store/slices';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { ERROR_TEXT_BASED_ON_EXCEPTION } from '../../../consts';
+import { ERROR_TEXT_BASED_ON_EXCEPTION } from '../../../constants';
 
 export const LoginForm: React.FC = () => {
-  const [userSignInDto, setUserSignInDto] = useState<UserSignInDto>({
+  const [userSignInDto, setUserSignInDto] = useState<UserSignInType>({
     personalNumber: '',
     password: '',
   });

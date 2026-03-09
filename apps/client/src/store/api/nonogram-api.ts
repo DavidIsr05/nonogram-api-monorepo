@@ -1,16 +1,16 @@
 import {
-  CreateNonogramRequestDto,
-  GenerateNonogramDto,
-  GeneratedNonogramResponseDto,
-  NonogramResponseDto,
+  CreateNonogramRequestType,
+  GenerateNonogramType,
+  GeneratedNonogramResponseType,
+  NonogramResponseType,
 } from '@nonogram-api-monorepo/types';
 import { api } from './api';
 
 export const nonogramApi = api.injectEndpoints({
   endpoints: (build) => ({
     generateNonogram: build.mutation<
-      GeneratedNonogramResponseDto,
-      GenerateNonogramDto
+      GeneratedNonogramResponseType,
+      GenerateNonogramType
     >({
       query: (body) => ({
         url: 'nonogram/generate',
@@ -19,8 +19,8 @@ export const nonogramApi = api.injectEndpoints({
       }),
     }),
     createNonogram: build.mutation<
-      NonogramResponseDto,
-      CreateNonogramRequestDto
+      NonogramResponseType,
+      CreateNonogramRequestType
     >({
       query: (body) => ({
         url: 'nonogram/create',
@@ -43,21 +43,21 @@ export const nonogramApi = api.injectEndpoints({
       }),
       providesTags: ['Game'],
     }),
-    getAllAvaliableNonograms: build.query<NonogramResponseDto[], string>({
+    getAllAvaliableNonograms: build.query<NonogramResponseType[], string>({
       query: (userId) => ({
         url: `nonogram/all/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Nonogram'],
     }),
-    getUnplayedNonograms: build.query<NonogramResponseDto[], string>({
+    getUnplayedNonograms: build.query<NonogramResponseType[], string>({
       query: (userId) => ({
         url: `nonogram/unplayed/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Nonogram', 'Game'],
     }),
-    getNonogram: build.query<NonogramResponseDto, string>({
+    getNonogram: build.query<NonogramResponseType, string>({
       query: (nonogramId) => ({
         url: `nonogram/${nonogramId}`,
         method: 'GET',

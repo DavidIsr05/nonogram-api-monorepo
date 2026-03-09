@@ -4,7 +4,8 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../../../store/store';
 import { useGetInProgresGamesQuery } from '../../../../store/api';
-import { DIFFICULTY_SIZE, LoadingState, ErrorState } from '../../../../consts';
+import { DIFFICULTY_SIZE } from '../../../../constants';
+import { LoadingState, ErrorState } from '../../../../components';
 
 type Props = {
   difficulty: NonogramDifficultiesEnumType | null;
@@ -27,7 +28,7 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
   }
 
   if (isLoading) {
-    return <>{LoadingState}</>;
+    return <LoadingState />;
   }
 
   if (isError) {
@@ -47,14 +48,20 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
         >
           <span className="text-center font-bold">{nonogram.name}</span>
           <span className="text-dividorGray">|</span>
-          <span className="text-center">⏱️ : {timer}</span>
+          <span className="text-center" role="img" aria-label="timer emoji">
+            ⏱️ : {timer}
+          </span>
           {/* //TODO need to fix time/format */}
           <span className="text-dividorGray">|</span>
-          <span className="text-center">❌ : {mistakes}/3</span>
+          <span className="text-center" role="img" aria-label="mistakes emoji">
+            ❌ : {mistakes}/3
+          </span>
           <span className="text-dividorGray">|</span>
-          <span className="text-center">💡 : {3 - hints}/3</span>
+          <span className="text-center" role="img" aria-label="hints emoji">
+            💡 : {3 - hints}/3
+          </span>
           <span className="text-dividorGray">|</span>
-          <span className="text-center">
+          <span className="text-center" role="img" aria-label="size emoji">
             📐 {DIFFICULTY_SIZE[nonogram.difficulty]}
           </span>
         </li>

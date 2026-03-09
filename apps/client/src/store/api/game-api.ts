@@ -1,17 +1,17 @@
 import {
-  CheckAndUpdateInProgressNonogramDto,
-  CheckNonogramResponseDto,
-  CreateGameDto,
-  GameDto,
-  GameResponseDto,
-  GameWithCluesResponseDto,
-  UpdateGameDto,
+  CheckAndUpdateInProgressNonogramType,
+  CheckNonogramResponseType,
+  CreateGameType,
+  GameType,
+  GameResponseType,
+  GameWithCluesResponseType,
+  UpdateGameType,
 } from '@nonogram-api-monorepo/types';
 import { api } from './api';
 
 export const gameApi = api.injectEndpoints({
   endpoints: (build) => ({
-    createGame: build.mutation<GameDto, CreateGameDto>({
+    createGame: build.mutation<GameType, CreateGameType>({
       query: (body) => ({
         url: 'game',
         method: 'POST',
@@ -19,35 +19,35 @@ export const gameApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Game'],
     }),
-    getAllUsersGames: build.query<GameDto[], string>({
+    getAllUsersGames: build.query<GameType[], string>({
       query: (userId) => ({
         url: `game/all/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    getInProgresGames: build.query<GameResponseDto[], string>({
+    getInProgresGames: build.query<GameResponseType[], string>({
       query: (userId) => ({
         url: `game/in-progress/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    getFinishedGames: build.query<GameDto[], string>({
+    getFinishedGames: build.query<GameType[], string>({
       query: (userId) => ({
         url: `game/finished/${userId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    getGameById: build.query<GameWithCluesResponseDto, string>({
+    getGameById: build.query<GameWithCluesResponseType, string>({
       query: (gameId) => ({
         url: `game/${gameId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
     }),
-    updateGame: build.mutation<GameDto, UpdateGameDto>({
+    updateGame: build.mutation<GameType, UpdateGameType>({
       query: (body) => ({
         url: `game`,
         method: 'PATCH',
@@ -63,8 +63,8 @@ export const gameApi = api.injectEndpoints({
       invalidatesTags: ['Game'],
     }),
     checkAndUpdateInProgressNonogram: build.mutation<
-      CheckNonogramResponseDto,
-      CheckAndUpdateInProgressNonogramDto
+      CheckNonogramResponseType,
+      CheckAndUpdateInProgressNonogramType
     >({
       query: (body) => ({
         url: 'game/check-nonogram',
