@@ -22,11 +22,11 @@ export const GlobalLeaderboard: React.FC = () => {
     const positionSymbol = POSITION_SYMBOLS[position] ?? position + 1;
 
     const backgroundColor =
-      TOP_THREE_COLORFUL_BACKGROUND[position] ?? 'bg-absoluteWhite/40';
+      TOP_THREE_COLORFUL_BACKGROUND[position] ?? 'bg-absoluteWhite/40 h-[8%]';
 
     return (
       <li
-        className={`h-[7%] mb-7 flex flex-row items-center justify-between p-5 rounded-xl shadow-lg backdrop-blur-lg ${backgroundColor}`}
+        className={`mb-7 flex flex-row items-center justify-between p-5 rounded-xl shadow-lg backdrop-blur-lg ${backgroundColor}`} //TODO global leader board will probs overfill cause i made each one bigger. need to check with mode data in db
         key={position}
       >
         <div className="text-xl">{positionSymbol}</div>

@@ -9,7 +9,6 @@ import {
 import { RootState } from '../../../store/store';
 import { DIFFICULTY_SIZE } from '../../../constants';
 import { LoadingState, ErrorState } from '../../../components';
-import { Toaster, toast } from 'sonner';
 
 type Props = {
   difficulty: NonogramDifficultiesEnumType | null;
@@ -55,34 +54,42 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
 
   return (
     <ul className="flex flex-col gap-2 overflow-y-auto max-h-[93%] pb-2">
-      {filteredNonograms?.map(
-        ({ id, name, likeCount, gameCount, difficulty, user }) => (
-          <li
-            key={id}
-            className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
-            onClick={() => handleNonogramClick(id)}
-          >
-            <span className="font-semibold text-center">{user?.username}</span>
-            <span className="text-dividorGray">|</span>
-            <span className="font-bold text-center">{name}</span>
-            <span className="text-dividorGray">|</span>
-            <span className="text-center" role="img" aria-label="size emoji">
-              📐 {DIFFICULTY_SIZE[difficulty]}
-            </span>
-            <span className="text-dividorGray">|</span>
-            <span className="text-center" role="img" aria-label="like emoji">
-              👍 {likeCount}
-            </span>
-            <span className="text-dividorGray">|</span>
-            <span
-              className="text-center"
-              role="img"
-              aria-label="joystick emoji"
+      {filteredNonograms && filteredNonograms.length > 0 ? (
+        filteredNonograms.map(
+          ({ id, name, likeCount, gameCount, difficulty, user }) => (
+            <li
+              key={id}
+              className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
+              onClick={() => handleNonogramClick(id)}
             >
-              🎮 {gameCount}
-            </span>
-          </li>
+              <span className="font-semibold text-center">
+                {user?.username}
+              </span>
+              <span className="text-dividorGray">|</span>
+              <span className="font-bold text-center">{name}</span>
+              <span className="text-dividorGray">|</span>
+              <span className="text-center" role="img" aria-label="size emoji">
+                📐 {DIFFICULTY_SIZE[difficulty]}
+              </span>
+              <span className="text-dividorGray">|</span>
+              <span className="text-center" role="img" aria-label="like emoji">
+                👍 {likeCount}
+              </span>
+              <span className="text-dividorGray">|</span>
+              <span
+                className="text-center"
+                role="img"
+                aria-label="joystick emoji"
+              >
+                🎮 {gameCount}
+              </span>
+            </li>
+          )
         )
+      ) : (
+        <li className="text-center text-absoluteBlack/40">
+          nothing here yet...
+        </li>
       )}
     </ul>
   );

@@ -150,6 +150,8 @@ export class GameService {
     return {
       ...foundGame.toJSON(),
       ...this.returnRowAndColClues(foundNonogram.nonogram),
+      nonogramName: foundNonogram.name,
+      nonogramDifficulty: foundNonogram.difficulty,
     };
   }
 

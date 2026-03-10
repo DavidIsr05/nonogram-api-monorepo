@@ -46,32 +46,40 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
 
   return (
     <ul className="flex flex-col gap-2 overflow-y-auto max-h-[93%] pb-2">
-      {filteredGames?.map(({ id, nonogram, timer, mistakes, hints }) => (
-        <li
-          key={id}
-          className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
-          onClick={() => handleGameClick(id)}
-        >
-          <span className="text-center font-bold">{nonogram.name}</span>
-          <span className="text-dividorGray">|</span>
-          <span className="text-center" role="img" aria-label="timer emoji">
-            ⏱️ : {timer}
-          </span>
-          {/* //TODO need to fix time/format */}
-          <span className="text-dividorGray">|</span>
-          <span className="text-center" role="img" aria-label="mistakes emoji">
-            ❌ : {mistakes}/3
-          </span>
-          <span className="text-dividorGray">|</span>
-          <span className="text-center" role="img" aria-label="hints emoji">
-            💡 : {3 - hints}/3
-          </span>
-          <span className="text-dividorGray">|</span>
-          <span className="text-center" role="img" aria-label="size emoji">
-            📐 {DIFFICULTY_SIZE[nonogram.difficulty]}
-          </span>
-        </li>
-      ))}
+      {filteredGames && filteredGames.length > 0 ? (
+        filteredGames.map(({ id, nonogram, timer, mistakes, hints }) => (
+          <li
+            key={id}
+            className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
+            onClick={() => handleGameClick(id)}
+          >
+            <span className="text-center font-bold">{nonogram.name}</span>
+            <span className="text-dividorGray">|</span>
+            <span className="text-center" role="img" aria-label="timer emoji">
+              ⏱️ : {timer}
+            </span>
+            {/* //TODO need to fix time/format */}
+            <span className="text-dividorGray">|</span>
+            <span
+              className="text-center"
+              role="img"
+              aria-label="mistakes emoji"
+            >
+              ❌ : {mistakes}/3
+            </span>
+            <span className="text-dividorGray">|</span>
+            <span className="text-center" role="img" aria-label="hints emoji">
+              💡 : {3 - hints}/3
+            </span>
+            <span className="text-dividorGray">|</span>
+            <span className="text-center" role="img" aria-label="size emoji">
+              📐 {DIFFICULTY_SIZE[nonogram.difficulty]}
+            </span>
+          </li>
+        ))
+      ) : (
+        <li className="text-center text-absoluteBlack/40">go play sum</li>
+      )}
     </ul>
   );
 };

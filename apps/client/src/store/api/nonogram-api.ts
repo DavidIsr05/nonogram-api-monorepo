@@ -74,5 +74,5 @@ export const {
   useGetGlobalLeadersQuery,
   useGetAllAvaliableNonogramsQuery,
   useGetUnplayedNonogramsQuery,
-  useGetNonogramQuery,
+  useLazyGetNonogramQuery,
 } = nonogramApi;
