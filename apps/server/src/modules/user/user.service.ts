@@ -8,7 +8,9 @@ import {
 } from '../../common';
 import * as bcrypt from 'bcrypt';
 import { UserResponseSchema } from '@nonogram-api-monorepo/types';
-import { ValidationError } from 'sequelize';
+import { ValidationError, col, fn } from 'sequelize';
+import { Game } from '../game/entity/game.entity';
+import { Nonogram } from '../nonogram/entity/nonogram.entity';
 
 @Injectable()
 export class UserService {
@@ -128,5 +130,53 @@ export class UserService {
   parseObjectForReturn(object) {
     this.logger.log('Parsing user object for return');
     return UserResponseSchema.parse(object.toJSON());
+  }
+
+  async getUserStats(currentUser) {
+    const userNonogramsAndGames = await this.userModel.findOne({
+      where: { id: currentUser.id },
+      attributes: [
+        [fn('COUNT', fn('DISTINCT', col('nonograms.id'))), 'nonogramsCreated'],
+      ],
+      include: [
+        {
+          model: Game,
+          where: { userId: currentUser.id },
+          attributes: ['isLiked', 'isFinished', 'timer'],
+        },
+        {
+          model: Nonogram,
+          where: { creatorId: currentUser.id },
+          attributes: [],
+        },
+      ],
+      group: ['User.id', 'games.id'],
+    });
+
+    let userStats = {
+      nonogramsCreated: Number(userNonogramsAndGames.get('nonogramsCreated')),
+      gamesPlayed: userNonogramsAndGames.games.length,
+      averageTimer: 0,
+      nonogramsLiked: 0,
+      nonogramsComplete: 0,
+    };
+
+    userNonogramsAndGames.games.map(({ isLiked, isFinished, timer }) => {
+      if (isFinished) {
+        userStats.nonogramsComplete++;
+        if (isLiked) {
+          userStats.nonogramsLiked++;
+        }
+        userStats.averageTimer += timer;
+      }
+    });
+
+    if (userStats.averageTimer) {
+      userStats.averageTimer =
+        userStats.averageTimer / userStats.nonogramsComplete;
+    }
+
+    this.logger.log('Got user stats succesfully');
+    return userStats;
   }
 }

@@ -439,6 +439,7 @@ export class NonogramService {
 
       const leaderboard = Object.entries(usersScores)
         .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+        .slice(0, 10)
         .map(([username, score]) => ({ username, score }));
 
       this.logger.log('Got global leaders successfully', { leaderboard });

@@ -107,7 +107,7 @@ export class GameService {
     }
     try {
       const finishedGames = await this.gameModel.findAll({
-        where: { isFinished: true },
+        where: { isFinished: true, userId },
       });
       this.logger.log('Got finished games successfully', { finishedGames });
       return finishedGames;

@@ -8,11 +8,13 @@ type Props = {
 export const Board: React.FC<Props> = ({ uncompletedNonogram }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
 
-  const handleOnClick = (index: number) => {
+  const handleOnMouseDown = (index: number, tile: TileStates) => {
     setIsMouseDown(true);
 
     console.log(Math.floor(index / 40));
     console.log(index % 40);
+
+    console.log(tile);
   };
 
   const onMouseOver = (index: number) => {
@@ -23,24 +25,34 @@ export const Board: React.FC<Props> = ({ uncompletedNonogram }) => {
   };
 
   return (
-    <div
-      className="grid w-full h-full min-h-0 min-w-0"
-      style={{
-        gridTemplateColumns: `repeat(${uncompletedNonogram[0].length}, 1fr)`,
-        gridTemplateRows: `repeat(${uncompletedNonogram.length}, 1fr)`,
-      }}
-    >
-      {uncompletedNonogram.flat().map((tile, index) => (
-        <button
-          className="border"
-          onMouseDown={() => handleOnClick(index)}
-          onMouseOver={() => onMouseOver(index)}
-          onMouseUp={() => setIsMouseDown(false)}
-          key={index}
-        >
-          <div className={``} />
-        </button>
-      ))}
+    <div className="flex  w-full h-[90%]">
+      <div
+        className="grid aspect-square max-h-full max-w-full"
+        style={{
+          gridTemplateColumns: `repeat(${uncompletedNonogram[0].length}, 1fr)`,
+          gridTemplateRows: `repeat(${uncompletedNonogram.length}, 1fr)`,
+        }}
+        onMouseLeave={() => setIsMouseDown(false)}
+      >
+        {uncompletedNonogram.flat().map((tile, index) => (
+          <button
+            onMouseDown={() => handleOnMouseDown(index, tile)}
+            onMouseOver={() => onMouseOver(index)}
+            onMouseUp={() => setIsMouseDown(false)}
+            key={index}
+          >
+            <div
+              className={`
+              ${
+                tile === TileStates.FILLED
+                  ? 'bg-absoluteBlack'
+                  : 'bg-absoluteWhite'
+              } w-full h-full border
+            `}
+            />
+          </button>
+        ))}
+      </div>
     </div>
   );
 };

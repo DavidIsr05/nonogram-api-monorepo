@@ -1,7 +1,7 @@
 import React from 'react';
 import { ErrorState, Header, LoadingState } from '../../components';
 import { useGetGameByIdQuery, useUpdateGameMutation } from '../../store/api';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { GameBoard, NonogramLeaderboard } from './components';
 import { Like, Star } from '../../assets/images';
 import { NonogramDifficultiesEnumValues } from '@nonogram-api-monorepo/types';
@@ -9,9 +9,11 @@ import { NonogramDifficultiesEnumValues } from '@nonogram-api-monorepo/types';
 export const Game: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>();
   const [updateGame] = useUpdateGameMutation();
+  const navigate = useNavigate();
 
   if (!gameId) {
-    return <LoadingState />; //TODO
+    navigate('/home', { replace: true });
+    return;
   }
 
   const {
@@ -50,7 +52,7 @@ export const Game: React.FC = () => {
     <div className="w-screen h-screen bg-graishWhiteBackground items-center flex flex-col">
       <Header />
       <div className="flex flex-col w-full h-[91%] p-3">
-        <div className="grid grid-cols-[1fr_1fr_1fr] w-full text-4xl">
+        <div className="grid grid-cols-[1fr_1fr_1fr] w-full text-4xl px-10">
           <span className=" font-bold">{gameData?.nonogramName}</span>
           <div className="flex flex-row justify-self-center">
             {Object.values(NonogramDifficultiesEnumValues.enum).map(
@@ -59,6 +61,7 @@ export const Game: React.FC = () => {
                   className={`aspect-square w-[3rem] ${getStarColor(
                     difficultyIndex
                   )}`}
+                  key={difficultyIndex}
                 />
               )
             )}

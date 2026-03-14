@@ -1,7 +1,9 @@
-import { GameWithCluesResponseType } from '@nonogram-api-monorepo/types';
-import React from 'react';
+import {
+  GameWithCluesResponseType,
+  TileStates,
+} from '@nonogram-api-monorepo/types';
+import React, { useState } from 'react';
 import { Hint, Timer, Mistakes, Restart } from '../../../assets/images';
-import { Board } from './board';
 
 type Props = GameWithCluesResponseType;
 
@@ -13,50 +15,96 @@ export const GameBoard: React.FC<Props> = ({
   mistakes,
   hints,
 }) => {
+  const [isMouseDown, setIsMouseDown] = useState(false);
+
+  const AVALIABLE_PIXELS_COUNT = 650;
+
+  const tileSize = Math.floor(AVALIABLE_PIXELS_COUNT / colClues.length);
+
+  const handleMouseDown = (row: number, col: number, tile: TileStates) => {
+    setIsMouseDown(true);
+    console.log(row, col, tile);
+  };
+
+  const handleMouseOver = (row: number, col: number) => {
+    if (isMouseDown) {
+      console.log(row, col);
+    }
+  };
+
   return (
-    <div className="flex flex-col w-[70%] h-full">
-      <div className="grid grid-cols-[auto_1fr] grid-rows-[auto_1fr] bg-absoluteWhite rounded-xl shadow-xl p-3 h-[90%]">
-        <div className="h-0 w-0" />
-        <div className="flex flex-row justify-around">
-          {colClues.map((col, colIndex) => (
-            <div key={colIndex} className="flex flex-col items-center">
-              {col.map((clue, clueIndex) => (
-                <span key={clueIndex} className="leading-none text-sm">
-                  {clue}
-                </span>
+    <div className="flex flex-row w-[60%] h-[90%] border rounded-xl shadow-xl justify-around items-center">
+      <div className="flex items-center justify-center">
+        <table
+          className=""
+          onMouseLeave={() => setIsMouseDown(false)}
+          onMouseUp={() => setIsMouseDown(false)}
+        >
+          <thead>
+            <tr>
+              <th />
+              {colClues.map((col, colIndex) => (
+                <td
+                  key={colIndex}
+                  style={{ width: tileSize }}
+                  className="align-bottom pb-1"
+                >
+                  <div className="flex flex-col items-center leading-none text-xs gap-1">
+                    {col.map((colClue, colClueIndex) => (
+                      <span key={colClueIndex}>{colClue}</span>
+                    ))}
+                  </div>
+                </td>
               ))}
-            </div>
-          ))}
-        </div>
-        <div className="flex flex-col justify-around">
-          {rowClues.map((row, rowIndex) => (
-            <div key={rowIndex} className="flex flex-row items-end gap-3">
-              {row.map((clue, clueIndex) => (
-                <span key={clueIndex} className="leading-none text-sm">
-                  {clue}
-                </span>
-              ))}
-            </div>
-          ))}
-        </div>
-        <Board uncompletedNonogram={uncompletedNonogram!} />
+            </tr>
+          </thead>
+          <tbody>
+            {uncompletedNonogram!.map((row, rowIndex) => (
+              <tr key={rowIndex}>
+                <td className="pr-1">
+                  <div className="flex flex-row justify-end leading-none text-xs gap-1">
+                    {rowClues[rowIndex].map((rowClue, rowClueIndex) => (
+                      <span key={rowClueIndex}>{rowClue}</span>
+                    ))}
+                  </div>
+                </td>
+                {row.map((tile, colIndex) => (
+                  <td
+                    key={colIndex}
+                    style={{ width: tileSize, height: tileSize }}
+                    className={`border cursor-pointer ${
+                      tile === TileStates.FILLED
+                        ? 'bg-absoluteBlack'
+                        : 'bg-absoluteWhite'
+                    }`}
+                    onMouseDown={() =>
+                      handleMouseDown(rowIndex, colIndex, tile)
+                    }
+                    onMouseOver={() => handleMouseOver(rowIndex, colIndex)}
+                    onMouseUp={() => setIsMouseDown(false)}
+                  />
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
-      <div className="flex flex-row h-[10%] w-full items-center justify-between p-5 text-4xl">
+      <div className="flex flex-col h-[85%] items-center justify-between p-5 text-4xl">
         <button>
-          <Restart className="aspect-square w-[2.5rem]" />
+          <Restart />
         </button>
-        <button className="flex flex-row">
-          <Hint className="aspect-square w-[2.5rem]" />
+        <button className="flex flex-row" disabled={hints === 3}>
+          <Hint />
           {hints}/3
         </button>
         <span className="flex flex-row items-center">
-          <Timer className="aspect-square w-[2.5rem]" />
-          {timer}
+          <Mistakes />
+          {mistakes}/3
         </span>
         <span className="flex flex-row items-center">
-          <Mistakes className="aspect-square w-[2.5rem]" />
-          {mistakes}/3
+          <Timer />
+          {timer}
         </span>
       </div>
     </div>

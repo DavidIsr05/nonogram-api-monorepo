@@ -48,7 +48,7 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
     })
   ) : (
     <li className="items-center justify-self-center" key={'empty'}>
-      EMPTY
+      Be the first one in here!
     </li>
   );
 
