@@ -153,7 +153,7 @@ export class UserService {
       group: ['User.id', 'games.id'],
     });
 
-    let userStats = {
+    const userStats = {
       nonogramsCreated: Number(userNonogramsAndGames.get('nonogramsCreated')),
       gamesPlayed: userNonogramsAndGames.games.length,
       averageTimer: 0,

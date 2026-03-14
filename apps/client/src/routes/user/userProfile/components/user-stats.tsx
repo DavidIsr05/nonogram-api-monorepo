@@ -14,11 +14,21 @@ export const UserStats: React.FC<Props> = ({
     <div className="flex flex-col items-center h-full w-[50%] gap-5 text-xl">
       <span className="text-2xl">Stats:</span>
       <div className="flex flex-col items-start gap-5">
-        <span>🎨 Nonograms created: {nonogramsCreated}</span>
-        <span>🎮 Games played: {gamesPlayed}</span>
-        <span>✅ Nonograms complete: {nonogramsComplete}</span>
-        <span>👍 Nonograms Liked: {nonogramsLiked}</span>
-        <span>⏳ Average time: {averageTimer}</span>
+        <span role="img" aria-label="Nonograms created">
+          🎨 Nonograms created: {nonogramsCreated}
+        </span>
+        <span role="img" aria-label="Games played">
+          🎮 Games played: {gamesPlayed}
+        </span>
+        <span role="img" aria-label="Nonograms complete">
+          ✅ Nonograms complete: {nonogramsComplete}
+        </span>
+        <span role="img" aria-label="Nonograms Liked">
+          👍 Nonograms Liked: {nonogramsLiked}
+        </span>
+        <span role="img" aria-label="average time">
+          ⏳ Average time: {averageTimer}
+        </span>
       </div>
     </div>
   );

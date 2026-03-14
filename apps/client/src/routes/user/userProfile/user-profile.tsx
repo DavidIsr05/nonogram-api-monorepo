@@ -11,17 +11,12 @@ export const UserProfile: React.FC = () => {
   const userId = useSelector((state: RootState) => state.user.userId);
   const navigate = useNavigate();
 
-  if (!userId) {
-    navigate('/', { replace: true });
-    return null;
-  }
-
   const {
     data: userData,
     isLoading: isUserDataLoading,
     isError: isErrorWhileFetchingUserData,
     error: userDataError,
-  } = useGetUserByIdQuery(userId);
+  } = useGetUserByIdQuery(userId!, { skip: !userId });
 
   const {
     data: userStats,
@@ -29,6 +24,11 @@ export const UserProfile: React.FC = () => {
     isError: isErrorWhileFetchingUserStats,
     error: userStatsError,
   } = useGetUserStatsQuery();
+
+  if (!userId) {
+    navigate('/', { replace: true });
+    return null;
+  }
 
   if (isUserDataLoading || isUserStatsLoading) {
     return <LoadingState />;

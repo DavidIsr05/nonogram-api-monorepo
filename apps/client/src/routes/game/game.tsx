@@ -11,16 +11,16 @@ export const Game: React.FC = () => {
   const [updateGame] = useUpdateGameMutation();
   const navigate = useNavigate();
 
-  if (!gameId) {
-    navigate('/home', { replace: true });
-    return;
-  }
-
   const {
     data: gameData,
     isLoading: isGameDataLoading,
     error: errorFetchingGameData,
-  } = useGetGameByIdQuery(gameId);
+  } = useGetGameByIdQuery(gameId!, { skip: !gameId });
+
+  if (!gameId) {
+    navigate('/home', { replace: true });
+    return;
+  }
 
   if (isGameDataLoading) {
     return <LoadingState />;
