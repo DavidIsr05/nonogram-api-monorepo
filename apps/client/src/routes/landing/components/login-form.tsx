@@ -21,7 +21,6 @@ export const LoginForm: React.FC = () => {
     e.preventDefault();
 
     if (userSignInDto.password.trim() !== '' && userSignInDto.personalNumber) {
-      //TODO check that password gets stored/checked correctly
       try {
         const result = await loginQuery(userSignInDto).unwrap();
 

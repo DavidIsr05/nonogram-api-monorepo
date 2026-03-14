@@ -2,6 +2,7 @@ import {
   CreateNonogramRequestType,
   GenerateNonogramType,
   GeneratedNonogramResponseType,
+  NonogramLeadersResponseType,
   NonogramResponseType,
 } from '@nonogram-api-monorepo/types';
 import { api } from './api';
@@ -29,7 +30,7 @@ export const nonogramApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Nonogram'],
     }),
-    getNonogramLeaders: build.query<[], string>({
+    getNonogramLeaders: build.query<NonogramLeadersResponseType, string>({
       query: (nonogramId) => ({
         url: `nonogram/leaders/${nonogramId}`,
         method: 'GET',

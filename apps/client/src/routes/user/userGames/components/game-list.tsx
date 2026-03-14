@@ -69,11 +69,11 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
             </span>
             <span className="text-dividorGray">|</span>
             <span className="text-center" role="img" aria-label="hints emoji">
-              💡 : {3 - hints}/3
+              💡 : {hints}/3
             </span>
             <span className="text-dividorGray">|</span>
             <span className="text-center" role="img" aria-label="size emoji">
-              📐 {DIFFICULTY_SIZE[nonogram.difficulty]}
+              📐 : {DIFFICULTY_SIZE[nonogram.difficulty]}
             </span>
           </li>
         ))

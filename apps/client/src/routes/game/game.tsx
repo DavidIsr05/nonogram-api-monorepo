@@ -2,7 +2,7 @@ import React from 'react';
 import { ErrorState, Header, LoadingState } from '../../components';
 import { useGetGameByIdQuery, useUpdateGameMutation } from '../../store/api';
 import { useParams } from 'react-router-dom';
-import { NonogramLeaderboard } from './components';
+import { GameBoard, NonogramLeaderboard } from './components';
 import { Like, Star } from '../../assets/images';
 import { NonogramDifficultiesEnumValues } from '@nonogram-api-monorepo/types';
 
@@ -18,7 +18,7 @@ export const Game: React.FC = () => {
     data: gameData,
     isLoading: isGameDataLoading,
     error: errorFetchingGameData,
-  } = useGetGameByIdQuery(gameId); //TODO lint error cause of hook call not in the sam eorder
+  } = useGetGameByIdQuery(gameId);
 
   if (isGameDataLoading) {
     return <LoadingState />;
@@ -49,7 +49,7 @@ export const Game: React.FC = () => {
   return (
     <div className="w-screen h-screen bg-graishWhiteBackground items-center flex flex-col">
       <Header />
-      <div className="flex flex-col w-full h-full p-3">
+      <div className="flex flex-col w-full h-[91%] p-3">
         <div className="grid grid-cols-[1fr_1fr_1fr] w-full text-4xl">
           <span className=" font-bold">{gameData?.nonogramName}</span>
           <div className="flex flex-row justify-self-center">
@@ -71,8 +71,9 @@ export const Game: React.FC = () => {
             <Like className={`${likeButtonFill}`} />
           </button>
         </div>
-        <div className="h-[95%] w-full p-3">
+        <div className="h-[95%] w-full p-3 flex flex-row justify-around">
           <NonogramLeaderboard nonogramId={gameData!.nonogramId} />
+          <GameBoard {...gameData!} />
         </div>
       </div>
     </div>

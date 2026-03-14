@@ -10,3 +10,4 @@ export * from './exception.type';
 export * from './game-response-dto.type';
 export * from './game-with-clues-response-dto.type';
 export * from './check-nonogram-response-dto.type';
+export * from './nonogram-leaders-response.type';
