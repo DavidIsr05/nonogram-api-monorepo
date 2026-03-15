@@ -18,7 +18,7 @@ export const GameBoard: React.FC<Props> = ({
 }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
 
-  const AVALIABLE_PIXELS_COUNT = 650;
+  const AVALIABLE_PIXELS_COUNT = 600;
 
   const tileSize = Math.floor(AVALIABLE_PIXELS_COUNT / colClues.length);
 
@@ -35,10 +35,16 @@ export const GameBoard: React.FC<Props> = ({
 
   const gameBoardTableBody = uncompletedNonogram!.map((row, rowIndex) => (
     <tr key={rowIndex}>
-      <td className="pr-1">
-        <div className="flex flex-row justify-end leading-none text-xs gap-1">
+      <td className="p-0 border-r border-t border-b border-absoluteBlack/30 border-r-absoluteBlack">
+        <div className="flex flex-row justify-end">
           {rowClues[rowIndex].map((rowClue, rowClueIndex) => (
-            <span key={rowClueIndex}>{rowClue}</span>
+            <div
+              key={rowClueIndex}
+              style={{ width: tileSize, height: tileSize }}
+              className="border-l border-absoluteBlack/30 flex items-center justify-center text-xs"
+            >
+              {rowClue}
+            </div>
           ))}
         </div>
       </td>
@@ -59,7 +65,7 @@ export const GameBoard: React.FC<Props> = ({
 
   return (
     <div className="flex flex-row w-[60%] h-[90%] border rounded-xl shadow-xl justify-around items-center">
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center border border-absoluteBlack">
         <table
           onMouseLeave={() => setIsMouseDown(false)}
           onMouseUp={() => setIsMouseDown(false)}
@@ -71,11 +77,17 @@ export const GameBoard: React.FC<Props> = ({
                 <td
                   key={colIndex}
                   style={{ width: tileSize }}
-                  className="align-bottom pb-1"
+                  className="p-0 align-bottom border-r border-l border-b border-b-absoluteBlack border-absoluteBlack/30"
                 >
-                  <div className="flex flex-col items-center leading-none text-xs gap-1">
+                  <div className="flex flex-col items-end">
                     {col.map((colClue, colClueIndex) => (
-                      <span key={colClueIndex}>{colClue}</span>
+                      <div
+                        key={colClueIndex}
+                        style={{ width: tileSize, height: tileSize }}
+                        className="border-t border-absoluteBlack/30 flex items-center justify-center text-xs"
+                      >
+                        {colClue}
+                      </div>
                     ))}
                   </div>
                 </td>
