@@ -1,3 +1,8 @@
+//
+//
+// UNUSED FILE. //TODO either delete or use
+//
+//
 import { TileStates } from '@nonogram-api-monorepo/types';
 import React, { useState } from 'react';
 

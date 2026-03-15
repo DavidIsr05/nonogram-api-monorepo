@@ -1,5 +1,5 @@
 import React from 'react';
-import { Star } from '../assets/images';
+import { Star } from '../assets';
 import {
   NonogramDifficultiesEnumType,
   NonogramDifficultiesEnumValues,

@@ -41,7 +41,7 @@ export const UserProfile: React.FC = () => {
   }
 
   return (
-    <div className="w-screen h-screen bg-graishWhiteBackground">
+    <div className="w-screen h-screen bg-lightGrayBackground">
       <Header />
       <div className="h-[91%] w-[95%] justify-self-center flex flex-col items-center justify-around">
         <div className="flex flex-row w-[90%] h-[40%]">

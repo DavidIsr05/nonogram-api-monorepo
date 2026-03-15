@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Profile, Games, Logo } from '../assets/images';
+import { Profile, Games, Logo } from '../assets';
 
 export const Header: React.FC = () => {
   return (

@@ -3,7 +3,8 @@ import {
   TileStates,
 } from '@nonogram-api-monorepo/types';
 import React, { useState } from 'react';
-import { Hint, Timer, Mistakes, Restart } from '../../../assets/images';
+import { Hint, Timer, Mistakes, Restart } from '../../../assets';
+import { HINTS_AND_MISTAKES_THRESHOLD } from '../../../constants';
 
 type Props = GameWithCluesResponseType;
 
@@ -32,11 +33,34 @@ export const GameBoard: React.FC<Props> = ({
     }
   };
 
+  const gameBoardTableBody = uncompletedNonogram!.map((row, rowIndex) => (
+    <tr key={rowIndex}>
+      <td className="pr-1">
+        <div className="flex flex-row justify-end leading-none text-xs gap-1">
+          {rowClues[rowIndex].map((rowClue, rowClueIndex) => (
+            <span key={rowClueIndex}>{rowClue}</span>
+          ))}
+        </div>
+      </td>
+      {row.map((tile, colIndex) => (
+        <td
+          key={colIndex}
+          style={{ width: tileSize, height: tileSize }}
+          className={`border cursor-pointer ${
+            tile === TileStates.FILLED ? 'bg-absoluteBlack' : 'bg-absoluteWhite'
+          }`}
+          onMouseDown={() => handleMouseDown(rowIndex, colIndex, tile)}
+          onMouseOver={() => handleMouseOver(rowIndex, colIndex)}
+          onMouseUp={() => setIsMouseDown(false)}
+        />
+      ))}
+    </tr>
+  ));
+
   return (
     <div className="flex flex-row w-[60%] h-[90%] border rounded-xl shadow-xl justify-around items-center">
       <div className="flex items-center justify-center">
         <table
-          className=""
           onMouseLeave={() => setIsMouseDown(false)}
           onMouseUp={() => setIsMouseDown(false)}
         >
@@ -58,35 +82,7 @@ export const GameBoard: React.FC<Props> = ({
               ))}
             </tr>
           </thead>
-          <tbody>
-            {uncompletedNonogram!.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                <td className="pr-1">
-                  <div className="flex flex-row justify-end leading-none text-xs gap-1">
-                    {rowClues[rowIndex].map((rowClue, rowClueIndex) => (
-                      <span key={rowClueIndex}>{rowClue}</span>
-                    ))}
-                  </div>
-                </td>
-                {row.map((tile, colIndex) => (
-                  <td
-                    key={colIndex}
-                    style={{ width: tileSize, height: tileSize }}
-                    className={`border cursor-pointer ${
-                      tile === TileStates.FILLED
-                        ? 'bg-absoluteBlack'
-                        : 'bg-absoluteWhite'
-                    }`}
-                    onMouseDown={() =>
-                      handleMouseDown(rowIndex, colIndex, tile)
-                    }
-                    onMouseOver={() => handleMouseOver(rowIndex, colIndex)}
-                    onMouseUp={() => setIsMouseDown(false)}
-                  />
-                ))}
-              </tr>
-            ))}
-          </tbody>
+          <tbody>{gameBoardTableBody}</tbody>
         </table>
       </div>
 
@@ -94,13 +90,16 @@ export const GameBoard: React.FC<Props> = ({
         <button>
           <Restart />
         </button>
-        <button className="flex flex-row" disabled={hints === 3}>
+        <button
+          className="flex flex-row"
+          disabled={hints === HINTS_AND_MISTAKES_THRESHOLD}
+        >
           <Hint />
-          {hints}/3
+          {hints}/{HINTS_AND_MISTAKES_THRESHOLD}
         </button>
         <span className="flex flex-row items-center">
           <Mistakes />
-          {mistakes}/3
+          {mistakes}/{HINTS_AND_MISTAKES_THRESHOLD}
         </span>
         <span className="flex flex-row items-center">
           <Timer />

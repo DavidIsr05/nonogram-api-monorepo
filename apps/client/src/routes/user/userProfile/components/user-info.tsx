@@ -1,5 +1,5 @@
 import { ExceptionType, UpdateUserType } from '@nonogram-api-monorepo/types';
-import { ERROR_TEXT_BASED_ON_EXCEPTION } from '../../../../constants';
+import { HTTP_ERROR_MESSAGES } from '../../../../constants';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { toast } from 'sonner';
 import { useUpdateUserMutation } from '../../../../store/api';
@@ -10,7 +10,7 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
   const [editUserDto, setEditUserDto] = useState<UpdateUserType>({
     id,
     username,
-    password: '',
+    password: '        ',
   });
 
   const [updateUser] = useUpdateUserMutation();
@@ -19,7 +19,7 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
     const { name, value } = e.target;
     setEditUserDto((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: name === 'password' && value.trim() === '' ? '' : value,
     }));
   };
 
@@ -53,10 +53,10 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
     } catch (error) {
       const e = error as ExceptionType;
 
-      if (ERROR_TEXT_BASED_ON_EXCEPTION[e.status]) {
-        toast.error(ERROR_TEXT_BASED_ON_EXCEPTION[e.status]);
+      if (HTTP_ERROR_MESSAGES[e.status]) {
+        toast.error(HTTP_ERROR_MESSAGES[e.status]);
       } else {
-        toast.error('error');
+        toast.error('error acuared while updating useer information');
       }
     }
   };

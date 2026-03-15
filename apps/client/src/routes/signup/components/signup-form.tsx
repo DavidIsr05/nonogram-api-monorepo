@@ -3,7 +3,7 @@ import { useLazySignupQuery } from '../../../store/api';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { ERROR_TEXT_BASED_ON_EXCEPTION } from '../../../constants';
+import { HTTP_ERROR_MESSAGES } from '../../../constants';
 
 export const SignupForm: React.FC = () => {
   const [userSignupDto, setUserSignupDto] = useState<CreateUserType>({
@@ -29,8 +29,8 @@ export const SignupForm: React.FC = () => {
       } catch (error) {
         const e = error as ExceptionType;
 
-        if (ERROR_TEXT_BASED_ON_EXCEPTION[e.status]) {
-          toast.error(ERROR_TEXT_BASED_ON_EXCEPTION[e.status]);
+        if (HTTP_ERROR_MESSAGES[e.status]) {
+          toast.error(HTTP_ERROR_MESSAGES[e.status]);
         } else {
           toast.error('error');
         }

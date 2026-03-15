@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trophy } from '../../../assets/images';
+import { Trophy } from '../../../assets';
 import { useGetNonogramLeadersQuery } from '../../../store/api';
 import { LoadingState, ErrorState } from '../../../components';
 import {
