@@ -59,7 +59,7 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
           ({ id, name, likeCount, gameCount, difficulty, user }) => (
             <li
               key={id}
-              className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
+              className="cursor-pointer grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
               onClick={() => handleNonogramClick(id)}
             >
               <span className="font-semibold text-center">

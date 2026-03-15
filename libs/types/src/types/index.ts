@@ -13,3 +13,4 @@ export * from './check-nonogram-response-dto.type';
 export * from './nonogram-leaders-response.type';
 export * from './user-stats.type';
 export * from './nonogram-leaders-response-game-object.type';
+export * from './finished-games-response.type';

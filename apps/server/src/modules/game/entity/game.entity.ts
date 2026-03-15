@@ -37,10 +37,6 @@ export class Game extends Model<Partial<Game>> {
 
   @Default(0)
   @Column({ type: DataType.INTEGER, allowNull: false })
-  hints: number;
-
-  @Default(0)
-  @Column({ type: DataType.INTEGER, allowNull: false })
   mistakes: number;
 
   @Default(false)

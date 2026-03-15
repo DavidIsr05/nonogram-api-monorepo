@@ -53,7 +53,7 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
   );
 
   return (
-    <div className="flex flex-col h-[90%] w-[25%] border items-center bg-globalLeaderboardsBackground rounded-xl shadow-xl">
+    <div className="flex flex-col h-[90%] w-[20%] border items-center bg-globalLeaderboardsBackground rounded-xl shadow-xl">
       <Trophy className="aspect-square m-7" />
       <ul className="list-inside w-[95%] h-[80%]">{leaders}</ul>
     </div>

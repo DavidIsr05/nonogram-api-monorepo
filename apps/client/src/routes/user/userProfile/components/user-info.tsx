@@ -62,7 +62,7 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-5 w-[50%] h-full border-r border-r-absoluteBlack">
+    <div className="flex flex-col items-center gap-5 w-[50%] h-[80%] border-r border-r-absoluteBlack">
       <span className="text-xl">Update user info:</span>
       <form
         onSubmit={handleSubmit}

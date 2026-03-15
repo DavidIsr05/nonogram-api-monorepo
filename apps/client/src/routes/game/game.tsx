@@ -53,7 +53,7 @@ export const Game: React.FC = () => {
       <Header />
       <div className="flex flex-col w-full h-[91%] p-3">
         <div className="grid grid-cols-[1fr_1fr_1fr] w-full text-4xl px-10">
-          <span className=" font-bold">{gameData?.nonogramName}</span>
+          <span className="font-bold">{gameData?.nonogramName}</span>
           <div className="flex flex-row justify-self-center">
             {Object.values(NonogramDifficultiesEnumValues.enum).map(
               (_, difficultyIndex) => (
@@ -74,7 +74,7 @@ export const Game: React.FC = () => {
             <Like className={`${likeButtonFill}`} />
           </button>
         </div>
-        <div className="h-[95%] w-full p-3 flex flex-row justify-around">
+        <div className="h-[95%] w-full p-3 flex flex-row ">
           <NonogramLeaderboard nonogramId={gameData!.nonogramId} />
           <GameBoard {...gameData!} />
         </div>

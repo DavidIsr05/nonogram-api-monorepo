@@ -3,7 +3,6 @@ import { z } from 'zod';
 export enum TileStates {
   EMPTY = 'EMPTY',
   FILLED = 'FILLED',
-  HINT = 'HINT',
   MISTAKE = 'MISTAKE',
   MARKED = 'MARKED',
 }

@@ -6,7 +6,6 @@ export const gamesForEachNonogramSchema = z.object({
     z.object({
       timer: z.number(),
       mistakes: z.number(),
-      hints: z.number(),
       user: z.object({
         username: z.string(),
       }),

@@ -3,8 +3,8 @@ import {
   TileStates,
 } from '@nonogram-api-monorepo/types';
 import React, { useState } from 'react';
-import { Hint, Timer, Mistakes, Restart } from '../../../assets';
-import { HINTS_AND_MISTAKES_THRESHOLD } from '../../../constants';
+import { Timer, Mistakes, Restart } from '../../../assets';
+import { MISTAKES_THRESHOLD } from '../../../constants';
 
 type Props = GameWithCluesResponseType;
 
@@ -64,7 +64,7 @@ export const GameBoard: React.FC<Props> = ({
   ));
 
   return (
-    <div className="flex flex-row w-[60%] h-[90%] border rounded-xl shadow-xl justify-around items-center">
+    <div className="flex flex-col w-[60%] h-[90%] items-center">
       <div className="flex items-center justify-center border border-absoluteBlack">
         <table
           onMouseLeave={() => setIsMouseDown(false)}
@@ -98,20 +98,13 @@ export const GameBoard: React.FC<Props> = ({
         </table>
       </div>
 
-      <div className="flex flex-col h-[85%] items-center justify-between p-5 text-4xl">
+      <div className="flex flex-row h-[85%] items-center gap-28 p-5 text-4xl">
         <button>
           <Restart />
         </button>
-        <button
-          className="flex flex-row"
-          disabled={hints === HINTS_AND_MISTAKES_THRESHOLD}
-        >
-          <Hint />
-          {hints}/{HINTS_AND_MISTAKES_THRESHOLD}
-        </button>
         <span className="flex flex-row items-center">
           <Mistakes />
-          {mistakes}/{HINTS_AND_MISTAKES_THRESHOLD}
+          {mistakes}/{MISTAKES_THRESHOLD}
         </span>
         <span className="flex flex-row items-center">
           <Timer />
