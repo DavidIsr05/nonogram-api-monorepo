@@ -5,7 +5,7 @@ import { setUserId } from '../../../store/slices';
 import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { ERROR_TEXT_BASED_ON_EXCEPTION } from '../../../constants';
+import { HTTP_ERROR_MESSAGES } from '../../../constants';
 
 export const LoginForm: React.FC = () => {
   const [userSignInDto, setUserSignInDto] = useState<UserSignInType>({
@@ -21,7 +21,6 @@ export const LoginForm: React.FC = () => {
     e.preventDefault();
 
     if (userSignInDto.password.trim() !== '' && userSignInDto.personalNumber) {
-      //TODO check that password gets stored/checked correctly
       try {
         const result = await loginQuery(userSignInDto).unwrap();
 
@@ -32,8 +31,8 @@ export const LoginForm: React.FC = () => {
       } catch (error) {
         const e = error as ExceptionType;
 
-        if (ERROR_TEXT_BASED_ON_EXCEPTION[e.status]) {
-          toast.error(ERROR_TEXT_BASED_ON_EXCEPTION[e.status]);
+        if (HTTP_ERROR_MESSAGES[e.status]) {
+          toast.error(HTTP_ERROR_MESSAGES[e.status]);
         } else {
           toast.error('error');
         }

@@ -89,7 +89,7 @@ export class GameService {
           model: Nonogram,
           attributes: ['difficulty', 'name'],
         },
-        attributes: ['timer', 'hints', 'mistakes'],
+        attributes: ['id', 'timer', 'hints', 'mistakes'],
       });
       this.logger.log('Got in progress games successfully', { inProgresGames });
       return inProgresGames;
@@ -107,7 +107,7 @@ export class GameService {
     }
     try {
       const finishedGames = await this.gameModel.findAll({
-        where: { isFinished: true },
+        where: { isFinished: true, userId },
       });
       this.logger.log('Got finished games successfully', { finishedGames });
       return finishedGames;
@@ -150,6 +150,8 @@ export class GameService {
     return {
       ...foundGame.toJSON(),
       ...this.returnRowAndColClues(foundNonogram.nonogram),
+      nonogramName: foundNonogram.name,
+      nonogramDifficulty: foundNonogram.difficulty,
     };
   }
 

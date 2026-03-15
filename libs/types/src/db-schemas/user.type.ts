@@ -29,7 +29,7 @@ export const CreateUserSchema = UserSchema.omit({
 
 export const UpdateUserSchema = UserSchema.partial()
   .required({ id: true })
-  .omit({ isAdmin: true })
+  .omit({ isAdmin: true, personalNumber: true })
   .strict();
 
 export type UserType = z.infer<typeof UserSchema>;

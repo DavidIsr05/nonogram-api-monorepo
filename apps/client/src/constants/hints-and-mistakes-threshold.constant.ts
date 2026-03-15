@@ -1,0 +1,1 @@
+export const HINTS_AND_MISTAKES_THRESHOLD = 3;

@@ -9,13 +9,23 @@ import {
   Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { Public, CurrentUser, CreateUserDto, UpdateUserDto } from '../../common';
+import {
+  Public,
+  CurrentUser,
+  CreateUserDto,
+  UpdateUserDto,
+} from '../../common';
 import { User } from './entity/user.entity';
 import { ZodValidationPipe } from 'nestjs-zod';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
+
+  @Get('get-user-stats')
+  getUserStats(@CurrentUser() currentUser: User) {
+    return this.userService.getUserStats(currentUser);
+  }
 
   @Get(':id')
   getUserById(

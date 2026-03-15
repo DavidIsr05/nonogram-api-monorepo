@@ -14,10 +14,10 @@ import {
   CreateNonogramRequestType,
   GeneratedNonogramResponseType,
   NonogramResponseSchema,
-  TileStatesEnumValues,
   GenerateNonogramType,
   GamesForEachNonogramType,
   NonogramResponseType,
+  NonogramDifficulties,
 } from '@nonogram-api-monorepo/types';
 import { Game } from '../game/entity/game.entity';
 import { User } from '../user/entity/user.entity';
@@ -126,7 +126,7 @@ export class NonogramService {
   getNonogramSize(nonogram) {
     const DEFAULT_NONOGRAM_SIZE = 20;
     const sizeFactorBasedOnDifficulty = Object.keys(
-      TileStatesEnumValues
+      NonogramDifficulties
     ).indexOf(nonogram.difficulty);
 
     return DEFAULT_NONOGRAM_SIZE + 10 * sizeFactorBasedOnDifficulty;
@@ -378,7 +378,7 @@ export class NonogramService {
 
   async getNonogramLeaders(nonogramId, limit) {
     try {
-      const nonogramLeaders = await this.nonogramModel.findAll({
+      const nonogramLeaders = await this.nonogramModel.findOne({
         include: [
           {
             model: Game,
@@ -439,6 +439,7 @@ export class NonogramService {
 
       const leaderboard = Object.entries(usersScores)
         .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
+        .slice(0, 10)
         .map(([username, score]) => ({ username, score }));
 
       this.logger.log('Got global leaders successfully', { leaderboard });

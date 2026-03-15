@@ -2,6 +2,7 @@ import {
   CreateUserType,
   UpdateUserType,
   UserResponseType,
+  UserStatsType,
 } from '@nonogram-api-monorepo/types';
 import { api } from './api';
 
@@ -21,12 +22,20 @@ export const userApi = api.injectEndpoints({
       }),
       providesTags: ['User'],
     }),
-    updateUser: build.query<UserResponseType, UpdateUserType>({
+    getUserStats: build.query<UserStatsType, void>({
+      query: () => ({
+        url: 'user/get-user-stats',
+        method: 'GET',
+      }),
+      providesTags: ['User'],
+    }),
+    updateUser: build.mutation<UserResponseType, UpdateUserType>({
       query: (body) => ({
         url: 'user',
         method: 'PATCH',
         body,
       }),
+      invalidatesTags: ['User'],
     }),
     delete: build.query<boolean, string>({
       query: (userId) => ({
@@ -40,6 +49,7 @@ export const userApi = api.injectEndpoints({
 export const {
   useLazySignupQuery,
   useGetUserByIdQuery,
-  useLazyUpdateUserQuery,
+  useGetUserStatsQuery,
+  useUpdateUserMutation,
   useLazyDeleteQuery,
 } = userApi;

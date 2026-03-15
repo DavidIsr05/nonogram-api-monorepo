@@ -13,7 +13,7 @@ import {
 import { RootState } from '../../../store/store';
 import { toast } from 'sonner';
 import { DEFAULT_FORM, DIM_FACTOR_OPTIONS } from '../../../constants';
-import { PlusCreate, ImagePlaceholder, Upload } from '../../../assets/images';
+import { PlusCreate, ImagePlaceholder, Upload } from '../../../assets';
 
 export const CreateNonogramPopup: React.FC = () => {
   const [open, setOpen] = useState(false);
