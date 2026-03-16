@@ -21,6 +21,12 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
     return null;
   };
 
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
   return (
     <Carousel className="w-[50%]">
       <CarouselContent>
@@ -42,7 +48,7 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
                   />
                   <div className="flex flex-row gap-5">
                     <span className="font-bold">{nonogram.name}</span>
-                    <span>⏱️ : {timer}</span>
+                    <span>⏱️ : {formatTime(timer)}</span>
                     <span>❌ : {mistakes}</span>
                   </div>
                 </CardContent>
