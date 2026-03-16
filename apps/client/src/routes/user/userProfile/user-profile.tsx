@@ -8,12 +8,10 @@ import {
   useGetUserByIdQuery,
   useGetUserStatsQuery,
 } from '../../../store/api';
-import { useNavigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
 
 export const UserProfile: React.FC = () => {
   const userId = useSelector((state: RootState) => state.user.userId);
-  const navigate = useNavigate();
 
   const {
     data: userData,
@@ -35,11 +33,6 @@ export const UserProfile: React.FC = () => {
     isError: isErrorWhileFetchingFinishedGames,
     error: finishedGamesError,
   } = useGetFinishedGamesQuery(userId!, { skip: !userId });
-
-  if (!userId) {
-    navigate('/', { replace: true });
-    return null;
-  }
 
   if (isUserDataLoading || isUserStatsLoading || isFinishedGamesLoading) {
     return <LoadingState />;

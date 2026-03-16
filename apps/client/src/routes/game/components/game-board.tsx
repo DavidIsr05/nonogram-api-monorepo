@@ -14,7 +14,6 @@ export const GameBoard: React.FC<Props> = ({
   uncompletedNonogram,
   timer,
   mistakes,
-  hints,
 }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
 

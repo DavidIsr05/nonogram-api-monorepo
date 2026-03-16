@@ -22,11 +22,6 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
     error,
   } = useGetInProgresGamesQuery(userId ?? '', { skip: !userId });
 
-  if (!userId) {
-    navigate('/', { replace: true });
-    return null;
-  }
-
   if (isLoading) {
     return <LoadingState />;
   }

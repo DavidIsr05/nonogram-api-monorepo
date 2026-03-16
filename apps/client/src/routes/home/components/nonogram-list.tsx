@@ -26,11 +26,6 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
     error,
   } = useGetUnplayedNonogramsQuery(userId ?? '', { skip: !userId });
 
-  if (!userId) {
-    navigate('/', { replace: true });
-    return null;
-  }
-
   if (isLoading) {
     return <LoadingState />;
   }
