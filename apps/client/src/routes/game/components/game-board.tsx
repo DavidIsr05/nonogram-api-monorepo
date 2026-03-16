@@ -2,7 +2,7 @@ import {
   GameWithCluesResponseType,
   TileStates,
 } from '@nonogram-api-monorepo/types';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Timer, Mistakes, Restart } from '../../../assets';
 import { MISTAKES_THRESHOLD } from '../../../constants';
 import { useUpdateGameMutation } from '../../../store/api';
@@ -19,10 +19,28 @@ export const GameBoard: React.FC<Props> = ({
 }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [callUpdateGameQuery] = useUpdateGameMutation();
+  const [elapsedTime, setElapsedTime] = useState(timer);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setElapsedTime((prev) => prev + 1);
+    }, 1000);
+
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
 
   const AVALIABLE_PIXELS_COUNT = 600;
 
   const tileSize = Math.floor(AVALIABLE_PIXELS_COUNT / colClues.length);
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
 
   const handleMouseDown = (row: number, col: number, tile: TileStates) => {
     setIsMouseDown(true);
@@ -114,7 +132,7 @@ export const GameBoard: React.FC<Props> = ({
         </span>
         <span className="flex flex-row items-center">
           <Timer />
-          {timer}
+          {formatTime(elapsedTime)}
         </span>
       </div>
     </div>

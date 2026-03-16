@@ -26,6 +26,12 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
     return <ErrorState error={error} />;
   }
 
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
   const leaders = nonogramLeaders ? (
     nonogramLeaders.games.map(({ timer, user }, position) => {
       const positionSymbol = POSITION_SYMBOLS[position] ?? position + 1;
@@ -41,7 +47,7 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
           <div className="text-xl">{positionSymbol}</div>
           <div className="text-2xl">{user.username}</div>
           <span className="text-xl" role="img" aria-label="timer emoji">
-            ⏱️: {timer}
+            ⏱️: {formatTime(timer)}
           </span>
         </li>
       );

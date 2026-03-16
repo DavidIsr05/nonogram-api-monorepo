@@ -66,34 +66,43 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
       <span className="text-xl">Update user info:</span>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-[2.5rem] items-center w-full"
+        className="flex flex-col gap-5 items-center w-full"
       >
-        <input
-          value={personalNumber}
-          name="personalNumber"
-          type="text"
-          className="rounded-lg border border-absoluteBlack w-[40%] h-9 p-3"
-          disabled={true}
-        />
-        <input
-          value={editUserDto.username}
-          name="username"
-          onChange={handleChange}
-          type="text"
-          placeholder="Username:"
-          className="rounded-lg border border-absoluteBlack w-[40%] h-9 p-3"
-        />
-        <input
-          value={editUserDto.password}
-          name="password"
-          onChange={handleChange}
-          type="password"
-          placeholder="Password:"
-          className="rounded-lg border border-absoluteBlack w-[40%] h-9 p-3"
-        />
+        <div className="flex flex-col items-center w-[40%]">
+          <label className="self-start text-sm">Personal Number:</label>
+          <input
+            value={personalNumber}
+            name="personalNumber"
+            type="text"
+            className="rounded-lg border border-absoluteBlack w-full h-9 p-3"
+            disabled={true}
+          />
+        </div>
+        <div className="flex flex-col items-center w-[40%]">
+          <label className="self-start text-sm">Username:</label>
+          <input
+            value={editUserDto.username}
+            name="username"
+            onChange={handleChange}
+            type="text"
+            placeholder="Username:"
+            className="rounded-lg border border-absoluteBlack w-full h-9 p-3"
+          />
+        </div>
+        <div className="flex flex-col items-center w-[40%]">
+          <label className="self-start text-sm">Password:</label>
+          <input
+            value={editUserDto.password}
+            name="password"
+            onChange={handleChange}
+            type="password"
+            placeholder="Password:"
+            className="rounded-lg border border-absoluteBlack w-full h-9 p-3"
+          />
+        </div>
         <button
           type="submit"
-          className="bg-signupPageOrange w-[10%] h-9 border border-absoluteBlack rounded-lg text-base"
+          className="bg-buttonGreen w-[10%] h-9 border border-absoluteBlack rounded-lg text-base"
         >
           Update
         </button>

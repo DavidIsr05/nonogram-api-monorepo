@@ -28,7 +28,7 @@ export class AuthController {
 
     res.cookie('access_token', access_token, {
       httpOnly: true,
-      secure: false, //TODO change to true in prod
+      secure: true,
       sameSite: 'lax',
       maxAge: 3600000,
     });

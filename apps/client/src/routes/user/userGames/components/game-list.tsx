@@ -15,6 +15,12 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
   const userId = useSelector((state: RootState) => state.user.userId);
   const navigate = useNavigate();
 
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+  };
+
   const {
     data: games,
     isLoading,
@@ -51,9 +57,8 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
             <span className="text-center font-bold">{nonogram.name}</span>
             <span className="text-dividorGray">|</span>
             <span className="text-center" role="img" aria-label="timer emoji">
-              ⏱️ : {timer}
+              ⏱️ : {formatTime(timer)}
             </span>
-            {/* //TODO need to fix time/format */}
             <span className="text-dividorGray">|</span>
             <span
               className="text-center"
