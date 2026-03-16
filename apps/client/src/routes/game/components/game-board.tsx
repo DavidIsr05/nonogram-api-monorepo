@@ -5,8 +5,9 @@ import {
 import React, { useState } from 'react';
 import { Timer, Mistakes, Restart } from '../../../assets';
 import { MISTAKES_THRESHOLD } from '../../../constants';
+import { useUpdateGameMutation } from '../../../store/api';
 
-type Props = GameWithCluesResponseType;
+type Props = GameWithCluesResponseType & { gameId: string };
 
 export const GameBoard: React.FC<Props> = ({
   rowClues,
@@ -14,8 +15,10 @@ export const GameBoard: React.FC<Props> = ({
   uncompletedNonogram,
   timer,
   mistakes,
+  gameId,
 }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
+  const [callUpdateGameQuery] = useUpdateGameMutation();
 
   const AVALIABLE_PIXELS_COUNT = 600;
 
@@ -30,6 +33,10 @@ export const GameBoard: React.FC<Props> = ({
     if (isMouseDown) {
       console.log(row, col);
     }
+  };
+
+  const handleResetButtonOnClick = () => {
+    callUpdateGameQuery({ id: gameId, timer: 0 });
   };
 
   const gameBoardTableBody = uncompletedNonogram!.map((row, rowIndex) => (
@@ -98,7 +105,7 @@ export const GameBoard: React.FC<Props> = ({
       </div>
 
       <div className="flex flex-row h-[85%] items-center gap-28 p-5 text-4xl">
-        <button>
+        <button onClick={handleResetButtonOnClick}>
           <Restart />
         </button>
         <span className="flex flex-row items-center">

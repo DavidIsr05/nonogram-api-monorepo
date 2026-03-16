@@ -6,11 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Game } from './entity/game.entity';
-import {
-  GameStatus,
-  TileStates,
-  TileStatesEnumType,
-} from '@nonogram-api-monorepo/types';
+import { GameStatus, TileStates } from '@nonogram-api-monorepo/types';
 import { NonogramService } from '../nonogram';
 import {
   ForbiddenGameException,
@@ -28,19 +24,11 @@ export class GameService {
   private readonly logger = new Logger(GameService.name);
 
   async createGame(currentUser, createGameDto) {
-    const currentNonogram = await this.nonogramModel.getNonogramById(
-      currentUser,
-      createGameDto.nonogramId
-    );
-
-    const nonogramSize: number = await this.nonogramModel.getNonogramSize(
-      currentNonogram
-    );
-
-    const blankUncompletedNonogram: TileStatesEnumType[][] = Array.from(
-      { length: nonogramSize },
-      () => new Array(nonogramSize).fill(TileStates.EMPTY)
-    );
+    const blankUncompletedNonogram =
+      await this.generateEmptyUncompletedNonogram(
+        currentUser,
+        createGameDto.nonogramId
+      );
 
     createGameDto = {
       ...createGameDto,
@@ -205,11 +193,42 @@ export class GameService {
     }
   }
 
+  async generateEmptyUncompletedNonogram(
+    currentUser,
+    nonogramId
+  ): Promise<TileStates[][]> {
+    const currentNonogram = await this.nonogramModel.getNonogramById(
+      currentUser,
+      nonogramId
+    );
+
+    const nonogramSize: number = await this.nonogramModel.getNonogramSize(
+      currentNonogram
+    );
+
+    return Array.from({ length: nonogramSize }, () =>
+      new Array(nonogramSize).fill(TileStates.EMPTY)
+    );
+  }
+
   async updateGame(currentUser, updateGameDto) {
     const game = await this.getGameById(currentUser, updateGameDto.id);
 
     if (updateGameDto.isLiked && !game.isFinished) {
       throw new LikingUnfinishedGameException();
+    }
+
+    if (updateGameDto.timer === 0) {
+      updateGameDto = {
+        ...updateGameDto,
+        mistakes: 0,
+        isFinished: false,
+        isLiked: false,
+        uncompletedNonogram: await this.generateEmptyUncompletedNonogram(
+          currentUser,
+          game.nonogramId
+        ),
+      };
     }
 
     game.set({

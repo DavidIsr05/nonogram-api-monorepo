@@ -76,7 +76,7 @@ export const Game: React.FC = () => {
         </div>
         <div className="h-[95%] w-full p-3 flex flex-row ">
           <NonogramLeaderboard nonogramId={gameData!.nonogramId} />
-          <GameBoard {...gameData!} />
+          <GameBoard {...gameData!} gameId={gameId} />
         </div>
       </div>
     </div>
