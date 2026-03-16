@@ -85,7 +85,7 @@ export const SignupForm: React.FC = () => {
         />
         <button
           type="submit"
-          className="bg-signupPageOrange w-1/4 h-9 border border-absoluteBlack rounded-lg"
+          className="bg-signupPageOrange w-1/4 h-9 border border-absoluteBlack rounded-lg hover:scale-105 active:scale-95 transition-transform"
         >
           Sign up
         </button>

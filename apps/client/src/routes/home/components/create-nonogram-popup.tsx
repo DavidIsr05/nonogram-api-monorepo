@@ -90,7 +90,11 @@ export const CreateNonogramPopup: React.FC = () => {
 
   return (
     <div>
-      <button type="button" onClick={() => setOpen(true)}>
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="hover:scale-105 active:scale-95 transition-transform"
+      >
         <PlusCreate className="w-[3rem] aspect-square" />
       </button>
 
@@ -136,7 +140,7 @@ export const CreateNonogramPopup: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex-1 flex items-center justify-center gap-1 border rounded-lg py-1.5 text-sm text-buttonTextGray hover:bg-simpleGray"
+                  className="flex-1 flex items-center justify-center gap-1 border rounded-lg py-1.5 text-sm text-buttonTextGray hover:bg-simpleGray hover:scale-105 active:scale-95 transition-transform"
                 >
                   <Upload className="w-4 h-4" />
                   Upload Image
@@ -145,7 +149,7 @@ export const CreateNonogramPopup: React.FC = () => {
                   type="button"
                   disabled={!form.imageBase64 || isGenerating}
                   onClick={handleGenerate}
-                  className="flex-1 border rounded-lg py-1.5 text-sm text-buttonTextGray hover:bg-simpleGray disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex-1 border rounded-lg py-1.5 text-sm text-buttonTextGray hover:bg-simpleGray hover:scale-105 active:scale-95 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {isGenerating ? 'Generating...' : 'Generate Preview'}
                 </button>
@@ -203,7 +207,7 @@ export const CreateNonogramPopup: React.FC = () => {
               <button
                 type="button"
                 onClick={handleReset}
-                className="px-5 py-2 border rounded-lg text-sm hover:bg-simpleGray"
+                className="px-5 py-2 border rounded-lg text-sm hover:bg-simpleGray hover:scale-105 active:scale-95 transition-transform"
               >
                 Reset
               </button>
@@ -211,7 +215,7 @@ export const CreateNonogramPopup: React.FC = () => {
                 type="button"
                 disabled={!generated || !name || isCreating}
                 onClick={handleCreate}
-                className="px-5 py-2 bg-buttonGreen text-absoluteWhite rounded-lg text-sm hover:bg-buttonHoverGreen disabled:opacity-40 disabled:cursor-not-allowed"
+                className="px-5 py-2 bg-buttonGreen text-absoluteWhite rounded-lg text-sm hover:bg-buttonHoverGreen hover:scale-105 active:scale-95 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {isCreating ? 'Creating...' : 'Submit'}
               </button>

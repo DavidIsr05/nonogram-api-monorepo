@@ -130,7 +130,7 @@ export const GameBoard: React.FC<Props> = ({
           <Mistakes />
           {mistakes}/{MISTAKES_THRESHOLD}
         </span>
-        <span className="flex flex-row items-center">
+        <span className="flex flex-row items-center tabular-nums">
           <Timer />
           {formatTime(elapsedTime)}
         </span>

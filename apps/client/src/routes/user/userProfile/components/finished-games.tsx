@@ -10,6 +10,8 @@ import {
   CardContent,
 } from '@nonogram-api-monorepo/ui-kit';
 import { useNavigate } from 'react-router-dom';
+import { Like } from '../../../../assets';
+import { MISTAKES_THRESHOLD } from '../../../../constants';
 
 type Props = { finishedGames: FinishedGamesResponseType[] }; //max-w-full sm:max-w-[15%]
 
@@ -28,34 +30,45 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
   };
 
   return (
-    <Carousel className="w-[50%]">
+    <Carousel className="w-[40%]">
       <CarouselContent>
-        {finishedGames.map(({ timer, mistakes, nonogram, isLiked, id }) => (
-          <CarouselItem
-            key={id}
-            className="basis-1/3"
-            onClick={() => {
-              handleClick(id);
-            }}
-          >
-            <div className="p-1">
-              <Card className="w-full h-full bg-globalLeaderboardsBackground/20 ring-0 border rounded-2xl shadow-md">
-                <CardContent className="flex flex-col aspect-square items-center p-2 gap-5">
-                  <img
-                    src={`data:image/png;base64,${nonogram.completeNonogramImageBase64}`}
-                    alt="complete game preview image"
-                    className="w-[80%]"
-                  />
-                  <div className="flex flex-row gap-5">
+        {finishedGames.map(({ timer, mistakes, nonogram, isLiked, id }) => {
+          const likeIconFill = isLiked
+            ? 'fill-absoluteBlack/30'
+            : 'fill-absoluteWhite';
+
+          return (
+            <CarouselItem
+              key={id}
+              className="basis-1/3 cursor-pointer"
+              onClick={() => {
+                handleClick(id);
+              }}
+            >
+              <div className="p-1">
+                <Card className="w-full h-full bg-globalLeaderboardsBackground/20 ring-0 border rounded-2xl shadow-md">
+                  <CardContent className="flex flex-col aspect-square items-center p-1 gap-3">
+                    <img
+                      src={`data:image/png;base64,${nonogram.completeNonogramImageBase64}`}
+                      alt="complete game preview image"
+                      className="w-[90%]"
+                    />
                     <span className="font-bold">{nonogram.name}</span>
-                    <span>⏱️ : {formatTime(timer)}</span>
-                    <span>❌ : {mistakes}</span>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </CarouselItem>
-        ))}
+                    <div className="flex flex-row gap-5 items-center">
+                      <span>⏱️ : {formatTime(timer)}</span>
+                      <span>
+                        ❌ : {mistakes}/{MISTAKES_THRESHOLD}
+                      </span>
+                      <Like
+                        className={`aspect-square h-[40%] ${likeIconFill}`}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </CarouselItem>
+          );
+        })}
       </CarouselContent>
       <CarouselPrevious />
       <CarouselNext />

@@ -69,7 +69,7 @@ export const Game: React.FC = () => {
           <button
             onClick={onLikeClick}
             disabled={!gameData?.isFinished}
-            className="disabled:opacity-40 disabled:cursor-not-allowed justify-self-end"
+            className="disabled:opacity-40 disabled:cursor-not-allowed justify-self-end hover:scale-105 active:scale-95 transition-transform"
           >
             <Like className={`${likeButtonFill}`} />
           </button>

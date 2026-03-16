@@ -42,7 +42,7 @@ export const DifficultyFilter: React.FC<Props> = ({
       {Object.values(NonogramDifficultiesEnumValues.enum).map(
         (difficultyValue, difficultyIndex) => (
           <button
-            className="aspect-square w-[3rem]"
+            className="aspect-square w-[3rem] hover:scale-105 active:scale-95 transition-transform"
             onClick={() => {
               handleClick(difficultyValue);
             }}

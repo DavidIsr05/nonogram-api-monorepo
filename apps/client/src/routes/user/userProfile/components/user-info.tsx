@@ -102,7 +102,7 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
         </div>
         <button
           type="submit"
-          className="bg-buttonGreen w-[10%] h-9 border border-absoluteBlack rounded-lg text-base"
+          className="bg-buttonGreen w-[10%] h-9 border border-absoluteBlack rounded-lg text-base hover:scale-105 active:scale-95 transition-transform"
         >
           Update
         </button>

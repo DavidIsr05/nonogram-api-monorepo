@@ -51,7 +51,7 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
         filteredGames.map(({ id, nonogram, timer, mistakes }) => (
           <li
             key={id}
-            className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
+            className="cursor-pointer grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
             onClick={() => handleGameClick(id)}
           >
             <span className="text-center font-bold">{nonogram.name}</span>
