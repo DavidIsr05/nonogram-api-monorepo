@@ -4,6 +4,7 @@ import {
   CreateGameType,
   GameType,
   GameResponseType,
+  FinishedGamesResponseType,
   GameWithCluesResponseType,
   UpdateGameType,
 } from '@nonogram-api-monorepo/types';
@@ -33,7 +34,7 @@ export const gameApi = api.injectEndpoints({
       }),
       providesTags: ['Game'],
     }),
-    getFinishedGames: build.query<GameType[], string>({
+    getFinishedGames: build.query<FinishedGamesResponseType[], string>({
       query: (userId) => ({
         url: `game/finished/${userId}`,
         method: 'GET',
@@ -80,7 +81,7 @@ export const {
   useCreateGameMutation,
   useGetAllUsersGamesQuery,
   useGetInProgresGamesQuery,
-  useLazyGetFinishedGamesQuery,
+  useGetFinishedGamesQuery,
   useGetGameByIdQuery,
   useUpdateGameMutation,
   useDeleteGameMutation,

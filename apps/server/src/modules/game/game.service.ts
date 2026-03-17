@@ -6,11 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Game } from './entity/game.entity';
-import {
-  GameStatus,
-  TileStates,
-  TileStatesEnumType,
-} from '@nonogram-api-monorepo/types';
+import { GameStatus, TileStates } from '@nonogram-api-monorepo/types';
 import { NonogramService } from '../nonogram';
 import {
   ForbiddenGameException,
@@ -28,19 +24,11 @@ export class GameService {
   private readonly logger = new Logger(GameService.name);
 
   async createGame(currentUser, createGameDto) {
-    const currentNonogram = await this.nonogramModel.getNonogramById(
-      currentUser,
-      createGameDto.nonogramId
-    );
-
-    const nonogramSize: number = await this.nonogramModel.getNonogramSize(
-      currentNonogram
-    );
-
-    const blankUncompletedNonogram: TileStatesEnumType[][] = Array.from(
-      { length: nonogramSize },
-      () => new Array(nonogramSize).fill(TileStates.EMPTY)
-    );
+    const blankUncompletedNonogram =
+      await this.generateEmptyUncompletedNonogram(
+        currentUser,
+        createGameDto.nonogramId
+      );
 
     createGameDto = {
       ...createGameDto,
@@ -89,7 +77,7 @@ export class GameService {
           model: Nonogram,
           attributes: ['difficulty', 'name'],
         },
-        attributes: ['id', 'timer', 'hints', 'mistakes'],
+        attributes: ['id', 'timer', 'mistakes'],
       });
       this.logger.log('Got in progress games successfully', { inProgresGames });
       return inProgresGames;
@@ -108,6 +96,10 @@ export class GameService {
     try {
       const finishedGames = await this.gameModel.findAll({
         where: { isFinished: true, userId },
+        include: {
+          model: Nonogram,
+          attributes: ['completeNonogramImageBase64', 'name'],
+        },
       });
       this.logger.log('Got finished games successfully', { finishedGames });
       return finishedGames;
@@ -165,11 +157,11 @@ export class GameService {
     return { rowClues, colClues };
   }
 
-  calculateClues = (idk) => {
+  calculateClues = (nonogramRow) => {
     const clues: number[] = [];
     let count = 0;
 
-    idk.forEach((tile) => {
+    nonogramRow.forEach((tile) => {
       if (tile) {
         count++;
       } else if (count > 0) {
@@ -201,11 +193,42 @@ export class GameService {
     }
   }
 
+  async generateEmptyUncompletedNonogram(
+    currentUser,
+    nonogramId
+  ): Promise<TileStates[][]> {
+    const currentNonogram = await this.nonogramModel.getNonogramById(
+      currentUser,
+      nonogramId
+    );
+
+    const nonogramSize: number = await this.nonogramModel.getNonogramSize(
+      currentNonogram
+    );
+
+    return Array.from({ length: nonogramSize }, () =>
+      new Array(nonogramSize).fill(TileStates.EMPTY)
+    );
+  }
+
   async updateGame(currentUser, updateGameDto) {
     const game = await this.getGameById(currentUser, updateGameDto.id);
 
     if (updateGameDto.isLiked && !game.isFinished) {
       throw new LikingUnfinishedGameException();
+    }
+
+    if (updateGameDto.timer === 0) {
+      updateGameDto = {
+        ...updateGameDto,
+        mistakes: 0,
+        isFinished: false,
+        isLiked: false,
+        uncompletedNonogram: await this.generateEmptyUncompletedNonogram(
+          currentUser,
+          game.nonogramId
+        ),
+      };
     }
 
     game.set({

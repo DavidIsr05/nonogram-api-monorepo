@@ -6,6 +6,7 @@ import {
   TOP_THREE_COLORFUL_BACKGROUND,
   POSITION_SYMBOLS,
 } from '../../../constants';
+import { formatTime } from '../../../utils';
 
 type Props = {
   nonogramId: string;
@@ -41,7 +42,7 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
           <div className="text-xl">{positionSymbol}</div>
           <div className="text-2xl">{user.username}</div>
           <span className="text-xl" role="img" aria-label="timer emoji">
-            ⏱️: {timer}
+            ⏱️: {formatTime(timer)}
           </span>
         </li>
       );
@@ -53,7 +54,7 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
   );
 
   return (
-    <div className="flex flex-col h-[90%] w-[25%] border items-center bg-globalLeaderboardsBackground rounded-xl shadow-xl">
+    <div className="flex flex-col h-[90%] w-[20%] border items-center bg-globalLeaderboardsBackground rounded-xl shadow-xl">
       <Trophy className="aspect-square m-7" />
       <ul className="list-inside w-[95%] h-[80%]">{leaders}</ul>
     </div>

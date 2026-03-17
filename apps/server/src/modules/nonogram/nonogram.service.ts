@@ -459,20 +459,18 @@ export class NonogramService {
             'Nonogram.id',
             'games.timer',
             'games.mistakes',
-            'games.hints',
             'games.id',
             'games->user.id',
           ],
           order: [
             ['games', 'timer'],
             ['games', 'mistakes'],
-            ['games', 'hints'],
           ],
           include: {
             model: Game,
             as: 'games',
             where: { isFinished: true },
-            attributes: ['timer', 'mistakes', 'hints'],
+            attributes: ['timer', 'mistakes'],
             include: [
               {
                 model: User,

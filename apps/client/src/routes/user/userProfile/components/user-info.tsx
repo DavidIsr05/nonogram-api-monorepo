@@ -19,7 +19,7 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
     const { name, value } = e.target;
     setEditUserDto((prev) => ({
       ...prev,
-      [name]: name === 'password' && value.trim() === '' ? '' : value,
+      [name]: name === 'password' && value.trim() === '' ? value.trim() : value,
     }));
   };
 
@@ -30,7 +30,11 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
       id,
     };
 
-    if (editUserDto.username && editUserDto.username.trim() !== '') {
+    if (
+      editUserDto.username &&
+      editUserDto.username.trim() !== '' &&
+      editUserDto.username !== username
+    ) {
       editUserDtoEditedFields = {
         ...editUserDtoEditedFields,
         username: editUserDto.username,
@@ -44,56 +48,63 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
       };
     }
 
-    try {
-      const result = await updateUser(editUserDtoEditedFields).unwrap();
+    if (editUserDtoEditedFields.username || editUserDtoEditedFields.password) {
+      try {
+        const result = await updateUser(editUserDtoEditedFields).unwrap();
 
-      if (result) {
-        toast.info('Updated info');
-      }
-    } catch (error) {
-      const e = error as ExceptionType;
+        if (result) {
+          toast.info('Updated info');
+        }
+      } catch (error) {
+        const e = error as ExceptionType;
 
-      if (HTTP_ERROR_MESSAGES[e.status]) {
-        toast.error(HTTP_ERROR_MESSAGES[e.status]);
-      } else {
-        toast.error('error acuared while updating useer information');
+        if (HTTP_ERROR_MESSAGES[e.status]) {
+          toast.error(HTTP_ERROR_MESSAGES[e.status]);
+        } else {
+          toast.error('error acuared while updating useer information');
+        }
       }
     }
   };
 
   return (
-    <div className="flex flex-col items-center gap-5 w-[50%] h-full border-r border-r-absoluteBlack">
+    <div className="flex flex-col items-center gap-5 w-[50%] h-[80%] border-r border-r-absoluteBlack">
       <span className="text-xl">Update user info:</span>
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-[2.5rem] items-center w-full"
+        className="flex flex-col gap-5 items-center w-full"
       >
-        <input
-          value={personalNumber}
-          name="personalNumber"
-          type="text"
-          className="rounded-lg border border-absoluteBlack w-[40%] h-9 p-3"
-          disabled={true}
-        />
-        <input
-          value={editUserDto.username}
-          name="username"
-          onChange={handleChange}
-          type="text"
-          placeholder="Username:"
-          className="rounded-lg border border-absoluteBlack w-[40%] h-9 p-3"
-        />
-        <input
-          value={editUserDto.password}
-          name="password"
-          onChange={handleChange}
-          type="password"
-          placeholder="Password:"
-          className="rounded-lg border border-absoluteBlack w-[40%] h-9 p-3"
-        />
+        <div className="flex flex-col items-center w-[40%]">
+          <label className="self-start text-sm">Personal Number:</label>
+          <div className="rounded-lg border border-absoluteBlack w-full h-9 p-3 flex items-center">
+            {personalNumber}
+          </div>
+        </div>
+        <div className="flex flex-col items-center w-[40%]">
+          <label className="self-start text-sm">Username:</label>
+          <input
+            value={editUserDto.username}
+            name="username"
+            onChange={handleChange}
+            type="text"
+            placeholder="Username:"
+            className="rounded-lg border border-absoluteBlack w-full h-9 p-3"
+          />
+        </div>
+        <div className="flex flex-col items-center w-[40%]">
+          <label className="self-start text-sm">Password:</label>
+          <input
+            value={editUserDto.password}
+            name="password"
+            onChange={handleChange}
+            type="password"
+            placeholder="Password:"
+            className="rounded-lg border border-absoluteBlack w-full h-9 p-3"
+          />
+        </div>
         <button
           type="submit"
-          className="bg-signupPageOrange w-[10%] h-9 border border-absoluteBlack rounded-lg text-base"
+          className="bg-buttonGreen w-[10%] h-9 border border-absoluteBlack rounded-lg text-base hover:scale-105 active:scale-95 transition-transform"
         >
           Update
         </button>

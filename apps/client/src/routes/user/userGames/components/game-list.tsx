@@ -6,6 +6,7 @@ import { RootState } from '../../../../store/store';
 import { useGetInProgresGamesQuery } from '../../../../store/api';
 import { DIFFICULTY_SIZE } from '../../../../constants';
 import { LoadingState, ErrorState } from '../../../../components';
+import { formatTime } from '../../../../utils';
 
 type Props = {
   difficulty: NonogramDifficultiesEnumType | null;
@@ -21,11 +22,6 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
     isError,
     error,
   } = useGetInProgresGamesQuery(userId ?? '', { skip: !userId });
-
-  if (!userId) {
-    navigate('/', { replace: true });
-    return null;
-  }
 
   if (isLoading) {
     return <LoadingState />;
@@ -47,18 +43,17 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
   return (
     <ul className="flex flex-col gap-2 overflow-y-auto max-h-[93%] pb-2">
       {filteredGames && filteredGames.length > 0 ? (
-        filteredGames.map(({ id, nonogram, timer, mistakes, hints }) => (
+        filteredGames.map(({ id, nonogram, timer, mistakes }) => (
           <li
             key={id}
-            className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
+            className="cursor-pointer grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
             onClick={() => handleGameClick(id)}
           >
             <span className="text-center font-bold">{nonogram.name}</span>
             <span className="text-dividorGray">|</span>
             <span className="text-center" role="img" aria-label="timer emoji">
-              ⏱️ : {timer}
+              ⏱️ : {formatTime(timer)}
             </span>
-            {/* //TODO need to fix time/format */}
             <span className="text-dividorGray">|</span>
             <span
               className="text-center"
@@ -66,10 +61,6 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
               aria-label="mistakes emoji"
             >
               ❌ : {mistakes}/3
-            </span>
-            <span className="text-dividorGray">|</span>
-            <span className="text-center" role="img" aria-label="hints emoji">
-              💡 : {hints}/3
             </span>
             <span className="text-dividorGray">|</span>
             <span className="text-center" role="img" aria-label="size emoji">

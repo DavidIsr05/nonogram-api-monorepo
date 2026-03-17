@@ -1,7 +1,6 @@
 export { default as BigLogo } from './bigLogo.svg?react';
 export { default as Edit } from './edit.svg?react';
 export { default as Games } from './games.svg?react';
-export { default as Hint } from './hint.svg?react';
 export { default as ImagePlaceholder } from './imagePlaceholder.svg?react';
 export { default as Like } from './like.svg?react';
 export { default as Logo } from './logo.svg?react';

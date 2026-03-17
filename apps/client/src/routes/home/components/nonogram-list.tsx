@@ -26,17 +26,16 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
     error,
   } = useGetUnplayedNonogramsQuery(userId ?? '', { skip: !userId });
 
-  if (!userId) {
-    navigate('/', { replace: true });
-    return null;
-  }
-
   if (isLoading) {
     return <LoadingState />;
   }
 
   if (isError) {
     return <ErrorState error={error} />;
+  }
+
+  if (!nonograms) {
+    return null;
   }
 
   const handleNonogramClick = async (nonogramId: string) => {
@@ -49,7 +48,7 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
   };
 
   const filteredNonograms = difficulty
-    ? nonograms?.filter((nonogram) => nonogram.difficulty === difficulty)
+    ? nonograms.filter((nonogram) => nonogram.difficulty === difficulty)
     : nonograms;
 
   return (
@@ -59,7 +58,7 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
           ({ id, name, likeCount, gameCount, difficulty, user }) => (
             <li
               key={id}
-              className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
+              className="cursor-pointer grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
               onClick={() => handleNonogramClick(id)}
             >
               <span className="font-semibold text-center">

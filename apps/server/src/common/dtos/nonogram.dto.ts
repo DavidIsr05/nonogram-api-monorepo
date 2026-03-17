@@ -6,7 +6,7 @@ import {
   CreateNonogramRequestSchema,
   GenerateNonogramSchema,
   GeneratedNonogramResponseSchema,
-  gamesForEachNonogramSchema,
+  GamesForEachNonogramSchema,
 } from '@nonogram-api-monorepo/types';
 
 export class NonogramDto extends createZodDto(NonogramSchema) {}
@@ -20,5 +20,5 @@ export class GeneratedNonogramResponseDto extends createZodDto(
   GeneratedNonogramResponseSchema
 ) {}
 export class GamesForEachNonogramDto extends createZodDto(
-  gamesForEachNonogramSchema
+  GamesForEachNonogramSchema
 ) {}

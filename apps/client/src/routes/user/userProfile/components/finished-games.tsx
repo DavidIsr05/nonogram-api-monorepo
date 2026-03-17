@@ -1,0 +1,72 @@
+import { FinishedGamesResponseType } from '@nonogram-api-monorepo/types';
+import React from 'react';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  Card,
+  CardContent,
+} from '@nonogram-api-monorepo/ui-kit';
+import { useNavigate } from 'react-router-dom';
+import { Like } from '../../../../assets';
+import { MISTAKES_THRESHOLD } from '../../../../constants';
+import { formatTime } from '../../../../utils';
+
+type Props = { finishedGames: FinishedGamesResponseType[] };
+
+export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
+  const navigate = useNavigate();
+
+  const handleClick = (gameId: string) => {
+    navigate(`/game/${gameId}`);
+    return null;
+  };
+
+  return (
+    <Carousel className="w-[40%]">
+      <CarouselContent>
+        {finishedGames.map(({ timer, mistakes, nonogram, isLiked, id }) => {
+          const likeIconFill = isLiked
+            ? 'fill-absoluteBlack/30'
+            : 'fill-absoluteWhite';
+
+          return (
+            <CarouselItem
+              key={id}
+              className="basis-1/3 cursor-pointer"
+              onClick={() => {
+                handleClick(id);
+              }}
+            >
+              <div className="p-1">
+                <Card className="w-full h-full bg-globalLeaderboardsBackground/20 ring-0 border rounded-2xl shadow-md">
+                  <CardContent className="flex flex-col aspect-square items-center p-1 gap-3">
+                    <img
+                      src={`data:image/png;base64,${nonogram.completeNonogramImageBase64}`}
+                      alt="complete game preview image"
+                      className="w-[90%]"
+                    />
+                    <span className="font-bold">{nonogram.name}</span>
+                    <div className="flex flex-row gap-5 items-center">
+                      <span>⏱️ : {formatTime(timer)}</span>
+                      <span>
+                        ❌ : {mistakes}/{MISTAKES_THRESHOLD}
+                      </span>
+                      <Like
+                        className={`aspect-square h-[40%] ${likeIconFill}`}
+                      />
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </CarouselItem>
+          );
+        })}
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
+  );
+};

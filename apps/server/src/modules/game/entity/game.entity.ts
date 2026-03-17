@@ -9,7 +9,7 @@ import {
   Table,
 } from 'sequelize-typescript';
 
-import { TileStatesEnumType } from '@nonogram-api-monorepo/types';
+import { TileStates } from '@nonogram-api-monorepo/types';
 import { User } from '../../user/entity/user.entity';
 import { Nonogram } from '../../nonogram/entity/nonogram.entity';
 
@@ -29,15 +29,11 @@ export class Game extends Model<Partial<Game>> {
   nonogramId: string;
 
   @Column(DataType.JSONB)
-  uncompletedNonogram: TileStatesEnumType[][] | null;
+  uncompletedNonogram: TileStates[][] | null;
 
   @Default(0)
   @Column({ type: DataType.INTEGER, allowNull: false })
   timer: number;
-
-  @Default(0)
-  @Column({ type: DataType.INTEGER, allowNull: false })
-  hints: number;
 
   @Default(0)
   @Column({ type: DataType.INTEGER, allowNull: false })
