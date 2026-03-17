@@ -6,6 +6,7 @@ import {
   TOP_THREE_COLORFUL_BACKGROUND,
   POSITION_SYMBOLS,
 } from '../../../constants';
+import { formatTime } from '../../../utils';
 
 type Props = {
   nonogramId: string;
@@ -25,12 +26,6 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
   if (error) {
     return <ErrorState error={error} />;
   }
-
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  };
 
   const leaders = nonogramLeaders ? (
     nonogramLeaders.games.map(({ timer, user }, position) => {

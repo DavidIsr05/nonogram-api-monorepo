@@ -1,5 +1,6 @@
 import { UserStatsType } from '@nonogram-api-monorepo/types';
 import React from 'react';
+import { formatTime } from '../../../../utils';
 
 type Props = UserStatsType;
 
@@ -10,12 +11,6 @@ export const UserStats: React.FC<Props> = ({
   nonogramsLiked,
   nonogramsComplete,
 }) => {
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  };
-
   return (
     <div className="flex flex-col items-center h-[80%] w-[50%] gap-5 text-xl">
       <span className="text-2xl">Stats:</span>

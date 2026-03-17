@@ -9,7 +9,7 @@ export const GeneratedNonogramResponseSchema = z
     mainObjectDimFactor: z.number(),
     difficulty: NonogramDifficultiesEnumValues,
   })
-  .strict();
+  .strip();
 
 export type GeneratedNonogramResponseType = z.infer<
   typeof GeneratedNonogramResponseSchema

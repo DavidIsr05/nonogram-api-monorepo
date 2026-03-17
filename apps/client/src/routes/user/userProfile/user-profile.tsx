@@ -46,16 +46,20 @@ export const UserProfile: React.FC = () => {
     return <ErrorState error={finishedGamesError} />;
   }
 
+  if (!userData || !userStats || !finishedGames) {
+    return null;
+  }
+
   return (
     <div className="w-screen h-screen bg-lightGrayBackground">
       <Header />
       <div className="h-[91%] w-[95%] justify-self-center flex flex-col items-center justify-around">
         <div className="flex flex-row w-[90%] h-[50%] border rounded-2xl shadow-lg items-center bg-absoluteWhite/70">
-          <UserInfo {...userData!} />
-          <UserStats {...userStats!} />
+          <UserInfo {...userData} />
+          <UserStats {...userStats} />
         </div>
         <span>Finished Games: </span>
-        <FinishedGames finishedGames={finishedGames!} />
+        <FinishedGames finishedGames={finishedGames} />
       </div>
       <Toaster richColors />
     </div>

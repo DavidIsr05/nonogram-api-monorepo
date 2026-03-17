@@ -6,8 +6,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Timer, Mistakes, Restart } from '../../../assets';
 import { MISTAKES_THRESHOLD } from '../../../constants';
 import { useUpdateGameMutation } from '../../../store/api';
+import { formatTime } from '../../../utils';
 
-type Props = GameWithCluesResponseType & { gameId: string };
+type Props = GameWithCluesResponseType;
 
 export const GameBoard: React.FC<Props> = ({
   rowClues,
@@ -15,7 +16,7 @@ export const GameBoard: React.FC<Props> = ({
   uncompletedNonogram,
   timer,
   mistakes,
-  gameId,
+  id,
 }) => {
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [callUpdateGameQuery] = useUpdateGameMutation();
@@ -36,12 +37,6 @@ export const GameBoard: React.FC<Props> = ({
 
   const tileSize = Math.floor(AVALIABLE_PIXELS_COUNT / colClues.length);
 
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  };
-
   const handleMouseDown = (row: number, col: number, tile: TileStates) => {
     setIsMouseDown(true);
     console.log(row, col, tile);
@@ -54,38 +49,45 @@ export const GameBoard: React.FC<Props> = ({
   };
 
   const handleResetButtonOnClick = () => {
-    callUpdateGameQuery({ id: gameId, timer: 0 });
+    callUpdateGameQuery({ id, timer: 0 });
   };
 
-  const gameBoardTableBody = uncompletedNonogram!.map((row, rowIndex) => (
-    <tr key={rowIndex}>
-      <td className="p-0 border-r border-t border-b border-absoluteBlack/30 border-r-absoluteBlack">
-        <div className="flex flex-row justify-end">
-          {rowClues[rowIndex].map((rowClue, rowClueIndex) => (
-            <div
-              key={rowClueIndex}
-              style={{ width: tileSize, height: tileSize }}
-              className="border-l border-absoluteBlack/30 flex items-center justify-center text-xs"
-            >
-              {rowClue}
-            </div>
-          ))}
-        </div>
-      </td>
-      {row.map((tile, colIndex) => (
-        <td
-          key={colIndex}
-          style={{ width: tileSize, height: tileSize }}
-          className={`border cursor-pointer ${
-            tile === TileStates.FILLED ? 'bg-absoluteBlack' : 'bg-absoluteWhite'
-          }`}
-          onMouseDown={() => handleMouseDown(rowIndex, colIndex, tile)}
-          onMouseOver={() => handleMouseOver(rowIndex, colIndex)}
-          onMouseUp={() => setIsMouseDown(false)}
-        />
-      ))}
-    </tr>
-  ));
+  const gameBoardTableBody = uncompletedNonogram!.map(
+    (
+      row,
+      rowIndex //TODO handle uncompletedNonogram being null when game is complete and isFinished
+    ) => (
+      <tr key={rowIndex}>
+        <td className="p-0 border-r border-t border-b border-absoluteBlack/30 border-r-absoluteBlack">
+          <div className="flex flex-row justify-end">
+            {rowClues[rowIndex].map((rowClue, rowClueIndex) => (
+              <div
+                key={rowClueIndex}
+                style={{ width: tileSize, height: tileSize }}
+                className="border-l border-absoluteBlack/30 flex items-center justify-center text-xs"
+              >
+                {rowClue}
+              </div>
+            ))}
+          </div>
+        </td>
+        {row.map((tile, colIndex) => (
+          <td
+            key={colIndex}
+            style={{ width: tileSize, height: tileSize }}
+            className={`border cursor-pointer ${
+              tile === TileStates.FILLED
+                ? 'bg-absoluteBlack'
+                : 'bg-absoluteWhite'
+            }`}
+            onMouseDown={() => handleMouseDown(rowIndex, colIndex, tile)}
+            onMouseOver={() => handleMouseOver(rowIndex, colIndex)}
+            onMouseUp={() => setIsMouseDown(false)}
+          />
+        ))}
+      </tr>
+    )
+  );
 
   return (
     <div className="flex flex-col w-[60%] h-[90%] items-center">

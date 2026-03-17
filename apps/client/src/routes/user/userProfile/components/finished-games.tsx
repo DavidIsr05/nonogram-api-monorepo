@@ -12,8 +12,9 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { Like } from '../../../../assets';
 import { MISTAKES_THRESHOLD } from '../../../../constants';
+import { formatTime } from '../../../../utils';
 
-type Props = { finishedGames: FinishedGamesResponseType[] }; //max-w-full sm:max-w-[15%]
+type Props = { finishedGames: FinishedGamesResponseType[] };
 
 export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
   const navigate = useNavigate();
@@ -21,12 +22,6 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
   const handleClick = (gameId: string) => {
     navigate(`/game/${gameId}`);
     return null;
-  };
-
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
   return (

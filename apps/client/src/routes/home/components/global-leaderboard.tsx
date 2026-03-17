@@ -18,8 +18,12 @@ export const GlobalLeaderboard: React.FC = () => {
     return <ErrorState error={error} />;
   }
 
-  const leaders = globalLeaders![0] ? (
-    globalLeaders!.map(({ username, score }, position) => {
+  if (!globalLeaders) {
+    return null;
+  }
+
+  const leaders = globalLeaders[0] ? (
+    globalLeaders.map(({ username, score }, position) => {
       const positionSymbol = POSITION_SYMBOLS[position] ?? position + 1;
 
       const backgroundColor =

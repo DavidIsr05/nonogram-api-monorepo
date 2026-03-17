@@ -6,6 +6,7 @@ import { RootState } from '../../../../store/store';
 import { useGetInProgresGamesQuery } from '../../../../store/api';
 import { DIFFICULTY_SIZE } from '../../../../constants';
 import { LoadingState, ErrorState } from '../../../../components';
+import { formatTime } from '../../../../utils';
 
 type Props = {
   difficulty: NonogramDifficultiesEnumType | null;
@@ -14,12 +15,6 @@ type Props = {
 export const GameList: React.FC<Props> = ({ difficulty }) => {
   const userId = useSelector((state: RootState) => state.user.userId);
   const navigate = useNavigate();
-
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-  };
 
   const {
     data: games,

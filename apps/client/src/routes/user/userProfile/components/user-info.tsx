@@ -19,7 +19,7 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
     const { name, value } = e.target;
     setEditUserDto((prev) => ({
       ...prev,
-      [name]: name === 'password' && value.trim() === '' ? '' : value,
+      [name]: name === 'password' && value.trim() === '' ? value.trim() : value,
     }));
   };
 
@@ -30,7 +30,11 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
       id,
     };
 
-    if (editUserDto.username && editUserDto.username.trim() !== '') {
+    if (
+      editUserDto.username &&
+      editUserDto.username.trim() !== '' &&
+      editUserDto.username !== username
+    ) {
       editUserDtoEditedFields = {
         ...editUserDtoEditedFields,
         username: editUserDto.username,
@@ -44,19 +48,21 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
       };
     }
 
-    try {
-      const result = await updateUser(editUserDtoEditedFields).unwrap();
+    if (editUserDtoEditedFields.username || editUserDtoEditedFields.password) {
+      try {
+        const result = await updateUser(editUserDtoEditedFields).unwrap();
 
-      if (result) {
-        toast.info('Updated info');
-      }
-    } catch (error) {
-      const e = error as ExceptionType;
+        if (result) {
+          toast.info('Updated info');
+        }
+      } catch (error) {
+        const e = error as ExceptionType;
 
-      if (HTTP_ERROR_MESSAGES[e.status]) {
-        toast.error(HTTP_ERROR_MESSAGES[e.status]);
-      } else {
-        toast.error('error acuared while updating useer information');
+        if (HTTP_ERROR_MESSAGES[e.status]) {
+          toast.error(HTTP_ERROR_MESSAGES[e.status]);
+        } else {
+          toast.error('error acuared while updating useer information');
+        }
       }
     }
   };
@@ -70,13 +76,9 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
       >
         <div className="flex flex-col items-center w-[40%]">
           <label className="self-start text-sm">Personal Number:</label>
-          <input
-            value={personalNumber}
-            name="personalNumber"
-            type="text"
-            className="rounded-lg border border-absoluteBlack w-full h-9 p-3"
-            disabled={true}
-          />
+          <div className="rounded-lg border border-absoluteBlack w-full h-9 p-3 flex items-center">
+            {personalNumber}
+          </div>
         </div>
         <div className="flex flex-col items-center w-[40%]">
           <label className="self-start text-sm">Username:</label>

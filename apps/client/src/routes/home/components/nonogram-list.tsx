@@ -34,6 +34,10 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
     return <ErrorState error={error} />;
   }
 
+  if (!nonograms) {
+    return null;
+  }
+
   const handleNonogramClick = async (nonogramId: string) => {
     const createdGameData = await createGame({
       nonogramId,
@@ -44,7 +48,7 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
   };
 
   const filteredNonograms = difficulty
-    ? nonograms?.filter((nonogram) => nonogram.difficulty === difficulty)
+    ? nonograms.filter((nonogram) => nonogram.difficulty === difficulty)
     : nonograms;
 
   return (

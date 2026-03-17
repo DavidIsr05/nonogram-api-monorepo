@@ -157,11 +157,11 @@ export class GameService {
     return { rowClues, colClues };
   }
 
-  calculateClues = (idk) => {
+  calculateClues = (nonogramRow) => {
     const clues: number[] = [];
     let count = 0;
 
-    idk.forEach((tile) => {
+    nonogramRow.forEach((tile) => {
       if (tile) {
         count++;
       } else if (count > 0) {

@@ -30,21 +30,25 @@ export const Game: React.FC = () => {
     return <ErrorState error={errorFetchingGameData} />;
   }
 
+  if (!gameData) {
+    return null;
+  }
+
   const onLikeClick = () => {
-    const isLiked = gameData?.isLiked;
+    const isLiked = gameData.isLiked;
     updateGame({ isLiked: !isLiked, id: gameId });
   };
 
   const getStarColor = (starIndex: number) => {
     return starIndex >
       Object.values(NonogramDifficultiesEnumValues.enum).indexOf(
-        gameData!.nonogramDifficulty
+        gameData.nonogramDifficulty
       )
       ? 'fill-absoluteWhite/30'
       : 'fill-filledDifficultyStar';
   };
 
-  const likeButtonFill = gameData?.isLiked
+  const likeButtonFill = gameData.isLiked
     ? 'fill-absoluteBlack/30'
     : 'fill-absoluteWhite';
 
@@ -53,7 +57,7 @@ export const Game: React.FC = () => {
       <Header />
       <div className="flex flex-col w-full h-[91%] p-3">
         <div className="grid grid-cols-[1fr_1fr_1fr] w-full text-4xl px-10">
-          <span className="font-bold">{gameData?.nonogramName}</span>
+          <span className="font-bold">{gameData.nonogramName}</span>
           <div className="flex flex-row justify-self-center">
             {Object.values(NonogramDifficultiesEnumValues.enum).map(
               (_, difficultyIndex) => (
@@ -68,15 +72,15 @@ export const Game: React.FC = () => {
           </div>
           <button
             onClick={onLikeClick}
-            disabled={!gameData?.isFinished}
+            disabled={!gameData.isFinished}
             className="disabled:opacity-40 disabled:cursor-not-allowed justify-self-end hover:scale-105 active:scale-95 transition-transform"
           >
             <Like className={`${likeButtonFill}`} />
           </button>
         </div>
         <div className="h-[95%] w-full p-3 flex flex-row ">
-          <NonogramLeaderboard nonogramId={gameData!.nonogramId} />
-          <GameBoard {...gameData!} gameId={gameId} />
+          <NonogramLeaderboard nonogramId={gameData.nonogramId} />
+          <GameBoard {...gameData} />
         </div>
       </div>
     </div>
