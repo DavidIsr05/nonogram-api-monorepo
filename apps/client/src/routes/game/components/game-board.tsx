@@ -1,4 +1,5 @@
 import {
+  GameStatus,
   GameWithCluesResponseType,
   TileStates,
 } from '@nonogram-api-monorepo/types';
@@ -11,6 +12,8 @@ import {
 } from '../../../store/api';
 import { formatTime } from '../../../utils';
 import debounce from 'debounce';
+import { LostPopup } from './lost-popup';
+import { WonPopup } from './won-popup';
 
 type Props = GameWithCluesResponseType;
 
@@ -29,6 +32,9 @@ export const GameBoard: React.FC<Props> = ({
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(timer);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [gameStatus, setGameStatus] = useState<GameStatus | null>(
+    isFinished ? null : mistakes === 3 ? GameStatus.LOST : GameStatus.FINE
+  );
   const coordinatesRef = useRef<{ rowIndex: number; colIndex: number }[]>([]);
   const elapsedTimeRef = useRef(elapsedTime);
   elapsedTimeRef.current = elapsedTime;
@@ -36,7 +42,7 @@ export const GameBoard: React.FC<Props> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isFinished) {
+    if (!isFinished && gameStatus !== GameStatus.LOST) {
       intervalRef.current = setInterval(() => {
         setElapsedTime((prev) => prev + 1);
       }, 1000);
@@ -45,7 +51,7 @@ export const GameBoard: React.FC<Props> = ({
         if (intervalRef.current) clearInterval(intervalRef.current);
       };
     }
-  }, [isFinished]);
+  }, [isFinished, gameStatus]);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -79,24 +85,34 @@ export const GameBoard: React.FC<Props> = ({
   const handleResetButtonOnClick = () => {
     callUpdateGameQuery({ id, timer: 0 });
     setElapsedTime(0);
+    setGameStatus(GameStatus.FINE);
   };
 
   const debouncedCheck = useMemo(
     () =>
-      debounce(() => {
-        checkAndUpdateInProgressNonogram({
+      debounce(async () => {
+        const { data } = await checkAndUpdateInProgressNonogram({
           gameId: id,
           timer: elapsedTimeRef.current,
           inProgressNonogramCoordinates: coordinatesRef.current,
         });
+
+        if (data?.status === GameStatus.LOST) {
+          setGameStatus(GameStatus.LOST);
+        } else if (data?.status === GameStatus.WON) {
+          setGameStatus(GameStatus.WON);
+        }
+
         coordinatesRef.current = [];
       }, 500),
     []
   );
 
   const markTile = (rowIndex: number, colIndex: number) => {
-    coordinatesRef.current.push({ rowIndex, colIndex });
-    debouncedCheck();
+    if (!isFinished && gameStatus === GameStatus.FINE) {
+      coordinatesRef.current.push({ rowIndex, colIndex });
+      debouncedCheck();
+    }
   };
 
   const paddedRowClues = rowClues.map((clues) =>
@@ -159,6 +175,13 @@ export const GameBoard: React.FC<Props> = ({
 
   return (
     <div className="flex flex-col w-[70%] h-full items-center">
+      {gameStatus === GameStatus.LOST && (
+        <LostPopup handleResetButtonOnClick={handleResetButtonOnClick} />
+      )}
+      {gameStatus === GameStatus.WON && (
+        <WonPopup setGameStatus={setGameStatus} />
+      )}
+
       <div
         ref={containerRef}
         className="flex items-center justify-center flex-1 min-h-0 w-full"
