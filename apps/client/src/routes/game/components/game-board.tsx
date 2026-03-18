@@ -45,7 +45,7 @@ export const GameBoard: React.FC<Props> = ({
         if (intervalRef.current) clearInterval(intervalRef.current);
       };
     }
-  }, []);
+  }, [isFinished]);
 
   useEffect(() => {
     if (!containerRef.current) return;
