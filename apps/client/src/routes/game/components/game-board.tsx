@@ -1,11 +1,15 @@
 import {
+  CheckAndUpdateInProgressNonogramType,
   GameWithCluesResponseType,
   TileStates,
 } from '@nonogram-api-monorepo/types';
 import React, { useEffect, useRef, useState } from 'react';
 import { Timer, Mistakes, Restart } from '../../../assets';
 import { MISTAKES_THRESHOLD } from '../../../constants';
-import { useUpdateGameMutation } from '../../../store/api';
+import {
+  useUpdateGameMutation,
+  useCheckAndUpdateInProgressNonogramMutation,
+} from '../../../store/api';
 import { formatTime } from '../../../utils';
 
 type Props = GameWithCluesResponseType;
@@ -17,34 +21,45 @@ export const GameBoard: React.FC<Props> = ({
   timer,
   mistakes,
   id,
+  isFinished,
 }) => {
-  const [isMouseDown, setIsMouseDown] = useState(false);
   const [callUpdateGameQuery] = useUpdateGameMutation();
+  const [checkAndUpdateInProgressNonogram] =
+    useCheckAndUpdateInProgressNonogramMutation();
+  const [isMouseDown, setIsMouseDown] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(timer);
+  const [inProgressNonogram, setInProgressNonogram] =
+    useState<CheckAndUpdateInProgressNonogramType>({
+      gameId: id,
+      timer: elapsedTime,
+      inProgressNonogramCoordinates: [],
+    });
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setElapsedTime((prev) => prev + 1);
-    }, 1000);
+    if (!isFinished) {
+      intervalRef.current = setInterval(() => {
+        setElapsedTime((prev) => prev + 1);
+      }, 1000);
 
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
+      return () => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+      };
+    }
   }, []);
 
   const AVALIABLE_PIXELS_COUNT = 600;
 
   const tileSize = Math.floor(AVALIABLE_PIXELS_COUNT / colClues.length);
 
-  const handleMouseDown = (row: number, col: number, tile: TileStates) => {
+  const handleMouseDown = (row: number, col: number) => {
     setIsMouseDown(true);
-    console.log(row, col, tile);
+    markTile(row, col);
   };
 
   const handleMouseOver = (row: number, col: number) => {
     if (isMouseDown) {
-      console.log(row, col);
+      markTile(row, col);
     }
   };
 
@@ -52,42 +67,46 @@ export const GameBoard: React.FC<Props> = ({
     callUpdateGameQuery({ id, timer: 0 });
   };
 
-  const gameBoardTableBody = uncompletedNonogram!.map(
-    (
-      row,
-      rowIndex //TODO handle uncompletedNonogram being null when game is complete and isFinished
-    ) => (
-      <tr key={rowIndex}>
-        <td className="p-0 border-r border-t border-b border-absoluteBlack/30 border-r-absoluteBlack">
-          <div className="flex flex-row justify-end">
-            {rowClues[rowIndex].map((rowClue, rowClueIndex) => (
-              <div
-                key={rowClueIndex}
-                style={{ width: tileSize, height: tileSize }}
-                className="border-l border-absoluteBlack/30 flex items-center justify-center text-xs"
-              >
-                {rowClue}
-              </div>
-            ))}
-          </div>
-        </td>
-        {row.map((tile, colIndex) => (
-          <td
-            key={colIndex}
-            style={{ width: tileSize, height: tileSize }}
-            className={`border cursor-pointer ${
-              tile === TileStates.FILLED
-                ? 'bg-absoluteBlack'
-                : 'bg-absoluteWhite'
-            }`}
-            onMouseDown={() => handleMouseDown(rowIndex, colIndex, tile)}
-            onMouseOver={() => handleMouseOver(rowIndex, colIndex)}
-            onMouseUp={() => setIsMouseDown(false)}
-          />
-        ))}
-      </tr>
-    )
-  );
+  const markTile = (rowIndex: number, colIndex: number) => {
+    setInProgressNonogram((prev) => ({
+      ...prev,
+      inProgressNonogramCoordinates: [
+        ...prev.inProgressNonogramCoordinates,
+        { rowIndex, colIndex },
+      ],
+    }));
+    console.log(inProgressNonogram);
+  };
+
+  const gameBoardTableBody = uncompletedNonogram.map((row, rowIndex) => (
+    <tr key={rowIndex}>
+      <td className="p-0 border-r border-t border-b border-absoluteBlack/30 border-r-absoluteBlack">
+        <div className="flex flex-row justify-end">
+          {rowClues[rowIndex].map((rowClue, rowClueIndex) => (
+            <div
+              key={rowClueIndex}
+              style={{ width: tileSize, height: tileSize }}
+              className="border-l border-absoluteBlack/30 flex items-center justify-center text-xs"
+            >
+              {rowClue}
+            </div>
+          ))}
+        </div>
+      </td>
+      {row.map((tile, colIndex) => (
+        <td
+          key={colIndex}
+          style={{ width: tileSize, height: tileSize }}
+          className={`border cursor-pointer ${
+            tile === TileStates.FILLED ? 'bg-absoluteBlack' : 'bg-absoluteWhite'
+          }`}
+          onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+          onMouseOver={() => handleMouseOver(rowIndex, colIndex)}
+          onMouseUp={() => setIsMouseDown(false)}
+        />
+      ))}
+    </tr>
+  ));
 
   return (
     <div className="flex flex-col w-[60%] h-[90%] items-center">

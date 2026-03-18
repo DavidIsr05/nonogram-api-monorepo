@@ -265,19 +265,15 @@ export class GameService {
 
     let { mistakes } = foundGame;
 
-    checkAndUpdateInProgressNonogramDto.inProgressNonogram.forEach(
-      (row, rowIndex) => {
-        row.forEach((tile, colIndex) => {
-          if (tile == TileStates.MARKED) {
-            if (foundNonogram.nonogram[rowIndex][colIndex]) {
-              uncompletedNonogram[rowIndex][colIndex] = TileStates.FILLED;
-            } else {
-              uncompletedNonogram[rowIndex][colIndex] = TileStates.MISTAKE;
+    checkAndUpdateInProgressNonogramDto.inProgressNonogramCoordinates.forEach(
+      ({ rowIndex, colIndex }) => {
+        if (foundNonogram.nonogram[rowIndex][colIndex]) {
+          uncompletedNonogram[rowIndex][colIndex] = TileStates.FILLED;
+        } else {
+          uncompletedNonogram[rowIndex][colIndex] = TileStates.MISTAKE;
 
-              mistakes++;
-            }
-          }
-        });
+          mistakes++;
+        }
       }
     );
 

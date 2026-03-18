@@ -29,7 +29,7 @@ export class Game extends Model<Partial<Game>> {
   nonogramId: string;
 
   @Column(DataType.JSONB)
-  uncompletedNonogram: TileStates[][] | null;
+  uncompletedNonogram: TileStates[][];
 
   @Default(0)
   @Column({ type: DataType.INTEGER, allowNull: false })
