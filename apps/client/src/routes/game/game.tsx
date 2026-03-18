@@ -55,30 +55,32 @@ export const Game: React.FC = () => {
   return (
     <div className="w-screen h-screen bg-lightGrayBackground items-center flex flex-col">
       <Header />
-      <div className="flex flex-col w-full h-[91%] p-3">
-        <div className="grid grid-cols-[1fr_1fr_1fr] w-full text-4xl px-10">
-          <span className="font-bold">{gameData.nonogramName}</span>
-          <div className="flex flex-row justify-self-center">
-            {Object.values(NonogramDifficultiesEnumValues.enum).map(
-              (_, difficultyIndex) => (
-                <Star
-                  className={`aspect-square w-[3rem] ${getStarColor(
-                    difficultyIndex
-                  )}`}
-                  key={difficultyIndex}
-                />
-              )
-            )}
+      <div className="relative w-full h-[91%] p-3">
+        <div className="absolute top-3 left-10 right-10 flex flex-row items-center justify-between text-4xl z-10 pointer-events-none">
+          <div className="flex flex-row items-center gap-10">
+            <span className="font-bold">{gameData.nonogramName}</span>
+            <div className="flex flex-row">
+              {Object.values(NonogramDifficultiesEnumValues.enum).map(
+                (_, difficultyIndex) => (
+                  <Star
+                    className={`aspect-square w-[3rem] ${getStarColor(
+                      difficultyIndex
+                    )}`}
+                    key={difficultyIndex}
+                  />
+                )
+              )}
+            </div>
           </div>
           <button
             onClick={onLikeClick}
             disabled={!gameData.isFinished}
-            className="disabled:opacity-40 disabled:cursor-not-allowed justify-self-end hover:scale-105 active:scale-95 transition-transform"
+            className="pointer-events-auto disabled:opacity-40 disabled:cursor-not-allowed hover:scale-105 active:scale-95 transition-transform"
           >
             <Like className={`${likeButtonFill}`} />
           </button>
         </div>
-        <div className="h-[95%] w-full p-3 flex flex-row ">
+        <div className="h-full w-full p-3 flex flex-row">
           <NonogramLeaderboard nonogramId={gameData.nonogramId} />
           <GameBoard {...gameData} />
         </div>

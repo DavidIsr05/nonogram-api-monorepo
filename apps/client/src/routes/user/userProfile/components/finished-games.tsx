@@ -24,7 +24,7 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
     return null;
   };
 
-  return (
+  return finishedGames[0] ? (
     <Carousel className="w-[40%]">
       <CarouselContent>
         {finishedGames.map(({ timer, mistakes, nonogram, isLiked, id }) => {
@@ -68,5 +68,9 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
       <CarouselPrevious />
       <CarouselNext />
     </Carousel>
+  ) : (
+    <span className="items-center text-4xl text-absoluteBlack/40">
+      u did not finish any yet...
+    </span>
   );
 };

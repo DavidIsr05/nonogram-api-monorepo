@@ -27,7 +27,7 @@ module.exports = {
         signupFormBackground: '#FFF6E5',
         nonogramsBackground: '#FBE6C1',
         filledDifficultyStar: '#FFFF00',
-        buttonTextGray: '#4B5563',
+        prettyGray: '#4B5563',
         buttonGreen: '#22C55E',
         buttonHoverGreen: '#16A34A',
         loginPagePurple: '#DA6DE4',
