@@ -41,3 +41,9 @@ Thumbs.db
 .nx/cache
 
 .env
+
+# Docker
+Dockerfile
+nginx.conf
+docker-compose.prod.yml
+docker-compose.yml
