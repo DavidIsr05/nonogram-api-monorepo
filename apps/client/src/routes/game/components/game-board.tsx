@@ -29,12 +29,14 @@ export const GameBoard: React.FC<Props> = ({
   const [callUpdateGameQuery] = useUpdateGameMutation();
   const [checkAndUpdateInProgressNonogram] =
     useCheckAndUpdateInProgressNonogramMutation();
+
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(timer);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [gameStatus, setGameStatus] = useState<GameStatus | null>(
     isFinished ? null : mistakes >= 3 ? GameStatus.LOST : GameStatus.FINE
   );
+
   const coordinatesRef = useRef<{ rowIndex: number; colIndex: number }[]>([]);
   const elapsedTimeRef = useRef(elapsedTime);
   elapsedTimeRef.current = elapsedTime;
@@ -115,6 +117,12 @@ export const GameBoard: React.FC<Props> = ({
     }
   };
 
+  const isTileMarked = (rowIndex: number, colIndex: number) => {
+    return coordinatesRef.current.some(
+      (cords) => cords.rowIndex === rowIndex && cords.colIndex === colIndex
+    );
+  };
+
   const paddedRowClues = rowClues.map((clues) =>
     new Array(maxRowClues - clues.length).fill(null).concat(clues)
   );
@@ -147,10 +155,7 @@ export const GameBoard: React.FC<Props> = ({
           >
             <Wrong className="w-full h-full" />
           </td>
-        ) : coordinatesRef.current.some(
-            (cords) =>
-              cords.rowIndex === rowIndex && cords.colIndex === colIndex
-          ) ? (
+        ) : isTileMarked(rowIndex, colIndex) ? (
           <td
             key={colIndex}
             style={{ width: tileSize, height: tileSize }}
