@@ -140,7 +140,7 @@ export const CreateNonogramPopup: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex-1 flex items-center justify-center gap-1 border rounded-lg py-1.5 text-sm text-buttonTextGray hover:bg-simpleGray hover:scale-105 active:scale-95 transition-transform"
+                  className="flex-1 flex items-center justify-center gap-1 border rounded-lg py-1.5 text-sm text-prettyGray hover:bg-simpleGray hover:scale-105 active:scale-95 transition-transform"
                 >
                   <Upload className="w-4 h-4" />
                   Upload Image
@@ -149,7 +149,7 @@ export const CreateNonogramPopup: React.FC = () => {
                   type="button"
                   disabled={!form.imageBase64 || isGenerating}
                   onClick={handleGenerate}
-                  className="flex-1 border rounded-lg py-1.5 text-sm text-buttonTextGray hover:bg-simpleGray hover:scale-105 active:scale-95 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="flex-1 border rounded-lg py-1.5 text-sm text-prettyGray hover:bg-simpleGray hover:scale-105 active:scale-95 transition-transform disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   {isGenerating ? 'Generating...' : 'Generate Preview'}
                 </button>

@@ -6,7 +6,7 @@ export const GameSchema = z
     id: z.string().uuid(),
     userId: z.string().uuid(),
     nonogramId: z.string().uuid(),
-    uncompletedNonogram: z.array(z.array(z.nativeEnum(TileStates))).nullable(),
+    uncompletedNonogram: z.array(z.array(z.nativeEnum(TileStates))),
     timer: z.number().default(0),
     mistakes: z.number().max(3).default(0),
     isFinished: z.boolean().default(false),

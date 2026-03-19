@@ -35,7 +35,7 @@ export const nonogramApi = api.injectEndpoints({
         url: `nonogram/leaders/${nonogramId}`,
         method: 'GET',
       }),
-      providesTags: ['Game'],
+      providesTags: ['Game', 'Nonogram'],
     }),
     getGlobalLeaders: build.query<Record<string, number>[], void>({
       query: () => ({

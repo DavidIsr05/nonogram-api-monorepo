@@ -218,19 +218,6 @@ export class GameService {
       throw new LikingUnfinishedGameException();
     }
 
-    if (updateGameDto.timer === 0) {
-      updateGameDto = {
-        ...updateGameDto,
-        mistakes: 0,
-        isFinished: false,
-        isLiked: false,
-        uncompletedNonogram: await this.generateEmptyUncompletedNonogram(
-          currentUser,
-          game.nonogramId
-        ),
-      };
-    }
-
     game.set({
       ...updateGameDto,
     });
@@ -265,19 +252,15 @@ export class GameService {
 
     let { mistakes } = foundGame;
 
-    checkAndUpdateInProgressNonogramDto.inProgressNonogram.forEach(
-      (row, rowIndex) => {
-        row.forEach((tile, colIndex) => {
-          if (tile == TileStates.MARKED) {
-            if (foundNonogram.nonogram[rowIndex][colIndex]) {
-              uncompletedNonogram[rowIndex][colIndex] = TileStates.FILLED;
-            } else {
-              uncompletedNonogram[rowIndex][colIndex] = TileStates.MISTAKE;
+    checkAndUpdateInProgressNonogramDto.inProgressNonogramCoordinates.forEach(
+      ({ rowIndex, colIndex }) => {
+        if (foundNonogram.nonogram[rowIndex][colIndex]) {
+          uncompletedNonogram[rowIndex][colIndex] = TileStates.FILLED;
+        } else {
+          uncompletedNonogram[rowIndex][colIndex] = TileStates.MISTAKE;
 
-              mistakes++;
-            }
-          }
-        });
+          mistakes++;
+        }
       }
     );
 

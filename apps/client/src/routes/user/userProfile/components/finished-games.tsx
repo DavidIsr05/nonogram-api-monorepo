@@ -24,7 +24,7 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
     return null;
   };
 
-  return (
+  return finishedGames[0] ? (
     <Carousel className="w-[40%]">
       <CarouselContent>
         {finishedGames.map(({ timer, mistakes, nonogram, isLiked, id }) => {
@@ -45,13 +45,15 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
                   <CardContent className="flex flex-col aspect-square items-center p-1 gap-3">
                     <img
                       src={`data:image/png;base64,${nonogram.completeNonogramImageBase64}`}
-                      alt="complete game preview image"
+                      alt="complete game preview"
                       className="w-[90%]"
                     />
                     <span className="font-bold">{nonogram.name}</span>
                     <div className="flex flex-row gap-5 items-center">
-                      <span>⏱️ : {formatTime(timer)}</span>
-                      <span>
+                      <span role="img" aria-label="timer emoji">
+                        ⏱️ : {formatTime(timer)}
+                      </span>
+                      <span role="img" aria-label="mistake emoji">
                         ❌ : {mistakes}/{MISTAKES_THRESHOLD}
                       </span>
                       <Like
@@ -68,5 +70,9 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
       <CarouselPrevious />
       <CarouselNext />
     </Carousel>
+  ) : (
+    <span className="items-center text-4xl text-absoluteBlack/40">
+      u did not finish any games yet...
+    </span>
   );
 };

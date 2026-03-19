@@ -1,9 +1,13 @@
 import z from 'zod';
-import { TileStates } from '../enums';
 
 export const CheckAndUpdateInProgressNonogramSchema = z
   .object({
-    inProgressNonogram: z.array(z.array(z.nativeEnum(TileStates))).nullable(),
+    inProgressNonogramCoordinates: z.array(
+      z.object({
+        rowIndex: z.number(),
+        colIndex: z.number(),
+      })
+    ),
     timer: z.number(),
     gameId: z.string().uuid(),
   })

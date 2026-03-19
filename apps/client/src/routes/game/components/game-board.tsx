@@ -1,12 +1,18 @@
 import {
+  GameStatus,
   GameWithCluesResponseType,
   TileStates,
 } from '@nonogram-api-monorepo/types';
-import React, { useEffect, useRef, useState } from 'react';
-import { Timer, Mistakes, Restart } from '../../../assets';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { Timer, Mistakes, Wrong } from '../../../assets';
 import { MISTAKES_THRESHOLD } from '../../../constants';
-import { useUpdateGameMutation } from '../../../store/api';
+import {
+  useUpdateGameMutation,
+  useCheckAndUpdateInProgressNonogramMutation,
+} from '../../../store/api';
 import { formatTime } from '../../../utils';
+import debounce from 'debounce';
+import { GamePopup } from './index';
 
 type Props = GameWithCluesResponseType;
 
@@ -17,95 +23,210 @@ export const GameBoard: React.FC<Props> = ({
   timer,
   mistakes,
   id,
+  isFinished,
 }) => {
-  const [isMouseDown, setIsMouseDown] = useState(false);
   const [callUpdateGameQuery] = useUpdateGameMutation();
+  const [checkAndUpdateInProgressNonogram] =
+    useCheckAndUpdateInProgressNonogramMutation();
+
+  const [isMouseDown, setIsMouseDown] = useState(false);
   const [elapsedTime, setElapsedTime] = useState(timer);
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [gameStatus, setGameStatus] = useState<GameStatus | null>(
+    isFinished ? null : mistakes >= 3 ? GameStatus.LOST : GameStatus.FINE
+  );
+  const [isLostPopupDismissed, setIsLostPopupDismissed] = useState(false);
+
+  const coordinatesRef = useRef<{ rowIndex: number; colIndex: number }[]>([]);
+  const elapsedTimeRef = useRef(elapsedTime);
+  elapsedTimeRef.current = elapsedTime;
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    intervalRef.current = setInterval(() => {
-      setElapsedTime((prev) => prev + 1);
-    }, 1000);
+    if (gameStatus == GameStatus.FINE) {
+      intervalRef.current = setInterval(() => {
+        setElapsedTime((prev) => prev + 1);
+      }, 1000);
 
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-    };
+      return () => {
+        if (intervalRef.current) clearInterval(intervalRef.current);
+      };
+    }
+  }, [isFinished, gameStatus]);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setContainerSize({ width, height });
+    });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
   }, []);
 
-  const AVALIABLE_PIXELS_COUNT = 600;
+  const debouncedCheck = useMemo(
+    () =>
+      debounce(async () => {
+        const { data } = await checkAndUpdateInProgressNonogram({
+          gameId: id,
+          timer: elapsedTimeRef.current,
+          inProgressNonogramCoordinates: coordinatesRef.current,
+        });
 
-  const tileSize = Math.floor(AVALIABLE_PIXELS_COUNT / colClues.length);
+        if (data?.status) {
+          setGameStatus(data.status);
+        }
 
-  const handleMouseDown = (row: number, col: number, tile: TileStates) => {
+        coordinatesRef.current = [];
+      }, 500),
+    []
+  );
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      debouncedCheck.flush();
+      callUpdateGameQuery({ id, timer: elapsedTimeRef.current });
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      callUpdateGameQuery({ id, timer: elapsedTimeRef.current });
+    };
+  }, [debouncedCheck]);
+
+  const maxRowClues = Math.max(...rowClues.map((row) => row.length));
+  const maxColClues = Math.max(...colClues.map((col) => col.length));
+  const totalCols = maxRowClues + uncompletedNonogram[0].length;
+  const totalRows = maxColClues + uncompletedNonogram.length;
+  const tileSize = Math.floor(
+    Math.min(containerSize.width / totalCols, containerSize.height / totalRows)
+  );
+
+  const handleMouseDown = (rowIndex: number, colIndex: number) => {
     setIsMouseDown(true);
-    console.log(row, col, tile);
+    markTile(rowIndex, colIndex);
   };
 
-  const handleMouseOver = (row: number, col: number) => {
+  const handleMouseOver = (rowIndex: number, colIndex: number) => {
     if (isMouseDown) {
-      console.log(row, col);
+      markTile(rowIndex, colIndex);
     }
   };
 
-  const handleResetButtonOnClick = () => {
-    callUpdateGameQuery({ id, timer: 0 });
+  const markTile = (rowIndex: number, colIndex: number) => {
+    if (!isFinished && gameStatus === GameStatus.FINE) {
+      coordinatesRef.current.push({ rowIndex, colIndex });
+      debouncedCheck();
+    }
   };
 
-  const gameBoardTableBody = uncompletedNonogram!.map(
-    (
-      row,
-      rowIndex //TODO handle uncompletedNonogram being null when game is complete and isFinished
-    ) => (
-      <tr key={rowIndex}>
-        <td className="p-0 border-r border-t border-b border-absoluteBlack/30 border-r-absoluteBlack">
-          <div className="flex flex-row justify-end">
-            {rowClues[rowIndex].map((rowClue, rowClueIndex) => (
-              <div
-                key={rowClueIndex}
-                style={{ width: tileSize, height: tileSize }}
-                className="border-l border-absoluteBlack/30 flex items-center justify-center text-xs"
-              >
-                {rowClue}
-              </div>
-            ))}
-          </div>
-        </td>
-        {row.map((tile, colIndex) => (
-          <td
-            key={colIndex}
-            style={{ width: tileSize, height: tileSize }}
-            className={`border cursor-pointer ${
-              tile === TileStates.FILLED
-                ? 'bg-absoluteBlack'
-                : 'bg-absoluteWhite'
-            }`}
-            onMouseDown={() => handleMouseDown(rowIndex, colIndex, tile)}
-            onMouseOver={() => handleMouseOver(rowIndex, colIndex)}
-            onMouseUp={() => setIsMouseDown(false)}
-          />
-        ))}
-      </tr>
-    )
+  const isTileMarked = (rowIndex: number, colIndex: number) => {
+    return coordinatesRef.current.some(
+      (cords) => cords.rowIndex === rowIndex && cords.colIndex === colIndex
+    );
+  };
+
+  const paddedRowClues = rowClues.map((clues) =>
+    new Array(maxRowClues - clues.length).fill(null).concat(clues)
   );
 
+  const paddedColClues = colClues.map((clues) =>
+    new Array(maxColClues - clues.length).fill(null).concat(clues)
+  );
+
+  const gameBoardTableBody = uncompletedNonogram.map((row, rowIndex) => (
+    <tr key={rowIndex}>
+      <td className="p-0 border-r border-t border-b border-absoluteBlack/30 border-r-absoluteBlack">
+        <div className="flex flex-row justify-end">
+          {paddedRowClues[rowIndex].map((rowClue, rowClueIndex) => (
+            <div
+              key={rowClueIndex}
+              style={{ width: tileSize, height: tileSize }}
+              className="border-l border-absoluteBlack/30 flex items-center justify-center text-xs"
+            >
+              {rowClue}
+            </div>
+          ))}
+        </div>
+      </td>
+      {row.map((tile, colIndex) => {
+        if (tile === TileStates.MISTAKE) {
+          return (
+            <td
+              key={colIndex}
+              style={{ width: tileSize, height: tileSize }}
+              className="border"
+            >
+              <Wrong className="w-full h-full" />
+            </td>
+          );
+        } else if (isTileMarked(rowIndex, colIndex)) {
+          return (
+            <td
+              key={colIndex}
+              style={{ width: tileSize, height: tileSize }}
+              className="bg-prettyGray border"
+            />
+          );
+        } else if (tile === TileStates.FILLED) {
+          return (
+            <td
+              key={colIndex}
+              style={{ width: tileSize, height: tileSize }}
+              className={`border bg-absoluteBlack`}
+            />
+          );
+        } else {
+          return (
+            <td
+              key={colIndex}
+              style={{ width: tileSize, height: tileSize }}
+              className={`border cursor-pointer`}
+              onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+              onMouseOver={() => handleMouseOver(rowIndex, colIndex)}
+              onMouseUp={() => setIsMouseDown(false)}
+            />
+          );
+        }
+      })}
+    </tr>
+  ));
+
   return (
-    <div className="flex flex-col w-[60%] h-[90%] items-center">
-      <div className="flex items-center justify-center border border-absoluteBlack">
+    <div className="flex flex-col w-[70%] h-full items-center">
+      {gameStatus === GameStatus.LOST && !isLostPopupDismissed && (
+        <GamePopup
+          gameStatus={gameStatus}
+          onDismiss={() => setIsLostPopupDismissed(true)}
+        />
+      )}
+      {gameStatus === GameStatus.WON && (
+        <GamePopup
+          gameStatus={gameStatus}
+          onDismiss={() => setGameStatus(null)}
+        />
+      )}
+
+      <div
+        ref={containerRef}
+        className="flex items-center justify-center flex-1 min-h-0 w-full"
+      >
         <table
           onMouseLeave={() => setIsMouseDown(false)}
           onMouseUp={() => setIsMouseDown(false)}
+          className="border border-absoluteBlack"
         >
           <thead>
             <tr>
               <th />
-              {colClues.map((col, colIndex) => (
+              {paddedColClues.map((col, colIndex) => (
                 <td
                   key={colIndex}
                   style={{ width: tileSize }}
                   className="p-0 align-bottom border-r border-l border-b border-b-absoluteBlack border-absoluteBlack/30"
                 >
-                  <div className="flex flex-col items-end">
+                  <div className="flex flex-col items-center">
                     {col.map((colClue, colClueIndex) => (
                       <div
                         key={colClueIndex}
@@ -124,11 +245,8 @@ export const GameBoard: React.FC<Props> = ({
         </table>
       </div>
 
-      <div className="flex flex-row h-[85%] items-center gap-28 p-5 text-4xl">
-        <button onClick={handleResetButtonOnClick}>
-          <Restart />
-        </button>
-        <span className="flex flex-row items-center">
+      <div className="flex flex-row items-center gap-28 mt-5 text-4xl">
+        <span className="flex flex-row items-center tabular-nums">
           <Mistakes />
           {mistakes}/{MISTAKES_THRESHOLD}
         </span>
