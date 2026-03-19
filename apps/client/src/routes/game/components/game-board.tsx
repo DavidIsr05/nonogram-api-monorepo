@@ -65,31 +65,6 @@ export const GameBoard: React.FC<Props> = ({
     return () => observer.disconnect();
   }, []);
 
-  const maxRowClues = Math.max(...rowClues.map((r) => r.length));
-  const maxColClues = Math.max(...colClues.map((c) => c.length));
-  const totalCols = maxRowClues + uncompletedNonogram[0].length;
-  const totalRows = maxColClues + uncompletedNonogram.length;
-  const tileSize = Math.floor(
-    Math.min(containerSize.width / totalCols, containerSize.height / totalRows)
-  );
-
-  const handleMouseDown = (row: number, col: number) => {
-    setIsMouseDown(true);
-    markTile(row, col);
-  };
-
-  const handleMouseOver = (row: number, col: number) => {
-    if (isMouseDown) {
-      markTile(row, col);
-    }
-  };
-
-  const handleResetButtonOnClick = () => {
-    callUpdateGameQuery({ id, timer: 0 });
-    setElapsedTime(0);
-    setGameStatus(GameStatus.FINE);
-  };
-
   const debouncedCheck = useMemo(
     () =>
       debounce(async () => {
@@ -109,6 +84,43 @@ export const GameBoard: React.FC<Props> = ({
       }, 500),
     []
   );
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      debouncedCheck.flush();
+      callUpdateGameQuery({ id, timer: elapsedTimeRef.current });
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      callUpdateGameQuery({ id, timer: elapsedTimeRef.current });
+    };
+  }, [debouncedCheck]);
+
+  const maxRowClues = Math.max(...rowClues.map((row) => row.length));
+  const maxColClues = Math.max(...colClues.map((col) => col.length));
+  const totalCols = maxRowClues + uncompletedNonogram[0].length;
+  const totalRows = maxColClues + uncompletedNonogram.length;
+  const tileSize = Math.floor(
+    Math.min(containerSize.width / totalCols, containerSize.height / totalRows)
+  );
+
+  const handleMouseDown = (rowIndex: number, colIndex: number) => {
+    setIsMouseDown(true);
+    markTile(rowIndex, colIndex);
+  };
+
+  const handleMouseOver = (rowIndex: number, colIndex: number) => {
+    if (isMouseDown) {
+      markTile(rowIndex, colIndex);
+    }
+  };
+
+  const handleResetButtonOnClick = () => {
+    callUpdateGameQuery({ id, timer: 0 });
+    setElapsedTime(0);
+    setGameStatus(GameStatus.FINE);
+  };
 
   const markTile = (rowIndex: number, colIndex: number) => {
     if (!isFinished && gameStatus === GameStatus.FINE) {
