@@ -12,8 +12,7 @@ import {
 } from '../../../store/api';
 import { formatTime } from '../../../utils';
 import debounce from 'debounce';
-import { LostPopup } from './lost-popup';
-import { WonPopup } from './won-popup';
+import { GamePopup } from './index';
 
 type Props = GameWithCluesResponseType;
 
@@ -45,7 +44,7 @@ export const GameBoard: React.FC<Props> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!isFinished && gameStatus !== GameStatus.LOST) {
+    if (gameStatus == GameStatus.FINE) {
       intervalRef.current = setInterval(() => {
         setElapsedTime((prev) => prev + 1);
       }, 1000);
@@ -75,10 +74,8 @@ export const GameBoard: React.FC<Props> = ({
           inProgressNonogramCoordinates: coordinatesRef.current,
         });
 
-        if (data?.status === GameStatus.LOST) {
-          setGameStatus(GameStatus.LOST);
-        } else if (data?.status === GameStatus.WON) {
-          setGameStatus(GameStatus.WON);
+        if (data?.status) {
+          setGameStatus(data.status);
         }
 
         coordinatesRef.current = [];
@@ -153,48 +150,62 @@ export const GameBoard: React.FC<Props> = ({
           ))}
         </div>
       </td>
-      {row.map((tile, colIndex) =>
-        tile === TileStates.MISTAKE ? (
-          <td
-            key={colIndex}
-            style={{ width: tileSize, height: tileSize }}
-            className="border"
-          >
-            <Wrong className="w-full h-full" />
-          </td>
-        ) : isTileMarked(rowIndex, colIndex) ? (
-          <td
-            key={colIndex}
-            style={{ width: tileSize, height: tileSize }}
-            className="bg-prettyGray border"
-          />
-        ) : tile === TileStates.FILLED ? (
-          <td
-            key={colIndex}
-            style={{ width: tileSize, height: tileSize }}
-            className={`border bg-absoluteBlack`}
-          />
-        ) : (
-          <td
-            key={colIndex}
-            style={{ width: tileSize, height: tileSize }}
-            className={`border cursor-pointer`}
-            onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
-            onMouseOver={() => handleMouseOver(rowIndex, colIndex)}
-            onMouseUp={() => setIsMouseDown(false)}
-          />
-        )
-      )}
+      {row.map((tile, colIndex) => {
+        if (tile === TileStates.MISTAKE) {
+          return (
+            <td
+              key={colIndex}
+              style={{ width: tileSize, height: tileSize }}
+              className="border"
+            >
+              <Wrong className="w-full h-full" />
+            </td>
+          );
+        } else if (isTileMarked(rowIndex, colIndex)) {
+          return (
+            <td
+              key={colIndex}
+              style={{ width: tileSize, height: tileSize }}
+              className="bg-prettyGray border"
+            />
+          );
+        } else if (tile === TileStates.FILLED) {
+          return (
+            <td
+              key={colIndex}
+              style={{ width: tileSize, height: tileSize }}
+              className={`border bg-absoluteBlack`}
+            />
+          );
+        } else {
+          return (
+            <td
+              key={colIndex}
+              style={{ width: tileSize, height: tileSize }}
+              className={`border cursor-pointer`}
+              onMouseDown={() => handleMouseDown(rowIndex, colIndex)}
+              onMouseOver={() => handleMouseOver(rowIndex, colIndex)}
+              onMouseUp={() => setIsMouseDown(false)}
+            />
+          );
+        }
+      })}
     </tr>
   ));
 
   return (
     <div className="flex flex-col w-[70%] h-full items-center">
       {gameStatus === GameStatus.LOST && !isLostPopupDismissed && (
-        <LostPopup setIsLostPopupDismissed={setIsLostPopupDismissed} />
+        <GamePopup
+          gameStatus={gameStatus}
+          onDismiss={() => setIsLostPopupDismissed(true)}
+        />
       )}
       {gameStatus === GameStatus.WON && (
-        <WonPopup setGameStatus={setGameStatus} />
+        <GamePopup
+          gameStatus={gameStatus}
+          onDismiss={() => setGameStatus(null)}
+        />
       )}
 
       <div
