@@ -1,11 +1,12 @@
+import { GameStatus } from '@nonogram-api-monorepo/types';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 type Props = {
-  handleResetButtonOnClick: () => void;
+  setIsLostPopupDismissed: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const LostPopup: React.FC<Props> = ({ handleResetButtonOnClick }) => {
+export const LostPopup: React.FC<Props> = ({ setIsLostPopupDismissed }) => {
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-absoluteWhite rounded-lg flex flex-col w-[15%] h-[25%] items-center justify-between p-5 border border-absoluteBlack">
@@ -19,10 +20,10 @@ export const LostPopup: React.FC<Props> = ({ handleResetButtonOnClick }) => {
             <button>Home</button>
           </Link>
           <button
-            onClick={() => handleResetButtonOnClick()}
+            onClick={() => setIsLostPopupDismissed(true)}
             className="hover:scale-105 active:scale-95 transition-transform border border-absoluteBlack p-2 rounded-lg shadow-xl"
           >
-            Restart
+            Dismiss
           </button>
         </div>
       </div>

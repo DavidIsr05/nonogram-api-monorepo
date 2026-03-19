@@ -218,19 +218,6 @@ export class GameService {
       throw new LikingUnfinishedGameException();
     }
 
-    if (updateGameDto.timer === 0) {
-      updateGameDto = {
-        ...updateGameDto,
-        mistakes: 0,
-        isFinished: false,
-        isLiked: false,
-        uncompletedNonogram: await this.generateEmptyUncompletedNonogram(
-          currentUser,
-          game.nonogramId
-        ),
-      };
-    }
-
     game.set({
       ...updateGameDto,
     });

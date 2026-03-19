@@ -4,7 +4,7 @@ import {
   TileStates,
 } from '@nonogram-api-monorepo/types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Timer, Mistakes, Restart, Wrong } from '../../../assets';
+import { Timer, Mistakes, Wrong } from '../../../assets';
 import { MISTAKES_THRESHOLD } from '../../../constants';
 import {
   useUpdateGameMutation,
@@ -36,6 +36,7 @@ export const GameBoard: React.FC<Props> = ({
   const [gameStatus, setGameStatus] = useState<GameStatus | null>(
     isFinished ? null : mistakes >= 3 ? GameStatus.LOST : GameStatus.FINE
   );
+  const [isLostPopupDismissed, setIsLostPopupDismissed] = useState(false);
 
   const coordinatesRef = useRef<{ rowIndex: number; colIndex: number }[]>([]);
   const elapsedTimeRef = useRef(elapsedTime);
@@ -116,12 +117,6 @@ export const GameBoard: React.FC<Props> = ({
     }
   };
 
-  const handleResetButtonOnClick = () => {
-    callUpdateGameQuery({ id, timer: 0 });
-    setElapsedTime(0);
-    setGameStatus(GameStatus.FINE);
-  };
-
   const markTile = (rowIndex: number, colIndex: number) => {
     if (!isFinished && gameStatus === GameStatus.FINE) {
       coordinatesRef.current.push({ rowIndex, colIndex });
@@ -195,8 +190,8 @@ export const GameBoard: React.FC<Props> = ({
 
   return (
     <div className="flex flex-col w-[70%] h-full items-center">
-      {gameStatus === GameStatus.LOST && (
-        <LostPopup handleResetButtonOnClick={handleResetButtonOnClick} />
+      {gameStatus === GameStatus.LOST && !isLostPopupDismissed && (
+        <LostPopup setIsLostPopupDismissed={setIsLostPopupDismissed} />
       )}
       {gameStatus === GameStatus.WON && (
         <WonPopup setGameStatus={setGameStatus} />
@@ -240,9 +235,6 @@ export const GameBoard: React.FC<Props> = ({
       </div>
 
       <div className="flex flex-row items-center gap-28 mt-5 text-4xl">
-        <button onClick={handleResetButtonOnClick}>
-          <Restart />
-        </button>
         <span className="flex flex-row items-center tabular-nums">
           <Mistakes />
           {mistakes}/{MISTAKES_THRESHOLD}
