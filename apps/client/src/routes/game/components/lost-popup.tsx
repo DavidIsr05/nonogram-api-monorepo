@@ -22,7 +22,7 @@ export const LostPopup: React.FC<Props> = ({ handleResetButtonOnClick }) => {
             onClick={() => handleResetButtonOnClick()}
             className="hover:scale-105 active:scale-95 transition-transform border border-absoluteBlack p-2 rounded-lg shadow-xl"
           >
-            Restarn
+            Restart
           </button>
         </div>
       </div>

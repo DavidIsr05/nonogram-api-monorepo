@@ -33,7 +33,7 @@ export const GameBoard: React.FC<Props> = ({
   const [elapsedTime, setElapsedTime] = useState(timer);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [gameStatus, setGameStatus] = useState<GameStatus | null>(
-    isFinished ? null : mistakes === 3 ? GameStatus.LOST : GameStatus.FINE
+    isFinished ? null : mistakes >= 3 ? GameStatus.LOST : GameStatus.FINE
   );
   const coordinatesRef = useRef<{ rowIndex: number; colIndex: number }[]>([]);
   const elapsedTimeRef = useRef(elapsedTime);
@@ -147,7 +147,10 @@ export const GameBoard: React.FC<Props> = ({
           >
             <Wrong className="w-full h-full" />
           </td>
-        ) : tile === TileStates.MARKED ? (
+        ) : coordinatesRef.current.some(
+            (cords) =>
+              cords.rowIndex === rowIndex && cords.colIndex === colIndex
+          ) ? (
           <td
             key={colIndex}
             style={{ width: tileSize, height: tileSize }}
@@ -223,7 +226,7 @@ export const GameBoard: React.FC<Props> = ({
         <button onClick={handleResetButtonOnClick}>
           <Restart />
         </button>
-        <span className="flex flex-row items-center">
+        <span className="flex flex-row items-center tabular-nums">
           <Mistakes />
           {mistakes}/{MISTAKES_THRESHOLD}
         </span>
