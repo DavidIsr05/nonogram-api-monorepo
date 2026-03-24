@@ -36,7 +36,7 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
 
       return (
         <li
-          className={`h-[7%] mb-4 flex flex-row items-center justify-between p-5 rounded-xl shadow-lg backdrop-blur-lg ${backgroundColor}`}
+          className={`h-[7%] flex flex-row items-center justify-between p-5 rounded-xl shadow-lg backdrop-blur-lg ${backgroundColor}`}
           key={position}
         >
           <div className="text-xl">{positionSymbol}</div>
@@ -54,9 +54,9 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
   );
 
   return (
-    <div className="mt-10 flex flex-col h-[90%] w-[20%] border items-center bg-globalLeaderboardsBackground rounded-xl shadow-xl">
+    <div className="mt-10 flex flex-col h-[90%] w-[20%] border items-center bg-globalLeaderboards rounded-xl shadow-xl">
       <Trophy className="aspect-square m-7" />
-      <ul className="list-inside w-[95%] h-[80%]">{leaders}</ul>
+      <ul className="list-inside w-[95%] h-[80%] space-y-4">{leaders}</ul>
     </div>
   );
 };

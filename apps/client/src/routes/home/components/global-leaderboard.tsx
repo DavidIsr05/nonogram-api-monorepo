@@ -45,14 +45,14 @@ export const GlobalLeaderboard: React.FC = () => {
   ) : (
     <li
       className="items-center justify-self-center text-4xl text-absoluteBlack/40"
-      key={'empty'}
+      key="empty"
     >
       Be the first one!
     </li>
   );
 
   return (
-    <div className="flex flex-col h-[95%] w-[30%] border items-center bg-globalLeaderboardsBackground/60 rounded-xl shadow-xl">
+    <div className="flex flex-col h-[95%] w-[30%] border items-center bg-globalLeaderboards/60 rounded-xl shadow-xl">
       <Trophy className="aspect-square m-5" />
       <ul className="list-inside w-[95%] h-[80%]">{leaders}</ul>
     </div>
