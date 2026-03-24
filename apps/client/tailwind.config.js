@@ -38,6 +38,10 @@ module.exports = {
         thirdPlaceBronzeBackground: '#CC8B00',
         dividorGray: '#9CA3AF',
         lightGrayBackground: '#F5F6F8'
+      },
+      backgroundImage: {
+        'defaultBG': "url(/repeated-square.png)",
+        'gameBG': 'url(/triangle-mosaic.png)'
       }
     },
   },

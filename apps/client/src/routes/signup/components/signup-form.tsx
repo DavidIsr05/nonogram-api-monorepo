@@ -11,6 +11,7 @@ export const SignupForm: React.FC = () => {
     password: '',
     personalNumber: null,
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
@@ -74,15 +75,24 @@ export const SignupForm: React.FC = () => {
           className="rounded-lg border border-absoluteBlack w-2/3 h-9 p-3"
           required
         />
-        <input
-          value={userSignupDto.password}
-          name="password"
-          onChange={handleChange}
-          type="password"
-          placeholder="Password:"
-          className="rounded-lg border border-absoluteBlack w-2/3 h-9 p-3"
-          required
-        />
+        <div className="relative w-2/3">
+          <input
+            value={userSignupDto.password}
+            name="password"
+            onChange={handleChange}
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Password:"
+            className="rounded-lg border border-absoluteBlack w-full h-9 p-3 pr-10"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-lg"
+          >
+            {showPassword ? '🙈' : '👁️'}
+          </button>
+        </div>
         <button
           type="submit"
           className="bg-signupPageOrange w-1/4 h-9 border border-absoluteBlack rounded-lg hover:scale-105 active:scale-95 transition-transform"

@@ -278,7 +278,7 @@ export class GameService {
       uncompletedNonogram: uncompletedNonogram,
       timer: checkAndUpdateInProgressNonogramDto.timer,
       mistakes: mistakes,
-      isFinished: isWon,
+      isFinished: isWon ? (mistakes >= MAX_FAILURES ? false : true) : false,
     });
 
     return {

@@ -53,7 +53,7 @@ export const Game: React.FC = () => {
     : 'fill-absoluteWhite';
 
   return (
-    <div className="w-screen h-screen bg-lightGrayBackground items-center flex flex-col">
+    <div className="w-screen h-screen bg-gameBG bg-center bg-repeat items-center flex flex-col">
       <Header />
       <div className="relative w-full h-[91%] p-3">
         <div className="absolute top-3 left-10 right-10 flex flex-row items-center justify-between text-4xl z-10 pointer-events-none">

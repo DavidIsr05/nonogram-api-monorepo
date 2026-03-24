@@ -72,7 +72,7 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
     </Carousel>
   ) : (
     <span className="items-center text-4xl text-absoluteBlack/40">
-      u did not finish any games yet...
+      You did not finish any games yet...
     </span>
   );
 };

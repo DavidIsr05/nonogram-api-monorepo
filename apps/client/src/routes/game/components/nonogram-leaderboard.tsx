@@ -36,7 +36,7 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
 
       return (
         <li
-          className={`h-[7%] mb-7 flex flex-row items-center justify-between p-5 rounded-xl shadow-lg backdrop-blur-lg ${backgroundColor}`}
+          className={`h-[7%] mb-4 flex flex-row items-center justify-between p-5 rounded-xl shadow-lg backdrop-blur-lg ${backgroundColor}`}
           key={position}
         >
           <div className="text-xl">{positionSymbol}</div>
