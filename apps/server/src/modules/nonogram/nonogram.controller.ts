@@ -40,13 +40,6 @@ export class NonogramController {
     );
   }
 
-  @Get('leaders/:nonogramId')
-  getNonogramLeaders(
-    @Param('nonogramId', new ParseUUIDPipe({ version: '4' })) nonogramId: string
-  ) {
-    return this.nonogramService.getNonogramLeaders(nonogramId, 10);
-  }
-
   @Get('global-leaders')
   getGlobalLeaders() {
     return this.nonogramService.getGlobalLeaders();

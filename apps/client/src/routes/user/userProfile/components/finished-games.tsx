@@ -41,7 +41,7 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
               }}
             >
               <div className="p-1">
-                <Card className="w-full h-full bg-globalLeaderboardsBackground/20 ring-0 border rounded-2xl shadow-md">
+                <Card className="w-full h-full bg-globalLeaderboards/20 ring-0 border rounded-2xl shadow-md">
                   <CardContent className="flex flex-col aspect-square items-center p-1 gap-3">
                     <img
                       src={`data:image/png;base64,${nonogram.completeNonogramImageBase64}`}

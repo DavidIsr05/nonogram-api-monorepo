@@ -376,40 +376,6 @@ export class NonogramService {
     }
   }
 
-  async getNonogramLeaders(nonogramId, limit) {
-    try {
-      const nonogramLeaders = await this.nonogramModel.findOne({
-        include: [
-          {
-            model: Game,
-            as: 'games',
-            where: {
-              isFinished: true,
-            },
-            attributes: ['timer'],
-            required: true,
-            include: [
-              {
-                model: User,
-                attributes: ['username'],
-              },
-            ],
-          },
-        ],
-        where: { id: nonogramId },
-        limit: limit,
-        attributes: ['id'],
-        order: [['games', 'timer', 'ASC']],
-      });
-      this.logger.log('Got nonogram leaders successfully', {
-        nonogramLeaders,
-      });
-      return nonogramLeaders;
-    } catch (error) {
-      throw new NonogramLeadersException(error.stack);
-    }
-  }
-
   async getGlobalLeaders() {
     try {
       const publicNonogramsDoneGames = await this.getPublicNonogramsDoneGames();

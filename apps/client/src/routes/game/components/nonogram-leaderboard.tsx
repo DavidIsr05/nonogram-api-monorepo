@@ -7,6 +7,7 @@ import {
   POSITION_SYMBOLS,
 } from '../../../constants';
 import { formatTime } from '../../../utils';
+import { cn } from '@nonogram-api-monorepo/ui-kit';
 
 type Props = {
   nonogramId: string;
@@ -28,7 +29,7 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
   }
 
   const leaders = nonogramLeaders ? (
-    nonogramLeaders.games.map(({ timer, user }, position) => {
+    nonogramLeaders.map(({ timer, user }, position) => {
       const positionSymbol = POSITION_SYMBOLS[position] ?? position + 1;
 
       const backgroundColor =
@@ -36,7 +37,10 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
 
       return (
         <li
-          className={`h-[7%] flex flex-row items-center justify-between p-5 rounded-xl shadow-lg backdrop-blur-lg ${backgroundColor}`}
+          className={cn(
+            'h-[7%] flex flex-row items-center justify-between p-5 rounded-xl shadow-lg backdrop-blur-lg',
+            backgroundColor
+          )}
           key={position}
         >
           <div className="text-xl">{positionSymbol}</div>

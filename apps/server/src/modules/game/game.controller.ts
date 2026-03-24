@@ -89,4 +89,11 @@ export class GameController {
       checkAndUpdateNonogramTileDto
     );
   }
+
+  @Get('leaders/:nonogramId')
+  getNonogramLeaders(
+    @Param('nonogramId', new ParseUUIDPipe({ version: '4' })) nonogramId: string
+  ) {
+    return this.gameService.getNonogramLeaders(nonogramId);
+  }
 }

@@ -7,6 +7,7 @@ import {
   FinishedGamesResponseType,
   GameWithCluesResponseType,
   UpdateGameType,
+  NonogramLeadersResponseType,
 } from '@nonogram-api-monorepo/types';
 import { api } from './api';
 
@@ -74,6 +75,13 @@ export const gameApi = api.injectEndpoints({
       }),
       invalidatesTags: ['Game'],
     }),
+    getNonogramLeaders: build.query<NonogramLeadersResponseType, string>({
+      query: (nonogramId) => ({
+        url: `game/leaders/${nonogramId}`,
+        method: 'GET',
+      }),
+      providesTags: ['Game', 'Nonogram'],
+    }),
   }),
 });
 
@@ -86,4 +94,5 @@ export const {
   useUpdateGameMutation,
   useDeleteGameMutation,
   useCheckAndUpdateInProgressNonogramMutation,
+  useGetNonogramLeadersQuery,
 } = gameApi;
