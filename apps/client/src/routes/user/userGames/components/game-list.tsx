@@ -69,7 +69,7 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
           </li>
         ))
       ) : (
-        <li className="text-center text-absoluteBlack/40">go play sum</li>
+        <li className="text-center text-absoluteBlack/40">Go play sum</li>
       )}
     </ul>
   );

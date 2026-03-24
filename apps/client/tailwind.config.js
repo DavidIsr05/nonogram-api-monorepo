@@ -20,7 +20,7 @@ module.exports = {
         absoluteBlack: '#000000',
         gradientStartYellow: '#E8AE48',
         gradientEndPurple: '#C95DDC',
-        globalLeaderboardsBackground: '#F4E1C6',
+        globalLeaderboards: '#F4E1C6',
         gameSelectorBackground: '#FBE6C1',
         loginFormBackground: '#F5E6FA',
         loginFormComponentBorder: '#A90FB8',
@@ -38,6 +38,10 @@ module.exports = {
         thirdPlaceBronzeBackground: '#CC8B00',
         dividorGray: '#9CA3AF',
         lightGrayBackground: '#F5F6F8'
+      },
+      backgroundImage: {
+        'default': "url(/repeated-square.png)",
+        'game': 'url(/triangle-mosaic.png)'
       }
     },
   },

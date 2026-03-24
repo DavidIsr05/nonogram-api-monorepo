@@ -61,11 +61,11 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
               className="cursor-pointer grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
               onClick={() => handleNonogramClick(id)}
             >
+              <span className="font-bold text-center">{name}</span>
+              <span className="text-dividorGray">|</span>
               <span className="font-semibold text-center">
                 {user?.username}
               </span>
-              <span className="text-dividorGray">|</span>
-              <span className="font-bold text-center">{name}</span>
               <span className="text-dividorGray">|</span>
               <span className="text-center" role="img" aria-label="size emoji">
                 📐 {DIFFICULTY_SIZE[difficulty]}
@@ -86,8 +86,8 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
           )
         )
       ) : (
-        <li className="text-center text-absoluteBlack/40">
-          nothing here yet...
+        <li className="text-center text-absoluteBlack/40 text-4xl">
+          Nothing here yet...
         </li>
       )}
     </ul>

@@ -44,7 +44,7 @@ export const GameBoard: React.FC<Props> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (gameStatus == GameStatus.FINE) {
+    if (gameStatus === GameStatus.FINE) {
       intervalRef.current = setInterval(() => {
         setElapsedTime((prev) => prev + 1);
       }, 1000);
@@ -215,7 +215,7 @@ export const GameBoard: React.FC<Props> = ({
         <table
           onMouseLeave={() => setIsMouseDown(false)}
           onMouseUp={() => setIsMouseDown(false)}
-          className="border border-absoluteBlack"
+          className="border border-absoluteBlack bg-absoluteWhite"
         >
           <thead>
             <tr>

@@ -12,6 +12,7 @@ export const LoginForm: React.FC = () => {
     personalNumber: '',
     password: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -65,15 +66,24 @@ export const LoginForm: React.FC = () => {
           className="rounded-lg border border-absoluteBlack w-2/3 h-9 p-3"
           required
         />
-        <input
-          value={userSignInDto.password}
-          name="password"
-          onChange={handleChange}
-          type="password"
-          placeholder="Password:"
-          className="rounded-lg border border-absoluteBlack w-2/3 h-9 p-3"
-          required
-        />
+        <div className="relative w-2/3">
+          <input
+            value={userSignInDto.password}
+            name="password"
+            onChange={handleChange}
+            type={showPassword ? 'text' : 'password'}
+            placeholder="Password:"
+            className="rounded-lg border border-absoluteBlack w-full h-9 p-3 pr-10"
+            required
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-lg"
+          >
+            {showPassword ? '🙈' : '👁️'}
+          </button>
+        </div>
         <button
           type="submit"
           className="bg-loginPagePurple w-1/4 h-9 border border-absoluteBlack rounded-lg hover:scale-105 active:scale-95 transition-transform"

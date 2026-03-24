@@ -11,8 +11,10 @@ import { NonogramService } from '../nonogram';
 import {
   ForbiddenGameException,
   LikingUnfinishedGameException,
+  NonogramLeadersException,
 } from '../../common';
 import { Nonogram } from '../nonogram/entity/nonogram.entity';
+import { User } from '../user/entity/user.entity';
 
 @Injectable()
 export class GameService {
@@ -278,7 +280,7 @@ export class GameService {
       uncompletedNonogram: uncompletedNonogram,
       timer: checkAndUpdateInProgressNonogramDto.timer,
       mistakes: mistakes,
-      isFinished: isWon,
+      isFinished: isWon && mistakes < MAX_FAILURES,
     });
 
     return {
@@ -290,5 +292,29 @@ export class GameService {
           ? GameStatus.WON
           : GameStatus.FINE,
     };
+  }
+
+  async getNonogramLeaders(nonogramId) {
+    try {
+      const nonogramLeaders = await Game.findAll({
+        where: { nonogramId, isFinished: true },
+        attributes: ['timer'],
+        include: [
+          {
+            model: User,
+            attributes: ['username'],
+          },
+        ],
+        limit: 10,
+        order: [['timer', 'ASC']],
+      });
+
+      this.logger.log('Got nonogram leaders successfully', {
+        nonogramLeaders,
+      });
+      return nonogramLeaders;
+    } catch (error) {
+      throw new NonogramLeadersException(error.stack);
+    }
   }
 }
