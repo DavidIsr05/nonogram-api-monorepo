@@ -200,7 +200,7 @@ export const GameBoard: React.FC<Props> = ({
   ));
 
   return (
-    <div className="flex flex-col w-[70%] h-full items-center">
+    <div className="flex flex-col w-[70%] h-full items-center select-none">
       {gameStatus === GameStatus.LOST && !isLostPopupDismissed && (
         <GamePopup
           gameStatus={gameStatus}

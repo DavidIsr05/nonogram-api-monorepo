@@ -55,34 +55,40 @@ export const LoginForm: React.FC = () => {
     <div className="flex flex-col w-1/2 h-full">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-[2.5rem] items-center"
+        className="flex flex-col gap-[3rem] items-center"
       >
-        <input
-          value={userSignInDto.personalNumber}
-          name="personalNumber"
-          onChange={handleChange}
-          type="number"
-          placeholder="Personal Number:"
-          className="rounded-lg border border-absoluteBlack w-full sm:w-2/3 h-9 p-3"
-          required
-        />
-        <div className="relative w-full sm:w-2/3">
+        <div className="w-full sm:w-2/3 h-9 flex flex-col">
+          <label>Personal Number:</label>
           <input
-            value={userSignInDto.password}
-            name="password"
+            value={userSignInDto.personalNumber}
+            name="personalNumber"
             onChange={handleChange}
-            type={showPassword ? 'text' : 'password'}
-            placeholder="Password:"
-            className="rounded-lg border border-absoluteBlack w-full h-9 p-3 pr-10"
+            type="number"
+            placeholder="1234567"
+            className="rounded-lg border border-absoluteBlack w-full h-9 p-3"
             required
           />
-          <button
-            type="button"
-            onClick={() => setShowPassword((prev) => !prev)}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-lg"
-          >
-            {showPassword ? '🙈' : '👁️'}
-          </button>
+        </div>
+        <div className="flex flex-col w-full sm:w-2/3 h-9">
+          <label>Password:</label>
+          <div className="relative w-full">
+            <input
+              value={userSignInDto.password}
+              name="password"
+              onChange={handleChange}
+              type={showPassword ? 'text' : 'password'}
+              placeholder="dog123"
+              className="rounded-lg border border-absoluteBlack w-full h-9 p-3 pr-10"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-lg"
+            >
+              {showPassword ? '🙈' : '👁️'}
+            </button>
+          </div>
         </div>
         <button
           type="submit"
