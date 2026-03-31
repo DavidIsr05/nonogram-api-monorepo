@@ -1,4 +1,7 @@
-import { FinishedGamesResponseType } from '@nonogram-api-monorepo/types';
+import {
+  FinishedGamesResponseType,
+  MISTAKES_THRESHOLD,
+} from '@nonogram-api-monorepo/types';
 import React from 'react';
 import {
   Carousel,
@@ -11,7 +14,6 @@ import {
 } from '@nonogram-api-monorepo/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { Like } from '../../../../assets';
-import { MISTAKES_THRESHOLD } from '../../../../constants';
 import { formatTime } from '../../../../utils';
 
 type Props = { finishedGames: FinishedGamesResponseType[] };

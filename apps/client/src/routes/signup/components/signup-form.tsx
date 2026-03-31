@@ -53,7 +53,7 @@ export const SignupForm: React.FC = () => {
     <div className="flex flex-col w-1/2">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col gap-[2.5rem] items-center"
+        className="flex flex-col gap-[2rem] md:gap-[2.5rem] items-center"
       >
         <input
           value={
@@ -63,7 +63,7 @@ export const SignupForm: React.FC = () => {
           onChange={handleChange}
           type="number"
           placeholder="Personal Number:"
-          className="rounded-lg border border-absoluteBlack w-2/3 h-9 p-3"
+          className="rounded-lg border border-absoluteBlack w-full sm:w-2/3 h-9 p-3"
           required
         />
         <input
@@ -72,10 +72,10 @@ export const SignupForm: React.FC = () => {
           onChange={handleChange}
           type="text"
           placeholder="Username:"
-          className="rounded-lg border border-absoluteBlack w-2/3 h-9 p-3"
+          className="rounded-lg border border-absoluteBlack w-full sm:w-2/3 h-9 p-3"
           required
         />
-        <div className="relative w-2/3">
+        <div className="relative w-full sm:w-2/3">
           <input
             value={userSignupDto.password}
             name="password"
@@ -95,7 +95,7 @@ export const SignupForm: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="bg-signupPageOrange w-1/4 h-9 border border-absoluteBlack rounded-lg hover:scale-105 active:scale-95 transition-transform"
+          className="bg-signupPageOrange w-1/2 sm:w-1/4 h-9 border border-absoluteBlack rounded-lg hover:scale-105 active:scale-95 transition-transform"
         >
           Sign up
         </button>

@@ -28,7 +28,11 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
     return <ErrorState error={error} />;
   }
 
-  const leaders = nonogramLeaders ? (
+  if (!nonogramLeaders) {
+    return null;
+  }
+
+  const leaders = nonogramLeaders[0] ? (
     nonogramLeaders.map(({ timer, user }, position) => {
       const positionSymbol = POSITION_SYMBOLS[position] ?? position + 1;
 
@@ -52,7 +56,10 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
       );
     })
   ) : (
-    <li className="items-center justify-self-center" key={'empty'}>
+    <li
+      className="items-center justify-self-center text-3xl text-absoluteBlack/40"
+      key={'empty'}
+    >
       Be the first one in here!
     </li>
   );

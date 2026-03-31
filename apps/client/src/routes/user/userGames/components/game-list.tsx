@@ -1,4 +1,7 @@
-import { NonogramDifficultiesEnumType } from '@nonogram-api-monorepo/types';
+import {
+  MISTAKES_THRESHOLD,
+  NonogramDifficultiesEnumType,
+} from '@nonogram-api-monorepo/types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -60,7 +63,7 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
               role="img"
               aria-label="mistakes emoji"
             >
-              ❌ : {mistakes}/3
+              ❌ : {mistakes}/{MISTAKES_THRESHOLD}
             </span>
             <span className="text-dividorGray">|</span>
             <span className="text-center" role="img" aria-label="size emoji">

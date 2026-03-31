@@ -10,8 +10,9 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
   const [editUserDto, setEditUserDto] = useState<UpdateUserType>({
     id,
     username,
-    password: '        ',
+    password: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const [updateUser] = useUpdateUserMutation();
 
@@ -19,7 +20,7 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
     const { name, value } = e.target;
     setEditUserDto((prev) => ({
       ...prev,
-      [name]: name === 'password' && value.trim() === '' ? value.trim() : value,
+      [name]: value,
     }));
   };
 
@@ -93,14 +94,23 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
         </div>
         <div className="flex flex-col items-center w-[40%]">
           <label className="self-start text-sm">Password:</label>
-          <input
-            value={editUserDto.password}
-            name="password"
-            onChange={handleChange}
-            type="password"
-            placeholder="Password:"
-            className="rounded-lg border border-absoluteBlack w-full h-9 p-3"
-          />
+          <div className="relative w-full">
+            <input
+              value={editUserDto.password}
+              name="password"
+              onChange={handleChange}
+              type={showPassword ? 'text' : 'password'}
+              placeholder="New Password:"
+              className="rounded-lg border border-absoluteBlack w-full h-9 p-3 pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-lg"
+            >
+              {showPassword ? '🙈' : '👁️'}
+            </button>
+          </div>
         </div>
         <button
           type="submit"

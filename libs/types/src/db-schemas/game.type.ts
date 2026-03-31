@@ -8,7 +8,7 @@ export const GameSchema = z
     nonogramId: z.string().uuid(),
     uncompletedNonogram: z.array(z.array(z.nativeEnum(TileStates))),
     timer: z.number().default(0),
-    mistakes: z.number().max(3).default(0),
+    mistakes: z.number().default(0),
     isFinished: z.boolean().default(false),
     isLiked: z.boolean().default(false),
     createdAt: z.string().datetime(),

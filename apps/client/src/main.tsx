@@ -9,6 +9,7 @@ import { Home } from './routes/home';
 import { Signup } from './routes/signup';
 import { UserProfile, UserGames } from './routes/user';
 import { NotFound } from './routes/not-found';
+import { TooltipProvider } from '@nonogram-api-monorepo/ui-kit';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -27,7 +28,9 @@ const router = createBrowserRouter([
 root.render(
   <StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <TooltipProvider>
+        <RouterProvider router={router} />
+      </TooltipProvider>
     </Provider>
   </StrictMode>
 );

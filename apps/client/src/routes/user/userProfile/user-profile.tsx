@@ -58,7 +58,7 @@ export const UserProfile: React.FC = () => {
           <UserInfo {...userData} />
           <UserStats {...userStats} />
         </div>
-        <span>Finished Games: </span>
+        <span className="font-medium text-2xl">Finished Games: </span>
         <FinishedGames finishedGames={finishedGames} />
       </div>
       <Toaster richColors />

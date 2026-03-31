@@ -11,7 +11,7 @@ export const Home: React.FC = () => {
   return (
     <div className="h-screen w-screen items-center flex flex-col bg-default bg-center bg-repeat">
       <Header />
-      <div className="h-[90%] w-full flex flex-row items-center justify-around">
+      <div className="h-[90%] w-full flex flex-row mb:flex-row items-center justify-around">
         <GlobalLeaderboard />
         <GameSelector
           name="Nonograms:"

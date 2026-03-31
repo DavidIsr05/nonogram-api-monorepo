@@ -63,10 +63,10 @@ export const LoginForm: React.FC = () => {
           onChange={handleChange}
           type="number"
           placeholder="Personal Number:"
-          className="rounded-lg border border-absoluteBlack w-2/3 h-9 p-3"
+          className="rounded-lg border border-absoluteBlack w-full sm:w-2/3 h-9 p-3"
           required
         />
-        <div className="relative w-2/3">
+        <div className="relative w-full sm:w-2/3">
           <input
             value={userSignInDto.password}
             name="password"
@@ -86,7 +86,7 @@ export const LoginForm: React.FC = () => {
         </div>
         <button
           type="submit"
-          className="bg-loginPagePurple w-1/4 h-9 border border-absoluteBlack rounded-lg hover:scale-105 active:scale-95 transition-transform"
+          className="bg-loginPagePurple w-1/2 sm:w-1/4 h-9 border border-absoluteBlack rounded-lg hover:scale-105 active:scale-95 transition-transform"
         >
           Log In
         </button>

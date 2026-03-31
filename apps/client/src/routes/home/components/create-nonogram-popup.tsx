@@ -16,6 +16,11 @@ import { toast } from 'sonner';
 import { DEFAULT_FORM, DIM_FACTOR_OPTIONS } from '../../../constants';
 import { PlusCreate, ImagePlaceholder, Upload } from '../../../assets';
 import { ErrorState, LoadingState } from '../../../components';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@nonogram-api-monorepo/ui-kit';
 
 export const CreateNonogramPopup: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -113,14 +118,21 @@ export const CreateNonogramPopup: React.FC = () => {
 
   return (
     <div>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="hover:scale-105 active:scale-95 transition-transform"
-        title="Create your own nonogram!"
-      >
-        <PlusCreate className="w-[3rem] aspect-square" />
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="hover:scale-110 active:scale-95 transition-transform"
+            title="Create your own nonogram!"
+          >
+            <PlusCreate className="w-[full] aspect-square" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="left">
+          <span>Create Nonogram</span>
+        </TooltipContent>
+      </Tooltip>
 
       {open && (
         <div

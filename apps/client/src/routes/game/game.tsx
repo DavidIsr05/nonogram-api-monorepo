@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { GameBoard, NonogramLeaderboard } from './components';
 import { Like, Star } from '../../assets';
 import { NonogramDifficultiesEnumValues } from '@nonogram-api-monorepo/types';
+import { DIFFICULTY_SIZE } from '../../constants';
 
 export const Game: React.FC = () => {
   const { gameId } = useParams<{ gameId: string }>();
