@@ -126,7 +126,7 @@ export const CreateNonogramPopup: React.FC = () => {
             className="hover:scale-110 active:scale-95 transition-transform"
             title="Create your own nonogram!"
           >
-            <PlusCreate className="w-[full] aspect-square" />
+            <PlusCreate className="w-[80%] sm:w-full aspect-square" />
           </button>
         </TooltipTrigger>
         <TooltipContent side="left">

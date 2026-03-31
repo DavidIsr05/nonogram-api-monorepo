@@ -52,13 +52,13 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
     : nonograms;
 
   return (
-    <ul className="flex flex-col gap-2 overflow-y-auto max-h-[93%] pb-2">
+    <ul className="flex flex-col gap-2 overflow-scroll h-auto list-inside pb-2">
       {filteredNonograms && filteredNonograms.length > 0 ? (
         filteredNonograms.map(
           ({ id, name, likeCount, gameCount, difficulty, user }) => (
             <li
               key={id}
-              className="cursor-pointer grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-lg"
+              className="cursor-pointer grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center shadow-md rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/30 text-sm md:text-lg"
               onClick={() => handleNonogramClick(id)}
             >
               <span className="font-bold text-center">{name}</span>

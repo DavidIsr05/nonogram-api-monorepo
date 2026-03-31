@@ -17,7 +17,7 @@ export const GameSelector: React.FC<Props> = ({
     useState<NonogramDifficultiesEnumType | null>(null);
 
   return (
-    <div className="h-[95%] w-[60%] border p-5 text-4xl rounded-xl bg-gameSelectorBackground/60 shadow-lg">
+    <div className="h-[95%] w-[80%] lg:w-[60%] border p-5 text-4xl rounded-xl bg-gameSelectorBackground/60 shadow-lg flex flex-col">
       <div className="grid grid-cols-[1fr_1fr_1fr]">
         <span className="font-medium">{name}</span>
         <div className="justify-self-center">

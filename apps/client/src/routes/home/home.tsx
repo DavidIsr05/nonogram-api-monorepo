@@ -9,9 +9,9 @@ import {
 
 export const Home: React.FC = () => {
   return (
-    <div className="h-screen w-screen items-center flex flex-col bg-default bg-center bg-repeat">
+    <div className="h-screen w-screen items-center flex flex-col bg-default bg-repeat">
       <Header />
-      <div className="h-[90%] w-full flex flex-row mb:flex-row items-center justify-around">
+      <div className="h-[90%] w-full flex flex-col-reverse lg:flex-row items-center justify-around p-5 lg:p-0 gap-5 lg:gap-0">
         <GlobalLeaderboard />
         <GameSelector
           name="Nonograms:"
