@@ -251,7 +251,7 @@ export const GameBoard: React.FC<Props> = ({
         </table>
       </div>
 
-      <div className="flex flex-row items-center gap-28 mt-5 text-4xl">
+      <div className="flex flex-row items-center gap-4 mt-5 md:gap-12 lg:gap-28 text-md md:text-xl lg:text-3xl">
         <span className="text-center" role="img" aria-label="size emoji">
           📐 {DIFFICULTY_SIZE[nonogramDifficulty]}
         </span>
