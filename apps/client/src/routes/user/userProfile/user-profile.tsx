@@ -51,9 +51,9 @@ export const UserProfile: React.FC = () => {
   }
 
   return (
-    <div className="w-screen h-screen bg-default bg-center bg-repeat overflow-scroll">
+    <div className="w-full h-screen bg-default bg-center bg-repeat overflow-auto">
       <Header />
-      <div className="h-[90%] w-full flex flex-col items-center justify-around p-5">
+      <div className="flex-1 w-full flex flex-col items-center justify-around p-5">
         <div className="flex flex-col xl:flex-row w-[90%] h-auto border rounded-2xl shadow-lg items-center bg-absoluteWhite/70 p-5">
           <UserInfo {...userData} />
           <UserStats {...userStats} />

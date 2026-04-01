@@ -136,16 +136,16 @@ export const CreateNonogramPopup: React.FC = () => {
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-absoluteBlack/50"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-absoluteBlack/50 overflow-auto"
           onClick={handleClose}
         >
           <div
-            className="bg-absoluteWhite rounded-2xl shadow-2xl p-6 flex flex-col gap-5 w-[25%]"
+            className="bg-absoluteWhite rounded-2xl shadow-2xl p-6 flex flex-col gap-5 w-[25%] h-max-[90%]"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col gap-2">
               <div
-                className="relative border rounded-xl aspect-square flex items-center justify-center bg-simpleGray cursor-pointer overflow-hidden"
+                className="relative border rounded-xl aspect-square flex items-center justify-center bg-simpleGray cursor-pointer"
                 onClick={() => fileInputRef.current?.click()}
               >
                 {form.imageBase64 ? (
@@ -172,7 +172,7 @@ export const CreateNonogramPopup: React.FC = () => {
                 className="hidden"
                 onChange={handleImageChange}
               />
-              <div className="flex gap-2">
+              <div className="flex flex-col md:flex-row gap-2">
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
@@ -203,7 +203,7 @@ export const CreateNonogramPopup: React.FC = () => {
                   maxLength={16}
                 />
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-col xl:flex-row gap-3">
                 <div className="flex-1 flex flex-col gap-1">
                   <label
                     className="text-sm"
@@ -258,7 +258,7 @@ export const CreateNonogramPopup: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col md:flex-row items-center gap-2">
               {userData.isAdmin && (
                 <label className="flex items-center gap-1 text-sm cursor-pointer">
                   <input
@@ -269,7 +269,7 @@ export const CreateNonogramPopup: React.FC = () => {
                   Public
                 </label>
               )}
-              <div className="flex gap-2 ml-auto">
+              <div className="flex flex-col lg:flex-row gap-2 ml-auto">
                 <button
                   type="button"
                   onClick={handleReset}

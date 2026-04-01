@@ -52,7 +52,7 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
     : nonograms;
 
   return (
-    <ul className="flex flex-col gap-2 overflow-scroll h-auto list-inside pb-2">
+    <ul className="flex flex-col gap-2 overflow-auto h-auto list-inside pb-2">
       {filteredNonograms && filteredNonograms.length > 0 ? (
         filteredNonograms.map(
           ({ id, name, likeCount, gameCount, difficulty, user }) => (

@@ -54,7 +54,7 @@ export const GlobalLeaderboard: React.FC = () => {
   return (
     <div className="flex flex-col h-[95%] w-[80%] lg:w-[30%] border items-center bg-globalLeaderboards/60 rounded-xl shadow-xl">
       <Trophy className="aspect-square m-5" />
-      <ul className="list-inside w-[95%] h-auto overflow-scroll">{leaders}</ul>
+      <ul className="list-inside w-[95%] h-auto overflow-auto">{leaders}</ul>
     </div>
   );
 };

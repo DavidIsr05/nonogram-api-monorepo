@@ -44,7 +44,7 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
     : games;
 
   return (
-    <ul className="flex flex-col list-inside gap-2 overflow-scroll h-auto pb-2">
+    <ul className="flex flex-col list-inside gap-2 overflow-auto h-auto pb-2">
       {filteredGames && filteredGames.length > 0 ? (
         filteredGames.map(({ id, nonogram, timer, mistakes }) => (
           <li

@@ -9,11 +9,11 @@ import {
 
 export const Header: React.FC = () => {
   return (
-    <div className="w-screen h-[9%] flex flex-row gap-[1%] items-center bg-gradient-to-r from-gradientStartYellow to-gradientEndPurple">
+    <div className="w-full h-[9%] flex flex-row gap-[1%] items-center bg-gradient-to-r from-gradientStartYellow to-gradientEndPurple">
       <Tooltip>
         <TooltipTrigger asChild>
           <Link to="/home" className="h-full overflow-hidden">
-            <Logo className="h-full aspect-auto hover:scale-105 active:scale-100 transition-transform" />
+            <Logo className="translate-x-0 h-full aspect-auto hover:scale-105 active:scale-100 transition-transform" />
           </Link>
         </TooltipTrigger>
         <TooltipContent side="bottom">
