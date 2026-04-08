@@ -77,7 +77,7 @@ export const LoginForm: React.FC = () => {
               name="password"
               onChange={handleChange}
               type={showPassword ? 'text' : 'password'}
-              placeholder="dog123"
+              placeholder="StrongPassword123!"
               className="rounded-lg border border-absoluteBlack w-full h-9 p-3 pr-10"
               required
             />
