@@ -25,7 +25,6 @@ import { Op, fn, col } from 'sequelize';
 import {
   ForbiddenNonogramException,
   GlobalLeadersException,
-  NonogramLeadersException,
 } from '../../common';
 import { EncryptionService } from '@hedger/nestjs-encryption';
 import { chunk } from 'lodash';
