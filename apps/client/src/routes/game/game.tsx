@@ -53,17 +53,17 @@ export const Game: React.FC = () => {
     : 'fill-absoluteWhite';
 
   return (
-    <div className="w-screen h-screen bg-game bg-center bg-repeat items-center flex flex-col">
+    <div className="w-full h-screen bg-game bg-center bg-repeat items-center flex flex-col">
       <Header />
       <div className="relative w-full h-[91%] p-3">
         <div className="absolute top-3 left-10 right-10 flex flex-row items-center justify-between text-4xl z-10 pointer-events-none">
-          <div className="flex flex-row items-center gap-10">
+          <div className="flex flex-col 2xl:flex-row items-center gap-3 2xl:gap-10 text-xl xl:text-4xl">
             <span className="font-bold">{gameData.nonogramName}</span>
             <div className="flex flex-row">
               {Object.values(NonogramDifficultiesEnumValues.enum).map(
                 (_, difficultyIndex) => (
                   <Star
-                    className={`aspect-square w-[3rem] ${getStarColor(
+                    className={`aspect-square w-[2rem] xl:w-[3rem] ${getStarColor(
                       difficultyIndex
                     )}`}
                     key={difficultyIndex}

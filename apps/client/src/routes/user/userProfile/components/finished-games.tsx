@@ -1,4 +1,7 @@
-import { FinishedGamesResponseType } from '@nonogram-api-monorepo/types';
+import {
+  FinishedGamesResponseType,
+  MISTAKES_THRESHOLD,
+} from '@nonogram-api-monorepo/types';
 import React from 'react';
 import {
   Carousel,
@@ -11,7 +14,6 @@ import {
 } from '@nonogram-api-monorepo/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { Like } from '../../../../assets';
-import { MISTAKES_THRESHOLD } from '../../../../constants';
 import { formatTime } from '../../../../utils';
 
 type Props = { finishedGames: FinishedGamesResponseType[] };
@@ -25,7 +27,7 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
   };
 
   return finishedGames[0] ? (
-    <Carousel className="w-[40%]">
+    <Carousel className="w-[90%] h-auto  select-none" orientation="horizontal">
       <CarouselContent>
         {finishedGames.map(({ timer, mistakes, nonogram, isLiked, id }) => {
           const likeIconFill = isLiked
@@ -35,7 +37,7 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
           return (
             <CarouselItem
               key={id}
-              className="basis-1/3 cursor-pointer"
+              className="basis-1/4 xl:basis-1/6 cursor-pointer"
               onClick={() => {
                 handleClick(id);
               }}
@@ -49,12 +51,12 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
                       className="w-[90%]"
                     />
                     <span className="font-bold">{nonogram.name}</span>
-                    <div className="flex flex-row gap-5 items-center">
+                    <div className="flex flex-row gap-3 items-center">
                       <span role="img" aria-label="timer emoji">
-                        ⏱️ : {formatTime(timer)}
+                        ⏱️: {formatTime(timer)}
                       </span>
                       <span role="img" aria-label="mistake emoji">
-                        ❌ : {mistakes}/{MISTAKES_THRESHOLD}
+                        ❌: {mistakes}/{MISTAKES_THRESHOLD}
                       </span>
                       <Like
                         className={`aspect-square h-[40%] ${likeIconFill}`}

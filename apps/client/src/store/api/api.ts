@@ -20,8 +20,8 @@ const baseQueryWithAuth: BaseQueryFn<
   const result = await rawBaseQuery(args, api, extraOptions);
 
   if (
-    result.error?.status === 401 ||
-    result.error?.status === 403
+    (result.error?.status === 401 || result.error?.status === 403) &&
+    window.location.pathname !== '/'
   ) {
     api.dispatch(clearUserId());
     window.location.replace('/');

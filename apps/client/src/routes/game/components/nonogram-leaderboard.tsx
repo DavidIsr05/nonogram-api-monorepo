@@ -28,7 +28,11 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
     return <ErrorState error={error} />;
   }
 
-  const leaders = nonogramLeaders ? (
+  if (!nonogramLeaders) {
+    return null;
+  }
+
+  const leaders = nonogramLeaders[0] ? (
     nonogramLeaders.map(({ timer, user }, position) => {
       const positionSymbol = POSITION_SYMBOLS[position] ?? position + 1;
 
@@ -43,24 +47,33 @@ export const NonogramLeaderboard: React.FC<Props> = ({ nonogramId }) => {
           )}
           key={position}
         >
-          <div className="text-xl">{positionSymbol}</div>
-          <div className="text-2xl">{user.username}</div>
-          <span className="text-xl" role="img" aria-label="timer emoji">
+          <div className="text-sm md:text-xl">{positionSymbol}</div>
+          <div className="text-base md:text-2xl">{user.username}</div>
+          <span
+            className="text-sm xl:text-xl"
+            role="img"
+            aria-label="timer emoji"
+          >
             ⏱️: {formatTime(timer)}
           </span>
         </li>
       );
     })
   ) : (
-    <li className="items-center justify-self-center" key={'empty'}>
+    <li
+      className="items-center justify-self-center text-3xl text-absoluteBlack/40"
+      key={'empty'}
+    >
       Be the first one in here!
     </li>
   );
 
   return (
-    <div className="mt-10 flex flex-col h-[90%] w-[20%] border items-center bg-globalLeaderboards rounded-xl shadow-xl">
+    <div className="mt-28 2xl:mt-10 flex flex-col h-[80%] 2xl:h-[90%] w-[20%] border items-center bg-globalLeaderboards rounded-xl shadow-xl">
       <Trophy className="aspect-square m-7" />
-      <ul className="list-inside w-[95%] h-[80%] space-y-4">{leaders}</ul>
+      <ul className="list-inside w-[95%] h-[81%] space-y-4 overflow-auto">
+        {leaders}
+      </ul>
     </div>
   );
 };

@@ -10,8 +10,9 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
   const [editUserDto, setEditUserDto] = useState<UpdateUserType>({
     id,
     username,
-    password: '        ',
+    password: '',
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const [updateUser] = useUpdateUserMutation();
 
@@ -19,7 +20,7 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
     const { name, value } = e.target;
     setEditUserDto((prev) => ({
       ...prev,
-      [name]: name === 'password' && value.trim() === '' ? value.trim() : value,
+      [name]: value,
     }));
   };
 
@@ -68,19 +69,19 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-5 w-[50%] h-[80%] border-r border-r-absoluteBlack">
-      <span className="text-2xl font-medium">Update user info:</span>
+    <div className="flex flex-col items-center gap-5 p-5 w-[90%] xl:w-[50%] h-auto border-b border-b-absoluteBlack xl:border-r xl:border-b-0 border-r-absoluteBlack">
+      <span className="text-2xl font-medium">Update User Info:</span>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-5 items-center w-full"
       >
-        <div className="flex flex-col items-center w-[40%]">
+        <div className="flex flex-col items-center w-[50%] xl:w-[40%]">
           <label className="self-start text-sm">Personal Number:</label>
-          <div className="rounded-lg border border-absoluteBlack w-full h-9 p-3 flex items-center">
+          <div className="rounded-xl border border-absoluteBlack w-full h-9 p-3 flex items-center">
             {personalNumber}
           </div>
         </div>
-        <div className="flex flex-col items-center w-[40%]">
+        <div className="flex flex-col items-center w-[50%] xl:w-[40%]">
           <label className="self-start text-sm">Username:</label>
           <input
             value={editUserDto.username}
@@ -88,23 +89,32 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
             onChange={handleChange}
             type="text"
             placeholder="Username:"
-            className="rounded-lg border border-absoluteBlack w-full h-9 p-3"
+            className="rounded-xl border border-absoluteBlack w-full h-9 p-3"
           />
         </div>
-        <div className="flex flex-col items-center w-[40%]">
+        <div className="flex flex-col items-center w-[50%] xl:w-[40%]">
           <label className="self-start text-sm">Password:</label>
-          <input
-            value={editUserDto.password}
-            name="password"
-            onChange={handleChange}
-            type="password"
-            placeholder="Password:"
-            className="rounded-lg border border-absoluteBlack w-full h-9 p-3"
-          />
+          <div className="relative w-full">
+            <input
+              value={editUserDto.password}
+              name="password"
+              onChange={handleChange}
+              type={showPassword ? 'text' : 'password'}
+              placeholder="New Password:"
+              className="rounded-xl border border-absoluteBlack w-full h-9 p-3 pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-xl"
+            >
+              {showPassword ? '🙈' : '👁️'}
+            </button>
+          </div>
         </div>
         <button
           type="submit"
-          className="bg-buttonGreen w-[10%] h-9 border border-absoluteBlack rounded-lg text-base hover:scale-105 active:scale-95 transition-transform"
+          className="bg-buttonGreen w-[20%] xl:w-[15%] h-9 border border-absoluteBlack rounded-xl text-base hover:scale-105 active:scale-95 transition-transform"
         >
           Update
         </button>

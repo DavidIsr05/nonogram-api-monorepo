@@ -1,11 +1,11 @@
 import {
   GameStatus,
   GameWithCluesResponseType,
+  MISTAKES_THRESHOLD,
   TileStates,
 } from '@nonogram-api-monorepo/types';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { Timer, Mistakes, Wrong } from '../../../assets';
-import { MISTAKES_THRESHOLD } from '../../../constants';
 import {
   useUpdateGameMutation,
   useCheckAndUpdateInProgressNonogramMutation,
@@ -13,6 +13,7 @@ import {
 import { formatTime } from '../../../utils';
 import debounce from 'debounce';
 import { GamePopup } from './index';
+import { DIFFICULTY_SIZE } from '../../../constants';
 
 type Props = GameWithCluesResponseType;
 
@@ -24,6 +25,7 @@ export const GameBoard: React.FC<Props> = ({
   mistakes,
   id,
   isFinished,
+  nonogramDifficulty,
 }) => {
   const [callUpdateGameQuery] = useUpdateGameMutation();
   const [checkAndUpdateInProgressNonogram] =
@@ -33,7 +35,11 @@ export const GameBoard: React.FC<Props> = ({
   const [elapsedTime, setElapsedTime] = useState(timer);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [gameStatus, setGameStatus] = useState<GameStatus | null>(
-    isFinished ? null : mistakes >= 3 ? GameStatus.LOST : GameStatus.FINE
+    isFinished
+      ? null
+      : mistakes >= MISTAKES_THRESHOLD
+      ? GameStatus.LOST
+      : GameStatus.FINE
   );
   const [isLostPopupDismissed, setIsLostPopupDismissed] = useState(false);
 
@@ -194,7 +200,7 @@ export const GameBoard: React.FC<Props> = ({
   ));
 
   return (
-    <div className="flex flex-col w-[70%] h-full items-center">
+    <div className="flex flex-col w-[70%] h-full items-center select-none">
       {gameStatus === GameStatus.LOST && !isLostPopupDismissed && (
         <GamePopup
           gameStatus={gameStatus}
@@ -245,7 +251,10 @@ export const GameBoard: React.FC<Props> = ({
         </table>
       </div>
 
-      <div className="flex flex-row items-center gap-28 mt-5 text-4xl">
+      <div className="flex flex-row items-center gap-4 mt-5 md:gap-12 lg:gap-28 text-md md:text-xl lg:text-3xl">
+        <span className="text-center" role="img" aria-label="size emoji">
+          📐 {DIFFICULTY_SIZE[nonogramDifficulty]}
+        </span>
         <span className="flex flex-row items-center tabular-nums">
           <Mistakes />
           {mistakes}/{MISTAKES_THRESHOLD}

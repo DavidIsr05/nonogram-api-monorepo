@@ -51,14 +51,14 @@ export const UserProfile: React.FC = () => {
   }
 
   return (
-    <div className="w-screen h-screen bg-default bg-center bg-repeat">
+    <div className="w-full h-screen bg-default bg-center bg-repeat overflow-auto">
       <Header />
-      <div className="h-[91%] w-[95%] justify-self-center flex flex-col items-center justify-around">
-        <div className="flex flex-row w-[90%] h-[50%] border rounded-2xl shadow-lg items-center bg-absoluteWhite/70">
+      <div className="flex-1 w-full flex flex-col items-center justify-around p-5">
+        <div className="flex flex-col xl:flex-row w-[90%] h-auto border rounded-2xl shadow-lg items-center bg-absoluteWhite/70 p-5">
           <UserInfo {...userData} />
           <UserStats {...userStats} />
         </div>
-        <span>Finished Games: </span>
+        <span className="font-medium pt-5 text-2xl">Finished Games: </span>
         <FinishedGames finishedGames={finishedGames} />
       </div>
       <Toaster richColors />

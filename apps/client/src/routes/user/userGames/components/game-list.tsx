@@ -1,4 +1,7 @@
-import { NonogramDifficultiesEnumType } from '@nonogram-api-monorepo/types';
+import {
+  MISTAKES_THRESHOLD,
+  NonogramDifficultiesEnumType,
+} from '@nonogram-api-monorepo/types';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -41,7 +44,7 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
     : games;
 
   return (
-    <ul className="flex flex-col gap-2 overflow-y-auto max-h-[93%] pb-2">
+    <ul className="flex flex-col list-inside gap-2 overflow-auto h-auto pb-2">
       {filteredGames && filteredGames.length > 0 ? (
         filteredGames.map(({ id, nonogram, timer, mistakes }) => (
           <li
@@ -60,7 +63,7 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
               role="img"
               aria-label="mistakes emoji"
             >
-              ❌ : {mistakes}/3
+              ❌ : {mistakes}/{MISTAKES_THRESHOLD}
             </span>
             <span className="text-dividorGray">|</span>
             <span className="text-center" role="img" aria-label="size emoji">

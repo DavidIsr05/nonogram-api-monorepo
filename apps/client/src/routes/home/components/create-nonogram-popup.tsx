@@ -16,6 +16,11 @@ import { toast } from 'sonner';
 import { DEFAULT_FORM, DIM_FACTOR_OPTIONS } from '../../../constants';
 import { PlusCreate, ImagePlaceholder, Upload } from '../../../assets';
 import { ErrorState, LoadingState } from '../../../components';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@nonogram-api-monorepo/ui-kit';
 
 export const CreateNonogramPopup: React.FC = () => {
   const [open, setOpen] = useState(false);
@@ -113,27 +118,34 @@ export const CreateNonogramPopup: React.FC = () => {
 
   return (
     <div>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="hover:scale-105 active:scale-95 transition-transform"
-        title="Create your own nonogram!"
-      >
-        <PlusCreate className="w-[3rem] aspect-square" />
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            type="button"
+            onClick={() => setOpen(true)}
+            className="hover:scale-110 active:scale-95 transition-transform"
+            title="Create your own nonogram!"
+          >
+            <PlusCreate className="w-[80%] sm:w-full aspect-square" />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="left">
+          <span>Create Nonogram</span>
+        </TooltipContent>
+      </Tooltip>
 
       {open && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-absoluteBlack/50"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-absoluteBlack/50 overflow-auto"
           onClick={handleClose}
         >
           <div
-            className="bg-absoluteWhite rounded-2xl shadow-2xl p-6 flex flex-col gap-5 w-[25%]"
+            className="bg-absoluteWhite rounded-2xl shadow-2xl p-6 flex flex-col gap-5 w-[25%] h-max-[90%]"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col gap-2">
               <div
-                className="relative border rounded-xl aspect-square flex items-center justify-center bg-simpleGray cursor-pointer overflow-hidden"
+                className="relative border rounded-xl aspect-square flex items-center justify-center bg-simpleGray cursor-pointer"
                 onClick={() => fileInputRef.current?.click()}
               >
                 {form.imageBase64 ? (
@@ -160,7 +172,7 @@ export const CreateNonogramPopup: React.FC = () => {
                 className="hidden"
                 onChange={handleImageChange}
               />
-              <div className="flex gap-2">
+              <div className="flex flex-col md:flex-row gap-2">
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
@@ -191,7 +203,7 @@ export const CreateNonogramPopup: React.FC = () => {
                   maxLength={16}
                 />
               </div>
-              <div className="flex gap-3">
+              <div className="flex flex-col xl:flex-row gap-3">
                 <div className="flex-1 flex flex-col gap-1">
                   <label
                     className="text-sm"
@@ -246,7 +258,7 @@ export const CreateNonogramPopup: React.FC = () => {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col md:flex-row items-center gap-2">
               {userData.isAdmin && (
                 <label className="flex items-center gap-1 text-sm cursor-pointer">
                   <input
@@ -257,7 +269,7 @@ export const CreateNonogramPopup: React.FC = () => {
                   Public
                 </label>
               )}
-              <div className="flex gap-2 ml-auto">
+              <div className="flex flex-col lg:flex-row gap-2 ml-auto">
                 <button
                   type="button"
                   onClick={handleReset}

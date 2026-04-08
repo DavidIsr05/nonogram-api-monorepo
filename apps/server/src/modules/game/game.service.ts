@@ -6,7 +6,11 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Game } from './entity/game.entity';
-import { GameStatus, TileStates } from '@nonogram-api-monorepo/types';
+import {
+  GameStatus,
+  TileStates,
+  MISTAKES_THRESHOLD,
+} from '@nonogram-api-monorepo/types';
 import { NonogramService } from '../nonogram';
 import {
   ForbiddenGameException,
@@ -266,8 +270,6 @@ export class GameService {
       }
     );
 
-    const MAX_FAILURES = 3;
-
     const isWon = foundNonogram.nonogram.every((row, rowIndex) =>
       row.every(
         (tile, colIndex) =>
@@ -280,13 +282,13 @@ export class GameService {
       uncompletedNonogram: uncompletedNonogram,
       timer: checkAndUpdateInProgressNonogramDto.timer,
       mistakes: mistakes,
-      isFinished: isWon && mistakes < MAX_FAILURES,
+      isFinished: isWon && mistakes < MISTAKES_THRESHOLD,
     });
 
     return {
       board: uncompletedNonogram,
       status:
-        mistakes >= MAX_FAILURES
+        mistakes >= MISTAKES_THRESHOLD
           ? GameStatus.LOST
           : isWon
           ? GameStatus.WON
