@@ -158,7 +158,7 @@ function CarouselItem({ className, ...props }: React.ComponentProps<'div'>) {
       aria-roledescription="slide"
       data-slot="carousel-item"
       className={cn(
-        'min-w-0 shrink-0 grow-0 basis-full',
+        'min-w-0 flex-1 max-h-full basis-full',
         orientation === 'horizontal' ? 'pl-4' : 'pt-4',
         className
       )}
@@ -177,7 +177,7 @@ function CarouselPrevious({
     <button
       data-slot="carousel-previous"
       className={cn(
-        'rounded-full absolute touch-manipulation disabled:cursor-not-allowed disabled:text-absoluteBlack/40',
+        'rounded-full absolute touch-manipulation disabled:cursor-default disabled:text-transparent',
         orientation === 'horizontal'
           ? 'top-1/2 -left-12 -translate-y-1/2'
           : '-top-12 left-1/2 -translate-x-1/2 rotate-90',
@@ -200,7 +200,7 @@ function CarouselNext({ className, ...props }: React.ComponentProps<'button'>) {
     <button
       data-slot="carousel-next"
       className={cn(
-        'rounded-full absolute touch-manipulation disabled:cursor-not-allowed disabled:text-absoluteBlack/40',
+        'rounded-full absolute touch-manipulation disabled:cursor-default disabled:text-transparent',
         orientation === 'horizontal'
           ? 'top-1/2 -right-12 -translate-y-1/2'
           : '-bottom-12 left-1/2 -translate-x-1/2 rotate-90',

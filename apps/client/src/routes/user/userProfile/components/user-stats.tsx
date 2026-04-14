@@ -13,7 +13,7 @@ export const UserStats: React.FC<Props> = ({
 }) => {
   return (
     <div className="flex flex-col items-center h-auto p-5 w-[90%] xl:w-[50%] gap-5 text-xl">
-      <span className="text-2xl font-medium">Stats:</span>
+      <span className="text-2xl font-medium underline">Stats:</span>
       <div className="flex flex-col items-start gap-5">
         <span role="img" aria-label="Nonograms created">
           🎨 Nonograms created: {nonogramsCreated}

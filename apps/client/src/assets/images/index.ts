@@ -13,3 +13,4 @@ export { default as Timer } from './timer.svg?react';
 export { default as Trophy } from './trophy.svg?react';
 export { default as Upload } from './upload.svg?react';
 export { default as Wrong } from './wrong.svg?react';
+export { default as Info } from './info.svg?react';

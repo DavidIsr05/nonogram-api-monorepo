@@ -14,7 +14,7 @@ import {
 import { RootState } from '../../../store/store';
 import { toast } from 'sonner';
 import { DEFAULT_FORM, DIM_FACTOR_OPTIONS } from '../../../constants';
-import { PlusCreate, ImagePlaceholder, Upload } from '../../../assets';
+import { PlusCreate, ImagePlaceholder, Upload, Info } from '../../../assets';
 import { ErrorState, LoadingState } from '../../../components';
 import {
   Tooltip,
@@ -124,7 +124,6 @@ export const CreateNonogramPopup: React.FC = () => {
             type="button"
             onClick={() => setOpen(true)}
             className="hover:scale-110 active:scale-95 transition-transform"
-            title="Create your own nonogram!"
           >
             <PlusCreate className="w-[80%] sm:w-full aspect-square" />
           </button>
@@ -205,12 +204,28 @@ export const CreateNonogramPopup: React.FC = () => {
               </div>
               <div className="flex flex-col xl:flex-row gap-3">
                 <div className="flex-1 flex flex-col gap-1">
-                  <label
-                    className="text-sm"
-                    title="Easy: 20x20; Medium: 30x30; Hard: 40x40"
-                  >
-                    Difficulty:
-                  </label>
+                  <div className="flex flex-row gap-2">
+                    <label
+                      className="text-sm"
+                      title="Easy: 20x20; Medium: 30x30; Hard: 40x40"
+                    >
+                      Difficulty:
+                    </label>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <span>
+                          Easy: 20x20
+                          <br />
+                          Medium: 30x30
+                          <br />
+                          Hard: 40x40
+                        </span>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                   <select
                     className="w-full border rounded-lg px-3 py-1.5 text-sm"
                     value={form.difficulty}
@@ -231,12 +246,25 @@ export const CreateNonogramPopup: React.FC = () => {
                   </select>
                 </div>
                 <div className="flex-1 flex flex-col gap-1">
-                  <label
-                    className="text-sm"
-                    title="Less value for more pixels."
-                  >
-                    Pixel Detection Rate:
-                  </label>
+                  <div className="flex flex-row gap-2">
+                    <label
+                      className="text-sm"
+                      title="Less value for more pixels."
+                    >
+                      Pixel Detection Rate:
+                    </label>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Info />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <span>
+                          Sensitivity of pixel detection. Lower values detect
+                          more pixels, higher values detect fewer.
+                        </span>
+                      </TooltipContent>
+                    </Tooltip>
+                  </div>
                   <select
                     className="w-full border rounded-lg px-3 py-1.5 text-sm"
                     value={form.mainObjectDimFactor}

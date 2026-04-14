@@ -4,3 +4,4 @@ export * from './carousel';
 export * from './card';
 export * from './cn';
 export * from './tooltip';
+export * from './separator';

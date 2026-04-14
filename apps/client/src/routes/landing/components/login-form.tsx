@@ -65,7 +65,7 @@ export const LoginForm: React.FC = () => {
             onChange={handleChange}
             type="number"
             placeholder="1234567"
-            className="rounded-lg border border-absoluteBlack w-full h-9 p-3"
+            className="rounded-lg border border-absoluteBlack w-full h-9 p-3 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             required
           />
         </div>
@@ -84,7 +84,8 @@ export const LoginForm: React.FC = () => {
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-lg"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-lg disabled:cursor-not-allowed"
+              disabled={!userSignInDto.password}
             >
               {showPassword ? '🙈' : '👁️'}
             </button>

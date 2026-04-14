@@ -70,14 +70,14 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
 
   return (
     <div className="flex flex-col items-center gap-5 p-5 w-[90%] xl:w-[50%] h-auto border-b border-b-absoluteBlack xl:border-r xl:border-b-0 border-r-absoluteBlack">
-      <span className="text-2xl font-medium">Update User Info:</span>
+      <span className="text-2xl font-medium underline">Update User Info:</span>
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-5 items-center w-full"
       >
         <div className="flex flex-col items-center w-[50%] xl:w-[40%]">
           <label className="self-start text-sm">Personal Number:</label>
-          <div className="rounded-xl border border-absoluteBlack w-full h-9 p-3 flex items-center">
+          <div className="rounded-xl border border-absoluteBlack w-full h-9 p-3 flex items-center text-absoluteBlack/40">
             {personalNumber}
           </div>
         </div>
@@ -106,7 +106,8 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-xl"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-xl disabled:cursor-not-allowed"
+              disabled={!editUserDto.password}
             >
               {showPassword ? '🙈' : '👁️'}
             </button>
