@@ -37,7 +37,14 @@ export const gameApi = api.injectEndpoints({
     }),
     getFinishedGames: build.query<FinishedGamesResponseType[], string>({
       query: (userId) => ({
-        url: `game/finished/${userId}`,
+        url: `game/finished-games/${userId}`,
+        method: 'GET',
+      }),
+      providesTags: ['Game'],
+    }),
+    getFinishedGame: build.query<FinishedGamesResponseType, string>({
+      query: (gameId) => ({
+        url: `game/finished-game/${gameId}`,
         method: 'GET',
       }),
       providesTags: ['Game'],
@@ -90,6 +97,7 @@ export const {
   useGetAllUsersGamesQuery,
   useGetInProgresGamesQuery,
   useGetFinishedGamesQuery,
+  useGetFinishedGameQuery,
   useGetGameByIdQuery,
   useUpdateGameMutation,
   useDeleteGameMutation,

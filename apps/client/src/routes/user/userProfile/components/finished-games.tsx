@@ -27,7 +27,7 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
   };
 
   return finishedGames[0] ? (
-    <Carousel className="w-[90%] h-auto  select-none" orientation="horizontal">
+    <Carousel className="w-[90%] select-none" orientation="horizontal">
       <CarouselContent>
         {finishedGames.map(({ timer, mistakes, nonogram, isLiked, id }) => {
           const likeIconFill = isLiked
@@ -43,7 +43,7 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
               }}
             >
               <div className="p-1">
-                <Card className="max-w-[40%] md:max-w-[20%] bg-globalLeaderboards/20 ring-0 border rounded-2xl shadow-md">
+                <Card className="w-full h-full bg-globalLeaderboards/20 ring-0 border rounded-2xl shadow-md">
                   <CardContent className="flex flex-col aspect-square items-center p-1 gap-3">
                     <img
                       src={`data:image/png;base64,${nonogram.completeNonogramImageBase64}`}

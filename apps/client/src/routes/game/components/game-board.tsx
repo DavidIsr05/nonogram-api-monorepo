@@ -15,7 +15,9 @@ import debounce from 'debounce';
 import { GamePopup } from './index';
 import { DIFFICULTY_SIZE } from '../../../constants';
 
-type Props = GameWithCluesResponseType;
+type Props = GameWithCluesResponseType & {
+  onLikeClick: () => void;
+};
 
 export const GameBoard: React.FC<Props> = ({
   rowClues,
@@ -26,6 +28,7 @@ export const GameBoard: React.FC<Props> = ({
   id,
   isFinished,
   nonogramDifficulty,
+  onLikeClick,
 }) => {
   const [callUpdateGameQuery] = useUpdateGameMutation();
   const [checkAndUpdateInProgressNonogram] =
@@ -41,7 +44,6 @@ export const GameBoard: React.FC<Props> = ({
       ? GameStatus.LOST
       : GameStatus.FINE
   );
-  const [isLostPopupDismissed, setIsLostPopupDismissed] = useState(false);
 
   const coordinatesRef = useRef<{ rowIndex: number; colIndex: number }[]>([]);
   const elapsedTimeRef = useRef(elapsedTime);
@@ -201,16 +203,11 @@ export const GameBoard: React.FC<Props> = ({
 
   return (
     <div className="flex flex-col w-[70%] h-full items-center select-none">
-      {gameStatus === GameStatus.LOST && !isLostPopupDismissed && (
+      {gameStatus && gameStatus !== GameStatus.FINE && (
         <GamePopup
           gameStatus={gameStatus}
-          onDismiss={() => setIsLostPopupDismissed(true)}
-        />
-      )}
-      {gameStatus === GameStatus.WON && (
-        <GamePopup
-          gameStatus={gameStatus}
-          onDismiss={() => setGameStatus(null)}
+          gameId={id}
+          onLikeClick={() => onLikeClick()}
         />
       )}
 

@@ -4,6 +4,7 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { HTTP_ERROR_MESSAGES } from '../../../constants';
+import { Separator } from '@nonogram-api-monorepo/ui-kit';
 
 export const SignupForm: React.FC = () => {
   const [userSignupDto, setUserSignupDto] = useState<CreateUserType>({
@@ -76,7 +77,7 @@ export const SignupForm: React.FC = () => {
             name="username"
             onChange={handleChange}
             type="text"
-            placeholder="ProGamer2005"
+            placeholder="Moshe"
             className="rounded-lg border border-absoluteBlack w-full h-9 p-3"
             required
           />
@@ -89,7 +90,7 @@ export const SignupForm: React.FC = () => {
               name="password"
               onChange={handleChange}
               type={showPassword ? 'text' : 'password'}
-              placeholder="pasvord123"
+              placeholder="StrongPassword123!"
               className="rounded-lg border border-absoluteBlack w-full h-9 p-3 pr-10"
               required
             />
@@ -109,8 +110,20 @@ export const SignupForm: React.FC = () => {
         >
           Sign up
         </button>
-        <Link to="/">
-          <button className="underline">Log in</button>
+        <div className="relative items-center gap-2 w-1/2 hidden md:flex">
+          <Separator
+            className="flex-1 border-absoluteBlack/20"
+            orientation="vertical"
+          />
+          <span className="shrink-0 px-2 text-muted-foreground text-xs uppercase">
+            OR
+          </span>
+          <Separator className="flex-1 border-absoluteBlack/20" />
+        </div>
+        <Link to="/" className="w-1/3 sm:w-1/5 h-9">
+          <button className="bg-absoluteWhite/70 w-full h-full border border-absoluteBlack rounded-lg hover:scale-105 active:scale-95 transition-transform">
+            Log in
+          </button>
         </Link>
       </form>
     </div>
