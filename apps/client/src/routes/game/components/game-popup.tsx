@@ -24,7 +24,7 @@ export const GamePopup: React.FC<Props> = ({
     isLoading: isFinishedGameLoading,
     isError: isErrorWhileFetchingFinishedGame,
     error: finishedGameError,
-  } = useGetFinishedGameQuery(gameId, { skip: !gameId });
+  } = useGetFinishedGameQuery(gameId, { skip: gameStatus === GameStatus.LOST });
 
   if (gameStatus === GameStatus.WON && isErrorWhileFetchingFinishedGame) {
     return <ErrorState error={finishedGameError} />;
@@ -34,7 +34,7 @@ export const GamePopup: React.FC<Props> = ({
     return <LoadingState />;
   }
 
-  if (!finishedGame) {
+  if (gameStatus === GameStatus.WON && !finishedGame) {
     return null;
   }
 
@@ -54,7 +54,9 @@ export const GamePopup: React.FC<Props> = ({
               You actually made it...
             </span>
             <img
-              src={`data:image/png;base64,${finishedGame.nonogram.completeNonogramImageBase64}`}
+              src={`data:image/png;base64,${
+                finishedGame!.nonogram.completeNonogramImageBase64
+              }`}
               alt="complete game preview"
               className="w-[90%]"
             />
@@ -69,7 +71,9 @@ export const GamePopup: React.FC<Props> = ({
                       setReacted(true);
                     }}
                   >
-                    Yes! 👍
+                    <span role="img" aria-label="thumbs up">
+                      Yes! 👍
+                    </span>
                   </button>
                   <button
                     className="border border-absoluteBlack w-1/3 h-8 rounded-md bg-absoluteWhite/30"
