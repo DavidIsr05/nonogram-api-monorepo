@@ -4,7 +4,18 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { HTTP_ERROR_MESSAGES } from '../../../constants';
-import { Separator } from '@nonogram-api-monorepo/ui-kit';
+import {
+  Button,
+  Field,
+  FieldGroup,
+  FieldLabel,
+  Input,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+  Separator,
+} from '@nonogram-api-monorepo/ui-kit';
 
 export const SignupForm: React.FC = () => {
   const [userSignupDto, setUserSignupDto] = useState<CreateUserType>({
@@ -51,14 +62,11 @@ export const SignupForm: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col w-1/2">
-      <form
-        onSubmit={handleSubmit}
-        className="flex flex-col gap-[2rem] md:gap-[3rem] items-center"
-      >
-        <div className="flex flex-col w-full sm:w-2/3 h-9">
-          <label>Personal Number:</label>
-          <input
+    <form onSubmit={handleSubmit} className="flex h-full w-1/2">
+      <FieldGroup className="flex flex-col gap-[2rem] md:gap-[3.5rem] items-center w-full h-full">
+        <Field className="flex flex-col w-full sm:w-2/3 h-9">
+          <FieldLabel>Personal Number:</FieldLabel>
+          <Input
             value={
               userSignupDto.personalNumber ? userSignupDto.personalNumber : ''
             }
@@ -66,66 +74,70 @@ export const SignupForm: React.FC = () => {
             onChange={handleChange}
             type="number"
             placeholder="1234567"
-            className="rounded-lg border border-absoluteBlack w-full h-9 p-3 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="rounded-lg border border-absoluteBlack w-full h-9 p-3 bg-absoluteWhite [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             required
           />
-        </div>
-        <div className="flex flex-col w-full sm:w-2/3 h-9">
-          <label>Username:</label>
-          <input
+        </Field>
+        <Field className="flex flex-col w-full sm:w-2/3 h-9">
+          <FieldLabel>Username:</FieldLabel>
+          <Input
             value={userSignupDto.username}
             name="username"
             onChange={handleChange}
             type="text"
             placeholder="Moshe"
-            className="rounded-lg border border-absoluteBlack w-full h-9 p-3"
+            className="rounded-lg border border-absoluteBlack w-full h-9 p-3 bg-absoluteWhite"
             required
           />
-        </div>
-        <div className="flex flex-col w-full sm:w-2/3 h-9">
-          <label>Password:</label>
-          <div className="relative w-full">
-            <input
+        </Field>
+        <Field className="flex flex-col w-full sm:w-2/3 h-9">
+          <FieldLabel>Password:</FieldLabel>
+          <InputGroup className="rounded-lg border border-absoluteBlack w-full h-9 relative bg-absoluteWhite">
+            <InputGroupInput
               value={userSignupDto.password}
               name="password"
               onChange={handleChange}
               type={showPassword ? 'text' : 'password'}
               placeholder="StrongPassword123!"
-              className="rounded-lg border border-absoluteBlack w-full h-9 p-3 pr-10"
+              className="p-3"
               required
             />
-            <button
-              type="button"
-              onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-lg disabled:cursor-not-allowed"
-              disabled={!userSignupDto.password}
-            >
-              {showPassword ? '🙈' : '👁️'}
-            </button>
+            <InputGroupAddon align="inline-end">
+              <InputGroupButton
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="text-lg disabled:cursor-not-allowed"
+                disabled={!userSignupDto.password}
+              >
+                {showPassword ? '🙈' : '👁️'}
+              </InputGroupButton>
+            </InputGroupAddon>
+          </InputGroup>
+        </Field>
+        <div className="w-full h-full flex flex-col items-center gap-10">
+          <Button
+            type="submit"
+            className="bg-signupPageOrange w-1/2 sm:w-1/4 h-9 border border-absoluteBlack rounded-lg hover:scale-105 active:scale-95 transition-transform"
+          >
+            Sign up
+          </Button>
+          <div className="relative items-center gap-2 w-1/2 hidden md:flex">
+            <Separator
+              className="flex-1 border-absoluteBlack/20"
+              orientation="vertical"
+            />
+            <span className="px-2 text-muted-foreground text-xs uppercase">
+              OR
+            </span>
+            <Separator className="flex-1 border-absoluteBlack/20" />
           </div>
+          <Link to="/" className="w-1/3 sm:w-1/5 h-9">
+            <Button className="bg-absoluteWhite/70 w-full h-full border border-absoluteBlack rounded-lg hover:scale-105 active:scale-95 transition-transform">
+              Log in
+            </Button>
+          </Link>
         </div>
-        <button
-          type="submit"
-          className="bg-signupPageOrange w-1/2 sm:w-1/4 h-9 border border-absoluteBlack rounded-lg hover:scale-105 active:scale-95 transition-transform"
-        >
-          Sign up
-        </button>
-        <div className="relative items-center gap-2 w-1/2 hidden md:flex">
-          <Separator
-            className="flex-1 border-absoluteBlack/20"
-            orientation="vertical"
-          />
-          <span className="shrink-0 px-2 text-muted-foreground text-xs uppercase">
-            OR
-          </span>
-          <Separator className="flex-1 border-absoluteBlack/20" />
-        </div>
-        <Link to="/" className="w-1/3 sm:w-1/5 h-9">
-          <button className="bg-absoluteWhite/70 w-full h-full border border-absoluteBlack rounded-lg hover:scale-105 active:scale-95 transition-transform">
-            Log in
-          </button>
-        </Link>
-      </form>
-    </div>
+      </FieldGroup>
+    </form>
   );
 };

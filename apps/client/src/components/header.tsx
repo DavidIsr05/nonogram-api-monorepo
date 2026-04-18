@@ -11,7 +11,7 @@ import goldenRouteLogo from '../assets/images/golden-route-logo.png';
 
 export const Header: React.FC = () => {
   return (
-    <div className="w-full h-[9%] flex flex-row gap-[1%] items-center bg-gradient-to-r from-gradientStartYellow to-gradientEndPurple">
+    <div className="w-full h-[9%] flex flex-row gap-[1%] items-center bg-gradient-to-r from-gradientStartYellow to-gradientEndPurple pr-[0.5%]">
       <Tooltip>
         <TooltipTrigger asChild>
           <Link to="/home" className="h-full overflow-hidden">
@@ -50,20 +50,20 @@ export const Header: React.FC = () => {
       </Tooltip>
       <Separator
         orientation="vertical"
-        className="w-px h-[80%] border-absoluteBlack/50"
+        className="h-[80%] border-absoluteBlack/50"
       />
-      <div className="group h-[90%] aspect-square cursor-pointer [perspective:1000px]">
+      <div className="group h-[90%] aspect-square cursor-pointer">
         <div className="relative w-full h-full transition-transform duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
-          <div className="absolute inset-0 flex items-center justify-center [backface-visibility:hidden]">
+          <div className="flex items-center justify-center [backface-visibility:hidden]">
             <img
               src={goldenRouteLogo}
               alt="team logo"
               className="w-full h-full object-contain"
             />
           </div>
-          <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold text-[1vw] text-orange-400 [backface-visibility:hidden] [transform:rotateY(180deg)]">
+          <span className="absolute inset-0 flex items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold text-[1vw] text-orange-400 [backface-visibility:hidden] [transform:rotateY(180deg)]">
             Golden Route Team
-          </div>
+          </span>
         </div>
       </div>
     </div>

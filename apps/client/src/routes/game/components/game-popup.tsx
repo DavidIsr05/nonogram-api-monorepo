@@ -4,6 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import Confetti from 'react-confetti';
 import { useGetFinishedGameQuery } from '../../../store/api';
 import { ErrorState, LoadingState } from '../../../components';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+} from '@nonogram-api-monorepo/ui-kit';
 
 type Props = {
   gameStatus: GameStatus.WON | GameStatus.LOST;
@@ -39,78 +46,93 @@ export const GamePopup: React.FC<Props> = ({
   }
 
   return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-30">
+    <Dialog open={true}>
       {gameStatus === GameStatus.WON && (
-        <div className="w-full h-full flex items-center justify-center">
+        <>
           <Confetti
-            className="w-full h-full z-40"
+            className="z-40"
             gravity={0.5}
             recycle={false}
             numberOfPieces={500}
           />
-          <div className="from-green-400/90 to-green-200/60 bg-gradient-to-b rounded-lg z-50 flex flex-col w-[20%] h-[55%] items-center justify-between p-5 border border-absoluteBlack">
-            <span className="font-bold text-2xl items-center">You Won!</span>
-            <span className="items-center justify-self-center">
-              You actually made it...
-            </span>
+          <DialogContent
+            className="from-green-400/90 to-green-200/60 bg-gradient-to-b ring-absoluteBlack"
+            showCloseButton={false}
+            onEscapeKeyDown={(e) => e.preventDefault()}
+            onPointerDownOutside={(e) => e.preventDefault()}
+          >
+            <DialogHeader className="items-center">
+              <span className="font-bold text-2xl">You Won!</span>
+            </DialogHeader>
+            <span className="justify-self-center">You actually made it...</span>
             <img
               src={`data:image/png;base64,${
                 finishedGame!.nonogram.completeNonogramImageBase64
               }`}
               alt="complete game preview"
-              className="w-[90%]"
+              className="w-[90%] justify-self-center"
             />
-            {!reacted && (
-              <div className="flex flex-col gap-5 items-center w-full">
-                <span>Did you like this nonogram?*</span>
-                <div className="flex flex-row gap-5 items-center justify-around w-full">
-                  <button
-                    className="border border-absoluteBlack w-1/3 h-8 rounded-md bg-absoluteWhite/30"
-                    onClick={() => {
-                      onLikeClick();
-                      setReacted(true);
-                    }}
-                  >
-                    <span role="img" aria-label="thumbs up">
-                      Yes! 👍
-                    </span>
-                  </button>
-                  <button
-                    className="border border-absoluteBlack w-1/3 h-8 rounded-md bg-absoluteWhite/30"
-                    onClick={() => setReacted(true)}
-                  >
-                    No :(
-                  </button>
+            <DialogFooter className="border-t-absoluteBlack/30">
+              {!reacted && (
+                <div className="flex flex-col gap-5 items-center w-full">
+                  <span>Did you like this nonogram?*</span>
+                  <div className="flex flex-row gap-5 items-center justify-around w-full">
+                    <Button
+                      className="border border-absoluteBlack rounded-md bg-absoluteWhite/30"
+                      onClick={() => {
+                        onLikeClick();
+                        setReacted(true);
+                      }}
+                    >
+                      <span role="img" aria-label="thumbs up">
+                        Yes! 👍
+                      </span>
+                    </Button>
+                    <Button
+                      className="border border-absoluteBlack rounded-md bg-absoluteWhite/30"
+                      onClick={() => setReacted(true)}
+                    >
+                      No :(
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            )}
-            {reacted && (
-              <button
-                className="enabled:hover:scale-105 enabled:active:scale-95 enabled:transition-transform disabled:bg-gray-400 disabled:cursor-not-allowed border border-absoluteBlack p-2 rounded-lg bg-absoluteWhite/70 shadow-xl"
-                disabled={!reacted}
-                onClick={() => navigate('/home', { replace: true })}
-              >
-                Home
-              </button>
-            )}
-          </div>
-        </div>
+              )}
+              {reacted && (
+                <Button
+                  className="hover:scale-105 active:scale-95 transition-transform border border-absoluteBlack p-2 rounded-lg bg-absoluteWhite/70 shadow-xl"
+                  onClick={() => navigate('/home', { replace: true })}
+                >
+                  Home
+                </Button>
+              )}
+            </DialogFooter>
+          </DialogContent>
+        </>
       )}
 
       {gameStatus === GameStatus.LOST && (
-        <div className="from-red-400/90 to-red-300/80 bg-gradient-to-b rounded-lg z-50 flex flex-col w-[20%] h-[30%] items-center justify-between p-5 border border-absoluteBlack">
-          <span className="font-bold text-2xl items-center">You Lost!</span>
-          <span className="items-center justify-self-center text-xl">
+        <DialogContent
+          showCloseButton={false}
+          className="from-red-400/90 to-red-300/80 bg-gradient-to-b ring-absoluteBlack"
+          onEscapeKeyDown={(e) => e.preventDefault()}
+          onPointerDownOutside={(e) => e.preventDefault()}
+        >
+          <DialogHeader className="items-center">
+            <span className="font-bold text-2xl">You Lost!</span>
+          </DialogHeader>
+          <span className="justify-self-center text-xl">
             Better luck next time
           </span>
-          <button
-            className="hover:scale-105 active:scale-95 transition-transform border border-absoluteBlack p-2 rounded-lg bg-absoluteWhite/70 shadow-xl"
-            onClick={() => navigate('/home', { replace: true })}
-          >
-            Home
-          </button>
-        </div>
+          <DialogFooter className="border-t-absoluteBlack/30">
+            <Button
+              className="hover:scale-105 active:scale-95 transition-transform border border-absoluteBlack p-2 rounded-lg bg-absoluteWhite/70 shadow-xl"
+              onClick={() => navigate('/home', { replace: true })}
+            >
+              Home
+            </Button>
+          </DialogFooter>
+        </DialogContent>
       )}
-    </div>
+    </Dialog>
   );
 };

@@ -82,7 +82,7 @@ export const Game: React.FC = () => {
         </div>
         <div className="h-full w-full p-3 flex flex-row">
           <NonogramLeaderboard nonogramId={gameData.nonogramId} />
-          <GameBoard {...gameData} onLikeClick={() => onLikeClick()} />
+          <GameBoard {...gameData} onLikeClick={onLikeClick} />
         </div>
       </div>
     </div>
