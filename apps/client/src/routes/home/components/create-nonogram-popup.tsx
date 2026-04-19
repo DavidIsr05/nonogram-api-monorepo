@@ -315,7 +315,7 @@ export const CreateNonogramPopup: React.FC = () => {
           <div className="flex flex-col md:flex-row items-center gap-2">
             {userData.isAdmin && (
               <label className="flex items-center gap-1 text-sm cursor-pointer">
-                <input
+                <Input
                   type="checkbox"
                   checked={!isPrivate}
                   onChange={(e) => setIsPrivate(!e.target.checked)}
