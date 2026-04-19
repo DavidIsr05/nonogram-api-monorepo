@@ -27,7 +27,7 @@ export const FinishedGames: React.FC<Props> = ({ finishedGames }) => {
   };
 
   return finishedGames[0] ? (
-    <Carousel className="w-[90%] h-auto  select-none" orientation="horizontal">
+    <Carousel className="w-[90%] select-none" orientation="horizontal">
       <CarouselContent>
         {finishedGames.map(({ timer, mistakes, nonogram, isLiked, id }) => {
           const likeIconFill = isLiked

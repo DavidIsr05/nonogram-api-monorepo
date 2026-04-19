@@ -9,6 +9,7 @@ import {
 import { RootState } from '../../../store/store';
 import { DIFFICULTY_SIZE } from '../../../constants';
 import { LoadingState, ErrorState } from '../../../components';
+import { Separator } from '@nonogram-api-monorepo/ui-kit';
 
 type Props = {
   difficulty: NonogramDifficultiesEnumType | null;
@@ -62,19 +63,19 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
               onClick={() => handleNonogramClick(id)}
             >
               <span className="font-bold text-center">{name}</span>
-              <span className="text-dividorGray">|</span>
+              <Separator orientation="vertical" className="w-full h-full" />
               <span className="font-semibold text-center">
                 {user?.username}
               </span>
-              <span className="text-dividorGray">|</span>
+              <Separator orientation="vertical" className="w-full h-full" />
               <span className="text-center" role="img" aria-label="size emoji">
                 📐 {DIFFICULTY_SIZE[difficulty]}
               </span>
-              <span className="text-dividorGray">|</span>
+              <Separator orientation="vertical" className="w-full h-full" />
               <span className="text-center" role="img" aria-label="like emoji">
                 👍 {likeCount}
               </span>
-              <span className="text-dividorGray">|</span>
+              <Separator orientation="vertical" className="w-full h-full" />
               <span
                 className="text-center"
                 role="img"

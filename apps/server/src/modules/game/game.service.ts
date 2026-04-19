@@ -117,6 +117,27 @@ export class GameService {
     }
   }
 
+  async getFinishedGame(currentUser, gameId) {
+    try {
+      const finishedGame = await this.gameModel.findOne({
+        where: { isFinished: true, id: gameId, userId: currentUser.id },
+        include: {
+          model: Nonogram,
+          attributes: ['completeNonogramImageBase64', 'name'],
+        },
+      });
+
+      if (finishedGame.userId !== currentUser.id) {
+        throw new ForbiddenGameException();
+      }
+
+      this.logger.log('Got finished games successfully', { finishedGame });
+      return finishedGame;
+    } catch (error) {
+      throw new BadRequestException('Could not get finished game', error.stack);
+    }
+  }
+
   async getGameById(currentUser, gameId) {
     try {
       const foundGame = await this.gameModel.findByPk(gameId);

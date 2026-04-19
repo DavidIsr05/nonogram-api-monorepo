@@ -10,6 +10,7 @@ import { useGetInProgresGamesQuery } from '../../../../store/api';
 import { DIFFICULTY_SIZE } from '../../../../constants';
 import { LoadingState, ErrorState } from '../../../../components';
 import { formatTime } from '../../../../utils';
+import { Separator } from '@nonogram-api-monorepo/ui-kit';
 
 type Props = {
   difficulty: NonogramDifficultiesEnumType | null;
@@ -53,11 +54,11 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
             onClick={() => handleGameClick(id)}
           >
             <span className="text-center font-bold">{nonogram.name}</span>
-            <span className="text-dividorGray">|</span>
+            <Separator orientation="vertical" className="w-full h-full" />
             <span className="text-center" role="img" aria-label="timer emoji">
               ⏱️ : {formatTime(timer)}
             </span>
-            <span className="text-dividorGray">|</span>
+            <Separator orientation="vertical" className="w-full h-full" />
             <span
               className="text-center"
               role="img"
@@ -65,7 +66,7 @@ export const GameList: React.FC<Props> = ({ difficulty }) => {
             >
               ❌ : {mistakes}/{MISTAKES_THRESHOLD}
             </span>
-            <span className="text-dividorGray">|</span>
+            <Separator orientation="vertical" className="w-full h-full" />
             <span className="text-center" role="img" aria-label="size emoji">
               📐 : {DIFFICULTY_SIZE[nonogram.difficulty]}
             </span>

@@ -46,7 +46,7 @@ export class GameController {
     return this.gameService.getInProgresGames(currentUser, userId);
   }
 
-  @Get('finished/:id')
+  @Get('finished-games/:id')
   getFinishedGames(
     @Param('id', new ParseUUIDPipe({ version: '4' })) userId: string,
     @CurrentUser() currentUser: User
@@ -95,5 +95,13 @@ export class GameController {
     @Param('nonogramId', new ParseUUIDPipe({ version: '4' })) nonogramId: string
   ) {
     return this.gameService.getNonogramLeaders(nonogramId);
+  }
+
+  @Get('finished-game/:id')
+  getFinishedGame(
+    @Param('id', new ParseUUIDPipe({ version: '4' })) gameId: string,
+    @CurrentUser() currentUser: User
+  ) {
+    return this.gameService.getFinishedGame(currentUser, gameId);
   }
 }
