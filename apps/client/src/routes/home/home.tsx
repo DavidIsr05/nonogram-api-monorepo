@@ -1,13 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GameSelector, Header } from '../../components';
 import { Toaster } from 'sonner';
 import {
   GlobalLeaderboard,
   NonogramList,
   CreateNonogramPopup,
+  NonogramListHeader,
 } from './components';
 
 export const Home: React.FC = () => {
+  const [listOnlyUnplayedNonograms, setListOnlyUnplayedNonograms] =
+    useState<boolean>(false);
+
   return (
     <div className="h-screen w-full items-center flex flex-col bg-default bg-repeat overflow-auto">
       <Header />
@@ -15,7 +19,18 @@ export const Home: React.FC = () => {
         <GlobalLeaderboard />
         <GameSelector
           name="Nonograms:"
-          renderList={(difficulty) => <NonogramList difficulty={difficulty} />}
+          renderList={(difficulty) => (
+            <NonogramList
+              listOnlyUnplayedNonograms={listOnlyUnplayedNonograms}
+              difficulty={difficulty}
+            />
+          )}
+          ListHeader={() => (
+            <NonogramListHeader
+              setListOnlyUnplayedNonograms={setListOnlyUnplayedNonograms}
+              listOnlyUnplayedNonograms={listOnlyUnplayedNonograms}
+            />
+          )}
           NonogramCreationPopup={CreateNonogramPopup}
         />
       </div>

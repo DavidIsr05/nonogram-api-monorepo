@@ -4,6 +4,11 @@ import {
   NonogramDifficultiesEnumType,
   NonogramDifficultiesEnumValues,
 } from '@nonogram-api-monorepo/types';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@nonogram-api-monorepo/ui-kit';
 
 type Props = {
   setDifficultyFilter: (
@@ -49,9 +54,14 @@ export const DifficultyFilter: React.FC<Props> = ({
             type="button"
             key={difficultyIndex}
           >
-            <Star
-              className={`w-full h-full ${getStarColor(difficultyIndex)}`}
-            />
+            <Tooltip>
+              <TooltipTrigger>
+                <Star
+                  className={`w-full h-full ${getStarColor(difficultyIndex)}`}
+                />
+              </TooltipTrigger>
+              <TooltipContent>{difficultyValue}</TooltipContent>
+            </Tooltip>
           </button>
         )
       )}

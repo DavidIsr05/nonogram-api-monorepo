@@ -18,7 +18,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({ error }) => {
       ? (error as { status: number | string }).status
       : undefined;
 
-  if (status === 401) {
+  if (status === 401 && location.pathname !== '/profile') {
     navigate('/', { replace: true });
     return null;
   }

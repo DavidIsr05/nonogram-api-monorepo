@@ -21,7 +21,8 @@ const baseQueryWithAuth: BaseQueryFn<
 
   if (
     (result.error?.status === 401 || result.error?.status === 403) &&
-    window.location.pathname !== '/'
+    window.location.pathname !== '/' &&
+    window.location.pathname !== '/profile'
   ) {
     api.dispatch(clearUserId());
     window.location.replace('/');

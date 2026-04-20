@@ -28,6 +28,7 @@ export const CreateUserSchema = UserSchema.omit({
 }).strict();
 
 export const UpdateUserSchema = UserSchema.partial()
+  .extend({ currentPassword: z.string().optional() })
   .required({ id: true })
   .omit({ isAdmin: true, personalNumber: true })
   .strict();

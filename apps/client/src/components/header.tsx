@@ -32,7 +32,7 @@ export const Header: React.FC = () => {
           </Link>
         </TooltipTrigger>
         <TooltipContent side="bottom">
-          <span>My games</span>
+          <span>Recent games</span>
         </TooltipContent>
       </Tooltip>
       <Tooltip>

@@ -13,3 +13,4 @@ export * from './textarea';
 export * from './label';
 export * from './field';
 export * from './select';
+export * from './tabs';

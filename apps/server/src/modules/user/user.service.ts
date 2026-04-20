@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { User } from './entity/user.entity';
 import {
@@ -82,7 +87,17 @@ export class UserService {
 
     const user = await this.getUserByPersonalNumber(currentUser.personalNumber);
 
+    if (!user) {
+      throw new UserNotFoundException(currentUser.personalNumber);
+    }
+
     if (userUpdateDto.password) {
+      if (
+        !(await bcrypt.compare(userUpdateDto.currentPassword, user.password))
+      ) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+
       const saltRounds = parseInt(process.env.BCRYPT_SALT);
       const salt = await bcrypt.genSalt(saltRounds);
 

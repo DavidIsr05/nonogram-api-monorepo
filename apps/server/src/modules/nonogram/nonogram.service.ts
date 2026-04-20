@@ -208,7 +208,10 @@ export class NonogramService {
           [Op.or]: [{ isPrivate: false }, { creatorId: userId }],
         },
         attributes: {
-          include: [[fn('COUNT', col('likedGames.id')), 'likeCount']],
+          include: [
+            [fn('COUNT', fn('DISTINCT', col('likedGames.id'))), 'likeCount'],
+            [fn('COUNT', fn('DISTINCT', col('allGames.id'))), 'gameCount'],
+          ],
         },
         include: [
           {
@@ -218,8 +221,18 @@ export class NonogramService {
             where: { isLiked: true },
             required: false,
           },
+          {
+            model: Game,
+            as: 'allGames',
+            attributes: [],
+            required: false,
+          },
+          {
+            model: User,
+            attributes: ['username'],
+          },
         ],
-        group: ['Nonogram.id'],
+        group: ['Nonogram.id', 'user.id', 'user.username'],
         order: [[fn('COUNT', col('likedGames.id')), 'DESC']],
       });
       this.logger.log('Got all avaliable nonograms', { allAvaliableNonograms });
