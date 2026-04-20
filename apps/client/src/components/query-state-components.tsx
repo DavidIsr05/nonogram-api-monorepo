@@ -1,5 +1,5 @@
 import React from 'react';
-import { Spinner } from '@nonogram-api-monorepo/ui-kit';
+import { Spinner } from '@nonogram-api-monorepo/ui';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { HTTP_ERROR_MESSAGES } from '../constants';

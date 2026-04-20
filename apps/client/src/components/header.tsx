@@ -6,7 +6,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@nonogram-api-monorepo/ui-kit';
+} from '@nonogram-api-monorepo/ui';
 import goldenRouteLogo from '../assets/images/golden-route-logo.png';
 
 export const Header: React.FC = () => {

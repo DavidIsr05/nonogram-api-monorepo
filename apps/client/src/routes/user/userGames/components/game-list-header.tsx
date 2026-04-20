@@ -1,4 +1,4 @@
-import { Separator } from '@nonogram-api-monorepo/ui-kit';
+import { Separator } from '@nonogram-api-monorepo/ui';
 import React from 'react';
 
 export const GameListHeader: React.FC = () => {

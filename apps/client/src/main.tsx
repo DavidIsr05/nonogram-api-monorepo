@@ -9,7 +9,7 @@ import { Home } from './routes/home';
 import { Signup } from './routes/signup';
 import { UserProfile, UserGames } from './routes/user';
 import { NotFound } from './routes/not-found';
-import { TooltipProvider } from '@nonogram-api-monorepo/ui-kit';
+import { TooltipProvider } from '@nonogram-api-monorepo/ui';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

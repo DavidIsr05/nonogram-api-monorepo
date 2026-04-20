@@ -11,8 +11,9 @@ export const UserGames: React.FC = () => {
           name="Recent Games:"
           renderList={(difficulty) => <GameList difficulty={difficulty} />}
           NonogramCreationPopup={null}
-          ListHeader={GameListHeader}
-        />
+        >
+          <GameListHeader />
+        </GameSelector>
       </div>
     </div>
   );

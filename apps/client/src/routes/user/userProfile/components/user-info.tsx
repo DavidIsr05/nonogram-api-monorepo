@@ -13,7 +13,7 @@ import {
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from '@nonogram-api-monorepo/ui-kit';
+} from '@nonogram-api-monorepo/ui';
 import { clearUserId } from '../../../../store/slices';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
@@ -24,8 +24,8 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
   const [editUserDto, setEditUserDto] = useState<UpdateUserType>({
     id,
     username,
-    currentPassword: '',
-    password: '',
+    currentPassword: null,
+    password: null,
   });
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -33,7 +33,6 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
   const [updateUser] = useUpdateUserMutation();
 
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -87,15 +86,13 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
         }
       }
     }
-
     setEditUserDto({
       id,
       username,
-      currentPassword: '',
-      password: '',
+      currentPassword: null,
+      password: null,
     });
   };
-
   const handleSignOut = () => {
     dispatch(clearUserId());
     navigate('/', { replace: true });
@@ -137,7 +134,7 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
               </FieldLabel>
               <InputGroup className="relative rounded-xl border border-absoluteBlack w-full h-9 bg-absoluteWhite">
                 <InputGroupInput
-                  value={editUserDto.currentPassword}
+                  value={editUserDto.currentPassword ?? ''}
                   name="currentPassword"
                   onChange={handleChange}
                   type={showCurrentPassword ? 'text' : 'password'}
@@ -162,7 +159,7 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
               </FieldLabel>
               <InputGroup className="relative rounded-xl border border-absoluteBlack w-full h-9 bg-absoluteWhite">
                 <InputGroupInput
-                  value={editUserDto.password}
+                  value={editUserDto.password ?? ''}
                   name="password"
                   onChange={handleChange}
                   type={showPassword ? 'text' : 'password'}

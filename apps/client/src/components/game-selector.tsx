@@ -5,14 +5,14 @@ import { DifficultyFilter } from './difficulty-filter';
 type Props = {
   name: string;
   renderList: (difficulty: NonogramDifficultiesEnumType | null) => ReactNode;
-  ListHeader: React.FC;
+  children: ReactNode;
   NonogramCreationPopup: React.FC | null;
 };
 
 export const GameSelector: React.FC<Props> = ({
   name,
   renderList,
-  ListHeader,
+  children,
   NonogramCreationPopup,
 }) => {
   const [difficultyFilter, setDifficultyFilter] =
@@ -38,7 +38,7 @@ export const GameSelector: React.FC<Props> = ({
           )}
         </ul>
       </div>
-      <ListHeader />
+      {children}
       {renderList(difficultyFilter)}
     </div>
   );

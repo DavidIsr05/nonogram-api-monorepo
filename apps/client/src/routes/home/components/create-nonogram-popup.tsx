@@ -36,7 +36,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@nonogram-api-monorepo/ui-kit';
+} from '@nonogram-api-monorepo/ui';
 import { useNavigate } from 'react-router-dom';
 
 export const CreateNonogramPopup: React.FC = () => {

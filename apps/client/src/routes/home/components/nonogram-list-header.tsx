@@ -3,32 +3,32 @@ import {
   Tabs,
   TabsList,
   TabsTrigger,
-} from '@nonogram-api-monorepo/ui-kit';
+} from '@nonogram-api-monorepo/ui';
 import React from 'react';
 
 type Props = {
-  setListOnlyUnplayedNonograms: (listOnlyUnplayedNonograms: boolean) => void;
-  listOnlyUnplayedNonograms: boolean;
+  setIsDisplayAllNonograms: (isDisplayAllNonograms: boolean) => void;
+  isDisplayAllNonograms: boolean;
 };
 
 export const NonogramListHeader: React.FC<Props> = ({
-  setListOnlyUnplayedNonograms,
-  listOnlyUnplayedNonograms,
+  setIsDisplayAllNonograms,
+  isDisplayAllNonograms,
 }) => {
   return (
     <div className="w-full">
       <Tabs
-        defaultValue="false"
-        value={String(listOnlyUnplayedNonograms)}
+        defaultValue={isDisplayAllNonograms}
+        value={isDisplayAllNonograms}
         onValueChange={(value) => {
-          setListOnlyUnplayedNonograms(value === 'true' ? true : false);
+          setIsDisplayAllNonograms(value);
         }}
         className="w-full mb-2"
         asChild
       >
         <TabsList className="flex flex-row">
-          <TabsTrigger value="false">All</TabsTrigger>
-          <TabsTrigger value="true">Unplayed</TabsTrigger>
+          <TabsTrigger value={true}>All</TabsTrigger>
+          <TabsTrigger value={false}>Unplayed</TabsTrigger>
         </TabsList>
       </Tabs>
       <div className="grid grid-cols-[1fr_auto_1fr_auto_1fr_auto_1fr_auto_1fr] items-center rounded-lg p-4 backdrop-blur-lg bg-absoluteWhite/40 mb-2 text-sm md:text-lg">

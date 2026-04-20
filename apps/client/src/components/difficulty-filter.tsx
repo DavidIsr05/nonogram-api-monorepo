@@ -8,7 +8,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@nonogram-api-monorepo/ui-kit';
+} from '@nonogram-api-monorepo/ui';
 
 type Props = {
   setDifficultyFilter: (
@@ -42,6 +42,12 @@ export const DifficultyFilter: React.FC<Props> = ({
     }
   };
 
+  const DIFFICULTY_TOOLTIP_BORDER: Record<number, string> = {
+    0: 'border-green-400',
+    1: 'border-yellow-400',
+    2: 'border-red-600',
+  };
+
   return (
     <div className="flex gap-2 flex-row pb-5">
       {Object.values(NonogramDifficultiesEnumValues.enum).map(
@@ -60,7 +66,11 @@ export const DifficultyFilter: React.FC<Props> = ({
                   className={`w-full h-full ${getStarColor(difficultyIndex)}`}
                 />
               </TooltipTrigger>
-              <TooltipContent>{difficultyValue}</TooltipContent>
+              <TooltipContent
+                className={`border ${DIFFICULTY_TOOLTIP_BORDER[difficultyIndex]}`}
+              >
+                {difficultyValue}
+              </TooltipContent>
             </Tooltip>
           </button>
         )

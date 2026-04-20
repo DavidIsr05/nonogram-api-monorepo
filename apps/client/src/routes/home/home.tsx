@@ -9,8 +9,7 @@ import {
 } from './components';
 
 export const Home: React.FC = () => {
-  const [listOnlyUnplayedNonograms, setListOnlyUnplayedNonograms] =
-    useState<boolean>(false);
+  const [isDisplayAllNonograms, setIsDisplayAllNonograms] = useState(true);
 
   return (
     <div className="h-screen w-full items-center flex flex-col bg-default bg-repeat overflow-auto">
@@ -21,18 +20,17 @@ export const Home: React.FC = () => {
           name="Nonograms:"
           renderList={(difficulty) => (
             <NonogramList
-              listOnlyUnplayedNonograms={listOnlyUnplayedNonograms}
+              isDisplayAllNonograms={isDisplayAllNonograms}
               difficulty={difficulty}
             />
           )}
-          ListHeader={() => (
-            <NonogramListHeader
-              setListOnlyUnplayedNonograms={setListOnlyUnplayedNonograms}
-              listOnlyUnplayedNonograms={listOnlyUnplayedNonograms}
-            />
-          )}
           NonogramCreationPopup={CreateNonogramPopup}
-        />
+        >
+          <NonogramListHeader
+            setIsDisplayAllNonograms={setIsDisplayAllNonograms}
+            isDisplayAllNonograms={isDisplayAllNonograms}
+          />
+        </GameSelector>
       </div>
       <Toaster richColors />
     </div>

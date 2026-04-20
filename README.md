@@ -27,7 +27,7 @@ apps/
   server/   NestJS API
 libs/
   types/    shared types
-  ui-kit/   shared UI components
+  ui/   shared UI components
 ```
 
 ## Running it
