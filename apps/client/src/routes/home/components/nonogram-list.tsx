@@ -5,37 +5,52 @@ import { useNavigate } from 'react-router-dom';
 import {
   useCreateGameMutation,
   useGetUnplayedNonogramsQuery,
+  useGetAllAvaliableNonogramsQuery,
 } from '../../../store/api';
 import { RootState } from '../../../store/store';
 import { DIFFICULTY_SIZE } from '../../../constants';
 import { LoadingState, ErrorState } from '../../../components';
-import { Separator } from '@nonogram-api-monorepo/ui-kit';
+import { Separator } from '@nonogram-api-monorepo/ui';
 
 type Props = {
   difficulty: NonogramDifficultiesEnumType | null;
+  isDisplayAllNonograms: boolean;
 };
 
-export const NonogramList: React.FC<Props> = ({ difficulty }) => {
+export const NonogramList: React.FC<Props> = ({
+  difficulty,
+  isDisplayAllNonograms,
+}) => {
   const userId = useSelector((state: RootState) => state.user.userId);
   const navigate = useNavigate();
   const [createGame] = useCreateGameMutation();
 
   const {
-    data: nonograms,
-    isLoading,
-    isError,
-    error,
+    data: allNonograms,
+    isLoading: areAllNonogramsLoading,
+    isError: isErrorInLoadingAllNonograms,
+    error: allNonogramsLoadingError,
+  } = useGetAllAvaliableNonogramsQuery(userId ?? '', { skip: !userId });
+
+  const {
+    data: unplayedNonograms,
+    isLoading: areUnplayedNonogramsLoading,
+    isError: isErrorLoadingUnplayedNonograms,
+    error: unplayedNonogramsLoadingError,
   } = useGetUnplayedNonogramsQuery(userId ?? '', { skip: !userId });
 
-  if (isLoading) {
+  if (areAllNonogramsLoading || areUnplayedNonogramsLoading) {
     return <LoadingState />;
   }
 
-  if (isError) {
-    return <ErrorState error={error} />;
+  if (isErrorInLoadingAllNonograms) {
+    return <ErrorState error={allNonogramsLoadingError} />;
+  }
+  if (isErrorLoadingUnplayedNonograms) {
+    return <ErrorState error={unplayedNonogramsLoadingError} />;
   }
 
-  if (!nonograms) {
+  if (!allNonograms || !unplayedNonograms) {
     return null;
   }
 
@@ -48,12 +63,14 @@ export const NonogramList: React.FC<Props> = ({ difficulty }) => {
     return null;
   };
 
+  const nonograms = isDisplayAllNonograms ? allNonograms : unplayedNonograms;
+
   const filteredNonograms = difficulty
     ? nonograms.filter((nonogram) => nonogram.difficulty === difficulty)
     : nonograms;
 
   return (
-    <ul className="flex flex-col gap-2 overflow-auto h-auto list-inside pb-2">
+    <ul className="flex flex-col gap-2 overflow-y-scroll h-auto list-inside pb-2">
       {filteredNonograms && filteredNonograms.length > 0 ? (
         filteredNonograms.map(
           ({ id, name, likeCount, gameCount, difficulty, user }) => (

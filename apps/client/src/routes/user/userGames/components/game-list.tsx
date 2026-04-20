@@ -10,7 +10,7 @@ import { useGetInProgresGamesQuery } from '../../../../store/api';
 import { DIFFICULTY_SIZE } from '../../../../constants';
 import { LoadingState, ErrorState } from '../../../../components';
 import { formatTime } from '../../../../utils';
-import { Separator } from '@nonogram-api-monorepo/ui-kit';
+import { Separator } from '@nonogram-api-monorepo/ui';
 
 type Props = {
   difficulty: NonogramDifficultiesEnumType | null;

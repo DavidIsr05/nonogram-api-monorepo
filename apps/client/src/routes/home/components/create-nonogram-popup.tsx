@@ -7,6 +7,7 @@ import {
 import React, { useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import {
+  useCreateGameMutation,
   useCreateNonogramMutation,
   useGenerateNonogramMutation,
   useGetUserByIdQuery,
@@ -35,7 +36,8 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@nonogram-api-monorepo/ui-kit';
+} from '@nonogram-api-monorepo/ui';
+import { useNavigate } from 'react-router-dom';
 
 export const CreateNonogramPopup: React.FC = () => {
   const [name, setName] = useState('');
@@ -59,6 +61,9 @@ export const CreateNonogramPopup: React.FC = () => {
     useGenerateNonogramMutation();
   const [triggerCreate, { isLoading: isCreating }] =
     useCreateNonogramMutation();
+
+  const [createGame] = useCreateGameMutation();
+  const navigate = useNavigate();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -95,14 +100,22 @@ export const CreateNonogramPopup: React.FC = () => {
       toast.error('error while creating nonogram');
       return;
     }
-    await triggerCreate({
+    const createdNonogramData = await triggerCreate({
       ...generated,
       nonogram: generated.nonogram as string,
       name,
       isPrivate,
       creatorId: userId,
     });
+
+    const createdGameData = await createGame({
+      nonogramId: createdNonogramData.data!.id,
+    }).unwrap();
+
     handleReset();
+
+    navigate(`/game/${createdGameData.id}`);
+    return null;
   };
 
   const handleReset = () => {

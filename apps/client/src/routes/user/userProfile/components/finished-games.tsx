@@ -11,7 +11,7 @@ import {
   CarouselPrevious,
   Card,
   CardContent,
-} from '@nonogram-api-monorepo/ui-kit';
+} from '@nonogram-api-monorepo/ui';
 import { useNavigate } from 'react-router-dom';
 import { Like } from '../../../../assets';
 import { formatTime } from '../../../../utils';

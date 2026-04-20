@@ -6,7 +6,7 @@ import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
-} from '@nonogram-api-monorepo/ui-kit';
+} from '@nonogram-api-monorepo/ui';
 import goldenRouteLogo from '../assets/images/golden-route-logo.png';
 
 export const Header: React.FC = () => {
@@ -32,7 +32,7 @@ export const Header: React.FC = () => {
           </Link>
         </TooltipTrigger>
         <TooltipContent side="bottom">
-          <span>My games</span>
+          <span>Recent games</span>
         </TooltipContent>
       </Tooltip>
       <Tooltip>

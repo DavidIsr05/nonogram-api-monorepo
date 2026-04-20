@@ -1,5 +1,5 @@
 import React from 'react';
-import { Spinner } from '@nonogram-api-monorepo/ui-kit';
+import { Spinner } from '@nonogram-api-monorepo/ui';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { HTTP_ERROR_MESSAGES } from '../constants';
@@ -18,7 +18,7 @@ export const ErrorState: React.FC<ErrorStateProps> = ({ error }) => {
       ? (error as { status: number | string }).status
       : undefined;
 
-  if (status === 401) {
+  if (status === 401 && location.pathname !== '/profile') {
     navigate('/', { replace: true });
     return null;
   }

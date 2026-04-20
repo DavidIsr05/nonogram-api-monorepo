@@ -10,7 +10,7 @@ import {
   DialogContent,
   DialogFooter,
   DialogHeader,
-} from '@nonogram-api-monorepo/ui-kit';
+} from '@nonogram-api-monorepo/ui';
 
 type Props = {
   gameStatus: GameStatus.WON | GameStatus.LOST;

@@ -1,6 +1,6 @@
 import { GameSelector, Header } from '../../../components';
 import React from 'react';
-import { GameList } from './components';
+import { GameList, GameListHeader } from './components';
 
 export const UserGames: React.FC = () => {
   return (
@@ -8,10 +8,12 @@ export const UserGames: React.FC = () => {
       <Header />
       <div className="h-[90%] w-full flex flex-row items-center justify-around">
         <GameSelector
-          name="Your Games:"
+          name="Recent Games:"
           renderList={(difficulty) => <GameList difficulty={difficulty} />}
           NonogramCreationPopup={null}
-        />
+        >
+          <GameListHeader />
+        </GameSelector>
       </div>
     </div>
   );

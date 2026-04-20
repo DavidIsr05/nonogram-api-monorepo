@@ -13,7 +13,10 @@ import {
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from '@nonogram-api-monorepo/ui-kit';
+} from '@nonogram-api-monorepo/ui';
+import { clearUserId } from '../../../../store/slices';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 type Props = UpdateUserType & { personalNumber: number };
 
@@ -21,11 +24,16 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
   const [editUserDto, setEditUserDto] = useState<UpdateUserType>({
     id,
     username,
-    password: '',
+    currentPassword: null,
+    password: null,
   });
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const [updateUser] = useUpdateUserMutation();
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -57,6 +65,7 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
       editUserDtoEditedFields = {
         ...editUserDtoEditedFields,
         password: editUserDto.password,
+        currentPassword: editUserDto.currentPassword,
       };
     }
 
@@ -77,61 +86,114 @@ export const UserInfo: React.FC<Props> = ({ id, username, personalNumber }) => {
         }
       }
     }
+    setEditUserDto({
+      id,
+      username,
+      currentPassword: null,
+      password: null,
+    });
+  };
+  const handleSignOut = () => {
+    dispatch(clearUserId());
+    navigate('/', { replace: true });
+    return null;
   };
 
   return (
-    <div className="flex flex-col items-center gap-5 p-5 w-[90%] xl:w-[50%] h-auto border-b border-b-absoluteBlack xl:border-r xl:border-b-0 border-r-absoluteBlack">
+    <div className="flex flex-col items-center gap-5 p-5 w-[90%] justify-center xl:w-[50%] h-auto border-b border-b-absoluteBlack xl:border-r xl:border-b-0 border-r-absoluteBlack">
       <span className="text-2xl font-medium underline">Update User Info:</span>
       <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full">
         <FieldGroup className="flex flex-col gap-5 items-center">
-          <Field className="flex flex-col items-center w-[50%] xl:w-[40%]">
-            <FieldLabel className="self-start text-sm">
-              Personal Number:
-            </FieldLabel>
-            <span className="rounded-xl border border-absoluteBlack w-full h-9 p-3 flex items-center text-absoluteBlack/40 bg-absoluteWhite">
-              {personalNumber}
-            </span>
-          </Field>
-          <Field className="flex flex-col items-center w-[50%] xl:w-[40%]">
-            <FieldLabel className="self-start text-sm">Username:</FieldLabel>
-            <Input
-              value={editUserDto.username}
-              name="username"
-              onChange={handleChange}
-              type="text"
-              placeholder="Username:"
-              className="rounded-xl border border-absoluteBlack w-full h-9 p-3 bg-absoluteWhite"
-            />
-          </Field>
-          <Field className="flex flex-col items-center w-[50%] xl:w-[40%]">
-            <FieldLabel className="self-start text-sm">Password:</FieldLabel>
-            <InputGroup className="relative rounded-xl border border-absoluteBlack w-full h-9 bg-absoluteWhite">
-              <InputGroupInput
-                value={editUserDto.password}
-                name="password"
-                onChange={handleChange}
-                type={showPassword ? 'text' : 'password'}
-                placeholder="New Password:"
-                className="p-3"
+          <div className="flex flex-row gap-5 w-full items-center justify-center">
+            <Field className="flex flex-col items-center w-[50%] xl:w-[40%]">
+              <FieldLabel className="self-start text-sm">
+                Personal Number:
+              </FieldLabel>
+              <Input
+                className="rounded-xl border border-absoluteBlack w-full h-9 p-3 flex items-center text-absoluteBlack/80 bg-absoluteWhite"
+                disabled={true}
+                value={personalNumber}
               />
-              <InputGroupAddon align="inline-end">
-                <InputGroupButton
-                  type="button"
-                  onClick={() => setShowPassword((prev) => !prev)}
-                  className="text-xl disabled:cursor-not-allowed"
-                  disabled={!editUserDto.password}
-                >
-                  {showPassword ? '🙈' : '👁️'}
-                </InputGroupButton>
-              </InputGroupAddon>
-            </InputGroup>
-          </Field>
-          <Button
-            type="submit"
-            className="bg-buttonGreen w-[20%] xl:w-[15%] h-9 border border-absoluteBlack rounded-xl text-base hover:scale-105 active:scale-95 transition-transform"
-          >
-            Update
-          </Button>
+            </Field>
+            <Field className="flex flex-col items-center w-[50%] xl:w-[40%]">
+              <FieldLabel className="self-start text-sm">Username:</FieldLabel>
+              <Input
+                value={editUserDto.username}
+                name="username"
+                onChange={handleChange}
+                type="text"
+                placeholder="Username:"
+                className="rounded-xl border border-absoluteBlack w-full h-9 p-3 bg-absoluteWhite"
+              />
+            </Field>
+          </div>
+          <div className="flex flex-row gap-5 w-full items-center justify-center">
+            <Field className="flex flex-col items-center w-[50%] xl:w-[40%]">
+              <FieldLabel className="self-start text-sm">
+                Current Password:
+              </FieldLabel>
+              <InputGroup className="relative rounded-xl border border-absoluteBlack w-full h-9 bg-absoluteWhite">
+                <InputGroupInput
+                  value={editUserDto.currentPassword ?? ''}
+                  name="currentPassword"
+                  onChange={handleChange}
+                  type={showCurrentPassword ? 'text' : 'password'}
+                  placeholder="Current Password:"
+                  className="p-3"
+                />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton
+                    type="button"
+                    onClick={() => setShowCurrentPassword((prev) => !prev)}
+                    className="text-xl disabled:cursor-not-allowed"
+                    disabled={!editUserDto.currentPassword}
+                  >
+                    {showCurrentPassword ? '🙈' : '👁️'}
+                  </InputGroupButton>
+                </InputGroupAddon>
+              </InputGroup>
+            </Field>
+            <Field className="flex flex-col items-center w-[50%] xl:w-[40%]">
+              <FieldLabel className="self-start text-sm">
+                New Password:
+              </FieldLabel>
+              <InputGroup className="relative rounded-xl border border-absoluteBlack w-full h-9 bg-absoluteWhite">
+                <InputGroupInput
+                  value={editUserDto.password ?? ''}
+                  name="password"
+                  onChange={handleChange}
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="New Password:"
+                  className="p-3"
+                />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="text-xl disabled:cursor-not-allowed"
+                    disabled={!editUserDto.password}
+                  >
+                    {showPassword ? '🙈' : '👁️'}
+                  </InputGroupButton>
+                </InputGroupAddon>
+              </InputGroup>
+            </Field>
+          </div>
+          <div className="w-full items-center justify-center flex flex-row gap-28">
+            <Button
+              type="button"
+              className="bg-red-500 w-[29%] sm:w-[20%] xl:w-[16%] h-9 border border-absoluteBlack rounded-xl text-base hover:scale-105 active:scale-95 transition-transform"
+              onClick={handleSignOut}
+            >
+              Sign out
+            </Button>
+            <Button
+              type="submit"
+              className="bg-buttonGreen w-[29%] sm:w-[20%] xl:w-[15%] h-9 border border-absoluteBlack rounded-xl text-base hover:scale-105 active:scale-95 transition-transform"
+            >
+              Update
+            </Button>
+          </div>
         </FieldGroup>
       </form>
     </div>

@@ -7,7 +7,7 @@ import {
   POSITION_SYMBOLS,
 } from '../../../constants';
 import { formatTime } from '../../../utils';
-import { cn } from '@nonogram-api-monorepo/ui-kit';
+import { cn } from '@nonogram-api-monorepo/ui';
 
 type Props = {
   nonogramId: string;

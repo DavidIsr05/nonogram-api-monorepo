@@ -15,7 +15,7 @@ import {
   InputGroupButton,
   InputGroupInput,
   Separator,
-} from '@nonogram-api-monorepo/ui-kit';
+} from '@nonogram-api-monorepo/ui';
 
 export const SignupForm: React.FC = () => {
   const [userSignupDto, setUserSignupDto] = useState<CreateUserType>({

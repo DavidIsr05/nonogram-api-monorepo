@@ -46,7 +46,6 @@ export const TooltipContent = ({
         {...props}
       >
         {children}
-        <TooltipPrimitive.Arrow className="z-50 size-2.5 translate-y-[calc(-50%_-_2px)] fill-absoluteWhite/70" />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
   );
