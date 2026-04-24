@@ -1,0 +1,67 @@
+import { ErrorState, Header, LoadingState } from '../../../components';
+import React from 'react';
+import { FinishedGames, UserInfo, UserStats } from './components';
+import { RootState } from '../../../store/store';
+import { useSelector } from 'react-redux';
+import {
+  useGetFinishedGamesQuery,
+  useGetUserByIdQuery,
+  useGetUserStatsQuery,
+} from '../../../store/api';
+import { Toaster } from 'sonner';
+
+export const UserProfile: React.FC = () => {
+  const userId = useSelector((state: RootState) => state.user.userId);
+
+  const {
+    data: userData,
+    isLoading: isUserDataLoading,
+    isError: isErrorWhileFetchingUserData,
+    error: userDataError,
+  } = useGetUserByIdQuery(userId!, { skip: !userId });
+
+  const {
+    data: userStats,
+    isLoading: isUserStatsLoading,
+    isError: isErrorWhileFetchingUserStats,
+    error: userStatsError,
+  } = useGetUserStatsQuery();
+
+  const {
+    data: finishedGames,
+    isLoading: isFinishedGamesLoading,
+    isError: isErrorWhileFetchingFinishedGames,
+    error: finishedGamesError,
+  } = useGetFinishedGamesQuery(userId!, { skip: !userId });
+
+  if (isUserDataLoading || isUserStatsLoading || isFinishedGamesLoading) {
+    return <LoadingState />;
+  }
+
+  if (isErrorWhileFetchingUserData) {
+    return <ErrorState error={userDataError} />;
+  } else if (isErrorWhileFetchingUserStats) {
+    return <ErrorState error={userStatsError} />;
+  } else if (isErrorWhileFetchingFinishedGames) {
+    return <ErrorState error={finishedGamesError} />;
+  }
+
+  if (!userData || !userStats || !finishedGames) {
+    return null;
+  }
+
+  return (
+    <div className="w-full h-screen bg-default bg-center bg-repeat overflow-auto">
+      <Header />
+      <div className="flex-1 w-full flex flex-col items-center justify-around p-5">
+        <div className="flex flex-col xl:flex-row w-[90%] h-auto border rounded-2xl shadow-lg items-start bg-absoluteWhite/70 p-5">
+          <UserInfo {...userData} />
+          <UserStats {...userStats} />
+        </div>
+        <span className="font-medium pt-5 text-2xl">Finished Games: </span>
+        <FinishedGames finishedGames={finishedGames} />
+      </div>
+      <Toaster richColors />
+    </div>
+  );
+};
